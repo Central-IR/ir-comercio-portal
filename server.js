@@ -187,8 +187,7 @@ app.post('/api/login', async (req, res) => {
 
     console.log('ℹ️ Registrando/atualizando dispositivo');
     
-    // Usar UPSERT - insere se não existe, atualiza se existe
-    // ✅ REMOVIDO 'last_login' - coluna não existe na tabela
+    // Usar UPSERT com onConflict correto - a chave única é apenas 'device_token'
     const { error: deviceError } = await supabase
       .from('authorized_devices')
       .upsert({
@@ -200,7 +199,7 @@ app.post('/api/login', async (req, res) => {
         user_agent: truncatedUserAgent,
         is_active: true
       }, {
-        onConflict: 'user_id,device_token',
+        onConflict: 'device_token', // ✅ Chave única correta
         ignoreDuplicates: false
       });
 
