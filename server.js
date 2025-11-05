@@ -29,27 +29,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ==========================================
 // ======== FILTRO DE IP ====================
 // ==========================================
-// Função auxiliar para validar IP
-function validateIP(req) {
+app.use((req, res, next) => {
+  if (req.path === '/health' || req.path.startsWith('/api/')) {
+    return next();
+  }
+
   const xForwardedFor = req.headers['x-forwarded-for'];
   const clientIP = xForwardedFor
     ? xForwardedFor.split(',')[0].trim()
     : req.socket.remoteAddress;
 
   const cleanIP = clientIP.replace('::ffff:', '');
-  return { cleanIP, isAllowed: cleanIP === allowedIP };
-}
 
-app.use((req, res, next) => {
-  // Permitir health check sem filtro
-  if (req.path === '/health') {
-    return next();
-  }
-
-  // Para todas as outras rotas (incluindo API), validar IP
-  const { cleanIP, isAllowed } = validateIP(req);
-
-  if (!isAllowed) {
+  if (cleanIP !== allowedIP) {
     console.log('❌ IP bloqueado:', cleanIP);
     return res.status(403).json({
       error: 'Acesso negado',
@@ -113,14 +105,21 @@ app.post('/api/login', async (req, res) => {
       });
     }
 
-    // 2. IP já foi validado pelo middleware global - apenas pegar o IP limpo
+    // 2. Verificar IP
     const xForwardedFor = req.headers['x-forwarded-for'];
     const clientIP = xForwardedFor
       ? xForwardedFor.split(',')[0].trim()
       : req.socket.remoteAddress;
     const cleanIP = clientIP.replace('::ffff:', '');
 
-    console.log('🔐 Tentativa de login - Usuário:', username, '| IP:', cleanIP);
+    if (cleanIP !== allowedIP) {
+      console.log('❌ Tentativa de login com IP não autorizado:', cleanIP, '| Usuário:', username);
+      await logLoginAttempt(username, false, 'IP não autorizado', deviceToken, cleanIP);
+      return res.status(403).json({ 
+        error: 'IP não autorizado',
+        message: `Seu IP (${cleanIP}) não tem permissão para acessar este sistema`
+      });
+    }
 
     // 3. Verificar horário comercial
     const now = new Date();
@@ -186,45 +185,31 @@ app.post('/api/login', async (req, res) => {
     const truncatedUserAgent = userAgent.substring(0, 95);
     const truncatedDeviceName = userAgent.substring(0, 95);
 
-    // 8. Verificar se este dispositivo JÁ EXISTE (globalmente, não só para este usuário)
+    // 8. Verificar se este dispositivo específico já existe
     const { data: existingDevice } = await supabase
       .from('authorized_devices')
       .select('*')
+      .eq('user_id', userData.id)
       .eq('device_token', deviceToken)
+      .eq('is_active', true)
       .maybeSingle();
 
     if (existingDevice) {
-      console.log('ℹ️ Dispositivo já existe no sistema');
+      console.log('ℹ️ Dispositivo já registrado - atualizando último acesso');
       
-      // Verificar se está vinculado a OUTRO usuário
-      if (existingDevice.user_id !== userData.id) {
-        console.log('⚠️ Dispositivo vinculado a outro usuário - atualizando para o usuário atual');
-      }
-      
-      // Atualizar dispositivo com novo usuário e dados
-      const { error: updateError } = await supabase
+      // Atualizar último acesso
+      await supabase
         .from('authorized_devices')
         .update({
-          user_id: userData.id,
           ip_address: cleanIP,
           user_agent: truncatedUserAgent,
-          device_name: truncatedDeviceName,
-          is_active: true,
           last_login: new Date().toISOString()
         })
-        .eq('device_token', deviceToken);
+        .eq('id', existingDevice.id);
         
-      if (updateError) {
-        console.error('❌ Erro ao atualizar dispositivo:', updateError);
-        return res.status(500).json({ 
-          error: 'Erro ao atualizar dispositivo',
-          details: updateError.message 
-        });
-      }
-      
-      console.log('✅ Dispositivo atualizado com sucesso');
+      console.log('✅ Dispositivo atualizado');
     } else {
-      // Novo dispositivo - criar registro
+      // Novo dispositivo - adicionar à lista de dispositivos autorizados
       const { error: deviceError } = await supabase
         .from('authorized_devices')
         .insert({
