@@ -30,8 +30,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ======== FILTRO DE IP ====================
 // ==========================================
 app.use((req, res, next) => {
-  // Permitir health check sem filtro de IP
-  if (req.path === '/health') return next();
+  // Permitir health check e rotas de API sem filtro global
+  // (cada rota de API faz sua própria verificação)
+  if (req.path === '/health' || req.path.startsWith('/api/')) {
+    return next();
+  }
 
   const xForwardedFor = req.headers['x-forwarded-for'];
   const clientIP = xForwardedFor
@@ -104,7 +107,7 @@ app.post('/api/login', async (req, res) => {
       });
     }
 
-    // 2. Verificar IP
+    // 2. Verificar IP (mantém a verificação aqui)
     const xForwardedFor = req.headers['x-forwarded-for'];
     const clientIP = xForwardedFor
       ? xForwardedFor.split(',')[0].trim()
@@ -112,9 +115,11 @@ app.post('/api/login', async (req, res) => {
     const cleanIP = clientIP.replace('::ffff:', '');
 
     if (cleanIP !== allowedIP) {
+      console.log('❌ Tentativa de login com IP não autorizado:', cleanIP, '| Usuário:', username);
       await logLoginAttempt(username, false, 'IP não autorizado', deviceToken, cleanIP);
       return res.status(403).json({ 
-        error: 'IP não autorizado' 
+        error: 'IP não autorizado',
+        message: `Seu IP (${cleanIP}) não tem permissão para acessar este sistema`
       });
     }
 
@@ -126,6 +131,8 @@ app.post('/api/login', async (req, res) => {
     const isBusinessHours = dayOfWeek >= 1 && dayOfWeek <= 5 && hour >= 8 && hour < 18;
 
     if (!isBusinessHours) {
+      console.log('❌ Tentativa de login fora do horário comercial:', username);
+      await logLoginAttempt(username, false, 'Fora do horário comercial', deviceToken, cleanIP);
       return res.status(403).json({ 
         error: 'Fora do horário comercial',
         message: 'Acesso permitido apenas de segunda a sexta, das 8h às 18h' 
@@ -142,6 +149,7 @@ app.post('/api/login', async (req, res) => {
       .single();
 
     if (userError || !userData) {
+      console.log('❌ Credenciais inválidas para usuário:', username);
       await logLoginAttempt(username, false, 'Credenciais inválidas', deviceToken, cleanIP);
       return res.status(401).json({ 
         error: 'Usuário ou senha incorretos' 
@@ -159,6 +167,7 @@ app.post('/api/login', async (req, res) => {
     if (deviceData) {
       // Dispositivo já existe - verificar se é o mesmo
       if (deviceData.device_token !== deviceToken) {
+        console.log('❌ Dispositivo não autorizado para usuário:', username);
         await logLoginAttempt(username, false, 'Dispositivo não autorizado', deviceToken, cleanIP);
         return res.status(403).json({ 
           error: 'Este usuário já está vinculado a outro dispositivo' 
@@ -177,9 +186,10 @@ app.post('/api/login', async (req, res) => {
         });
 
       if (deviceError) {
-        console.error('Erro ao autorizar dispositivo:', deviceError);
+        console.error('❌ Erro ao autorizar dispositivo:', deviceError);
         return res.status(500).json({ error: 'Erro ao autorizar dispositivo' });
       }
+      console.log('✅ Novo dispositivo autorizado para usuário:', username);
     }
 
     // 6. Criar sessão
@@ -198,12 +208,13 @@ app.post('/api/login', async (req, res) => {
       });
 
     if (sessionError) {
-      console.error('Erro ao criar sessão:', sessionError);
+      console.error('❌ Erro ao criar sessão:', sessionError);
       return res.status(500).json({ error: 'Erro ao criar sessão' });
     }
 
     // 7. Log de sucesso
     await logLoginAttempt(username, true, null, deviceToken, cleanIP);
+    console.log('✅ Login realizado com sucesso:', username, '| IP:', cleanIP);
 
     // 8. Retornar dados da sessão
     res.json({
@@ -221,7 +232,7 @@ app.post('/api/login', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erro no login:', error);
+    console.error('❌ Erro no login:', error);
     res.status(500).json({ error: 'Erro interno no servidor' });
   }
 });
@@ -242,9 +253,10 @@ app.post('/api/logout', async (req, res) => {
       .update({ is_active: false })
       .eq('session_token', sessionToken);
 
+    console.log('✅ Logout realizado:', sessionToken.substr(0, 20) + '...');
     res.json({ success: true });
   } catch (error) {
-    console.error('Erro no logout:', error);
+    console.error('❌ Erro no logout:', error);
     res.status(500).json({ error: 'Erro ao fazer logout' });
   }
 });
@@ -277,7 +289,7 @@ app.post('/api/verify-session', async (req, res) => {
 
     res.json({ valid: true });
   } catch (error) {
-    console.error('Erro ao verificar sessão:', error);
+    console.error('❌ Erro ao verificar sessão:', error);
     res.status(500).json({ error: 'Erro ao verificar sessão' });
   }
 });
@@ -295,7 +307,7 @@ async function logLoginAttempt(username, success, reason, deviceToken, ip) {
       failure_reason: reason
     });
   } catch (error) {
-    console.error('Erro ao registrar log:', error);
+    console.error('❌ Erro ao registrar log:', error);
   }
 }
 
@@ -314,7 +326,9 @@ app.get('/health', (req, res) => {
 // ======== INICIAR SERVIDOR ================
 // ==========================================
 app.listen(PORT, () => {
-  console.log(`==> Portal Central rodando na porta ${PORT}`);
-  console.log(`==> IP autorizado: ${allowedIP}`);
-  console.log(`==> Supabase configurado: ${supabaseUrl ? 'Sim' : 'Não'}`);
+  console.log('='.repeat(50));
+  console.log(`🚀 Portal Central rodando na porta ${PORT}`);
+  console.log(`🔒 IP autorizado: ${allowedIP}`);
+  console.log(`💾 Supabase configurado: ${supabaseUrl ? 'Sim ✅' : 'Não ❌'}`);
+  console.log('='.repeat(50));
 });
