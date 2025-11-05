@@ -179,7 +179,7 @@ app.post('/api/login', async (req, res) => {
 
     console.log('✅ Senha correta');
 
-    // 7. 🔧 CORREÇÃO: Registrar/Atualizar dispositivo usando UPSERT
+    // 7. ✅ CORRIGIDO: Registrar/Atualizar dispositivo usando UPSERT
     const deviceFingerprint = deviceToken + '_' + Date.now();
     const userAgent = req.headers['user-agent'] || 'Unknown';
     const truncatedUserAgent = userAgent.substring(0, 95);
@@ -188,6 +188,7 @@ app.post('/api/login', async (req, res) => {
     console.log('ℹ️ Registrando/atualizando dispositivo');
     
     // Usar UPSERT - insere se não existe, atualiza se existe
+    // ✅ REMOVIDO 'last_login' - coluna não existe na tabela
     const { error: deviceError } = await supabase
       .from('authorized_devices')
       .upsert({
@@ -197,11 +198,10 @@ app.post('/api/login', async (req, res) => {
         device_name: truncatedDeviceName,
         ip_address: cleanIP,
         user_agent: truncatedUserAgent,
-        is_active: true,
-        last_login: new Date().toISOString()
+        is_active: true
       }, {
-        onConflict: 'user_id,device_token', // Chave composta que causa conflito
-        ignoreDuplicates: false // Atualizar se já existir
+        onConflict: 'user_id,device_token',
+        ignoreDuplicates: false
       });
 
     if (deviceError) {
@@ -213,12 +213,12 @@ app.post('/api/login', async (req, res) => {
     }
     console.log('✅ Dispositivo registrado/atualizado para usuário:', username);
 
-    // 8. 🔧 CORREÇÃO: Criar ou atualizar sessão (evita erro de chave duplicada)
+    // 8. Criar ou atualizar sessão
     const sessionToken = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 16);
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 8);
 
-    // Verificar se já existe uma sessão para este usuário + dispositivo (independente de is_active)
+    // Verificar se já existe uma sessão para este usuário + dispositivo
     const { data: existingSession } = await supabase
       .from('active_sessions')
       .select('*')
