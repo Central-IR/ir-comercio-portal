@@ -179,100 +179,74 @@ app.post('/api/login', async (req, res) => {
 
     console.log('✅ Senha correta');
 
-    // 7. 🔧 CORREÇÃO: Registrar/Atualizar dispositivo (evita erro de chave duplicada)
+    // 7. 🔧 CORREÇÃO: Registrar/Atualizar dispositivo usando UPSERT
     const deviceFingerprint = deviceToken + '_' + Date.now();
     const userAgent = req.headers['user-agent'] || 'Unknown';
     const truncatedUserAgent = userAgent.substring(0, 95);
     const truncatedDeviceName = userAgent.substring(0, 95);
 
-    // Verificar se dispositivo já existe (independente de is_active)
-    const { data: existingDevice } = await supabase
+    console.log('ℹ️ Registrando/atualizando dispositivo');
+    
+    // Usar UPSERT - insere se não existe, atualiza se existe
+    const { error: deviceError } = await supabase
       .from('authorized_devices')
-      .select('*')
-      .eq('user_id', userData.id)
-      .eq('device_token', deviceToken)
-      .maybeSingle();
+      .upsert({
+        user_id: userData.id,
+        device_token: deviceToken,
+        device_fingerprint: deviceFingerprint,
+        device_name: truncatedDeviceName,
+        ip_address: cleanIP,
+        user_agent: truncatedUserAgent,
+        is_active: true,
+        last_login: new Date().toISOString()
+      }, {
+        onConflict: 'user_id,device_token', // Chave composta que causa conflito
+        ignoreDuplicates: false // Atualizar se já existir
+      });
 
-    if (existingDevice) {
-      console.log('ℹ️ Dispositivo já registrado - atualizando último acesso');
-      
-      // Atualizar dispositivo existente e reativar se necessário
-      const { error: updateError } = await supabase
-        .from('authorized_devices')
-        .update({
-          ip_address: cleanIP,
-          user_agent: truncatedUserAgent,
-          last_login: new Date().toISOString(),
-          is_active: true,
-          device_fingerprint: deviceFingerprint
-        })
-        .eq('id', existingDevice.id);
-        
-      if (updateError) {
-        console.error('❌ Erro ao atualizar dispositivo:', updateError);
-        return res.status(500).json({ 
-          error: 'Erro ao atualizar dispositivo',
-          details: updateError.message 
-        });
-      }
-      console.log('✅ Dispositivo atualizado');
-    } else {
-      console.log('ℹ️ Registrando novo dispositivo');
-      
-      // Criar novo dispositivo
-      const { error: deviceError } = await supabase
-        .from('authorized_devices')
-        .insert({
-          user_id: userData.id,
-          device_token: deviceToken,
-          device_fingerprint: deviceFingerprint,
-          device_name: truncatedDeviceName,
-          ip_address: cleanIP,
-          user_agent: truncatedUserAgent,
-          is_active: true
-        });
-
-      if (deviceError) {
-        console.error('❌ Erro ao registrar dispositivo:', deviceError);
-        return res.status(500).json({ 
-          error: 'Erro ao registrar dispositivo',
-          details: deviceError.message 
-        });
-      }
-      console.log('✅ Novo dispositivo registrado para usuário:', username);
+    if (deviceError) {
+      console.error('❌ Erro ao registrar dispositivo:', deviceError);
+      return res.status(500).json({ 
+        error: 'Erro ao registrar dispositivo',
+        details: deviceError.message 
+      });
     }
+    console.log('✅ Dispositivo registrado/atualizado para usuário:', username);
 
     // 8. 🔧 CORREÇÃO: Criar ou atualizar sessão (evita erro de chave duplicada)
     const sessionToken = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 16);
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 8);
 
-    // Verificar se já existe uma sessão ativa para este usuário + dispositivo
+    // Verificar se já existe uma sessão para este usuário + dispositivo (independente de is_active)
     const { data: existingSession } = await supabase
       .from('active_sessions')
       .select('*')
       .eq('user_id', userData.id)
       .eq('device_token', deviceToken)
-      .eq('is_active', true)
       .maybeSingle();
 
     if (existingSession) {
       console.log('ℹ️ Sessão existente encontrada - atualizando');
       
-      // Atualizar sessão existente
+      // Atualizar sessão existente e reativar
       const { error: sessionError } = await supabase
         .from('active_sessions')
         .update({
           ip_address: cleanIP,
           session_token: sessionToken,
           expires_at: expiresAt.toISOString(),
+          is_active: true,
           updated_at: new Date().toISOString()
         })
         .eq('id', existingSession.id);
 
       if (sessionError) {
         console.error('❌ Erro ao atualizar sessão:', sessionError);
-        return res.status(500).json({ error: 'Erro ao atualizar sessão' });
+        return res.status(500).json({ 
+          error: 'Erro ao atualizar sessão',
+          details: sessionError.message 
+        });
       }
       
       console.log('✅ Sessão atualizada com sucesso');
@@ -287,12 +261,16 @@ app.post('/api/login', async (req, res) => {
           device_token: deviceToken,
           ip_address: cleanIP,
           session_token: sessionToken,
-          expires_at: expiresAt.toISOString()
+          expires_at: expiresAt.toISOString(),
+          is_active: true
         });
 
       if (sessionError) {
         console.error('❌ Erro ao criar sessão:', sessionError);
-        return res.status(500).json({ error: 'Erro ao criar sessão' });
+        return res.status(500).json({ 
+          error: 'Erro ao criar sessão',
+          details: sessionError.message 
+        });
       }
       
       console.log('✅ Nova sessão criada com sucesso');
