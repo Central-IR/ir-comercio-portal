@@ -29,19 +29,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ==========================================
 // ======== FILTRO DE IP ====================
 // ==========================================
-app.use((req, res, next) => {
-  if (req.path === '/health' || req.path.startsWith('/api/')) {
-    return next();
-  }
-
+// Função auxiliar para validar IP
+function validateIP(req) {
   const xForwardedFor = req.headers['x-forwarded-for'];
   const clientIP = xForwardedFor
     ? xForwardedFor.split(',')[0].trim()
     : req.socket.remoteAddress;
 
   const cleanIP = clientIP.replace('::ffff:', '');
+  return { cleanIP, isAllowed: cleanIP === allowedIP };
+}
 
-  if (cleanIP !== allowedIP) {
+app.use((req, res, next) => {
+  // Permitir health check sem filtro
+  if (req.path === '/health') {
+    return next();
+  }
+
+  // Para todas as outras rotas (incluindo API), validar IP
+  const { cleanIP, isAllowed } = validateIP(req);
+
+  if (!isAllowed) {
     console.log('❌ IP bloqueado:', cleanIP);
     return res.status(403).json({
       error: 'Acesso negado',
@@ -179,29 +187,28 @@ app.post('/api/login', async (req, res) => {
 
     console.log('✅ Senha correta');
 
-    // 7. Gerar device_fingerprint único
+    // 7. Registrar dispositivo (permitir múltiplos dispositivos)
     const deviceFingerprint = deviceToken + '_' + Date.now();
     const userAgent = req.headers['user-agent'] || 'Unknown';
     const truncatedUserAgent = userAgent.substring(0, 95);
     const truncatedDeviceName = userAgent.substring(0, 95);
 
-    // 8. Verificar/Criar dispositivo autorizado (CORRIGIDO)
+    // 8. Verificar se este dispositivo específico já existe
     const { data: existingDevice } = await supabase
       .from('authorized_devices')
       .select('*')
       .eq('user_id', userData.id)
+      .eq('device_token', deviceToken)
       .eq('is_active', true)
-      .maybeSingle(); // 🔧 MUDANÇA: maybeSingle ao invés de single
+      .maybeSingle();
 
     if (existingDevice) {
-      console.log('ℹ️ Dispositivo já existe para usuário:', username);
+      console.log('ℹ️ Dispositivo já registrado - atualizando último acesso');
       
-      // Atualizar informações do dispositivo
+      // Atualizar último acesso
       await supabase
         .from('authorized_devices')
         .update({
-          device_token: deviceToken,
-          device_fingerprint: deviceFingerprint,
           ip_address: cleanIP,
           user_agent: truncatedUserAgent,
           last_login: new Date().toISOString()
@@ -210,26 +217,26 @@ app.post('/api/login', async (req, res) => {
         
       console.log('✅ Dispositivo atualizado');
     } else {
-      // Primeiro login - criar novo dispositivo
+      // Novo dispositivo - adicionar à lista de dispositivos autorizados
       const { error: deviceError } = await supabase
         .from('authorized_devices')
         .insert({
           user_id: userData.id,
           device_token: deviceToken,
-          device_fingerprint: deviceFingerprint, // 🔧 CAMPO OBRIGATÓRIO
+          device_fingerprint: deviceFingerprint,
           device_name: truncatedDeviceName,
           ip_address: cleanIP,
           user_agent: truncatedUserAgent
         });
 
       if (deviceError) {
-        console.error('❌ Erro ao autorizar dispositivo:', deviceError);
+        console.error('❌ Erro ao registrar dispositivo:', deviceError);
         return res.status(500).json({ 
-          error: 'Erro ao autorizar dispositivo',
+          error: 'Erro ao registrar dispositivo',
           details: deviceError.message 
         });
       }
-      console.log('✅ Novo dispositivo autorizado para usuário:', username);
+      console.log('✅ Novo dispositivo registrado para usuário:', username);
     }
 
     // 9. Criar sessão
