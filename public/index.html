@@ -426,11 +426,11 @@
 
     <script>
         // ==========================================
-        // ======== CONFIGURAÇÃO (SEM CREDENCIAIS) ==
+        // ======== CONFIGURAÇÃO ====================
         // ==========================================
         const API_URL = window.location.origin + '/api';
         
-        // URLs dos módulos (altere para suas URLs do Render)
+        // URLs dos módulos
         const MODULES = [
             {
                 id: 'tabela-precos',
@@ -443,8 +443,8 @@
                 id: 'cotacoes-frete',
                 name: 'Cotações de Frete',
                 description: 'Gerencia cotações com histórico e comparação entre transportadoras.',
-                url: null,
-                available: false
+                url: 'https://cotacoes-frete.onrender.com',
+                available: true
             },
             {
                 id: 'vendas',
@@ -453,15 +453,13 @@
                 url: null,
                 available: false
             },
-
-        {
+            {
                 id: 'faturamento',
                 name: 'Pedidos de Faturamento',
                 description: 'Centraliza notas pagas com dashboard de faturamento.',
                 url: null,
                 available: false
             },
-            
             {
                 id: 'gestao-usuarios',
                 name: 'Gestão de Usuários',
@@ -475,6 +473,7 @@
 
         let deviceToken = null;
         let publicIP = null;
+        let sessionCheckInterval = null;
 
         // ==========================================
         // ======== GERAÇÃO DE TOKEN ================
@@ -546,6 +545,7 @@
                 if (data.success && data.session) {
                     sessionStorage.setItem('irUserSession', JSON.stringify(data.session));
                     showDashboard(data.session);
+                    startSessionCheck();
                     showMessage('Login realizado com sucesso!', 'success');
                 }
                 
@@ -557,6 +557,56 @@
                 loginBtn.textContent = 'Entrar';
             }
         });
+
+        // ==========================================
+        // ======== VERIFICAÇÃO PERIÓDICA DE SESSÃO =
+        // ==========================================
+        function startSessionCheck() {
+            // Limpar intervalo anterior se existir
+            if (sessionCheckInterval) {
+                clearInterval(sessionCheckInterval);
+            }
+
+            // Verificar a cada 30 segundos
+            sessionCheckInterval = setInterval(async () => {
+                const sessionInfo = sessionStorage.getItem('irUserSession');
+                if (!sessionInfo) {
+                    stopSessionCheck();
+                    return;
+                }
+
+                const session = JSON.parse(sessionInfo);
+                const isValid = await verifySession(session.sessionToken);
+
+                if (!isValid) {
+                    stopSessionCheck();
+                    forceLogout('Sua sessão expirou ou foi invalidada');
+                }
+            }, 30000); // 30 segundos
+        }
+
+        function stopSessionCheck() {
+            if (sessionCheckInterval) {
+                clearInterval(sessionCheckInterval);
+                sessionCheckInterval = null;
+            }
+        }
+
+        async function verifySession(sessionToken) {
+            try {
+                const response = await fetch(`${API_URL}/verify-session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken })
+                });
+
+                const data = await response.json();
+                return data.valid === true;
+            } catch (error) {
+                console.error('Erro ao verificar sessão:', error);
+                return false;
+            }
+        }
 
         // ==========================================
         // ======== MOSTRAR DASHBOARD ===============
@@ -615,13 +665,26 @@
                     await fetch(`${API_URL}/logout`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ sessionToken: sessionInfo.sessionToken })
+                        body: JSON.stringify({ 
+                            sessionToken: sessionInfo.sessionToken,
+                            deviceToken: sessionInfo.deviceToken
+                        })
                     });
                 }
             } catch (error) {
                 console.error('Erro no logout:', error);
             }
             
+            performLogout();
+        }
+
+        function forceLogout(message) {
+            showMessage(message || 'Sessão encerrada', 'warning');
+            performLogout();
+        }
+
+        function performLogout() {
+            stopSessionCheck();
             sessionStorage.removeItem('irUserSession');
             document.getElementById('dashboardScreen').style.display = 'none';
             document.getElementById('loginScreen').classList.remove('hidden');
@@ -658,17 +721,13 @@
                 const sessionInfo = sessionStorage.getItem('irUserSession');
                 if (sessionInfo) {
                     const session = JSON.parse(sessionInfo);
+                    const isValid = await verifySession(session.sessionToken);
                     
-                    const response = await fetch(`${API_URL}/verify-session`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ sessionToken: session.sessionToken })
-                    });
-
-                    const data = await response.json();
-                    
-                    if (data.valid) {
+                    if (isValid) {
                         showDashboard(session);
+                        startSessionCheck();
+                    } else {
+                        sessionStorage.removeItem('irUserSession');
                     }
                 }
             } catch (error) {
@@ -678,26 +737,20 @@
 
         window.addEventListener('DOMContentLoaded', init);
 
-        // Verificação periódica de sessão
-        setInterval(async () => {
-            const sessionInfo = sessionStorage.getItem('irUserSession');
-            if (sessionInfo) {
-                const session = JSON.parse(sessionInfo);
-                
-                const response = await fetch(`${API_URL}/verify-session`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sessionToken: session.sessionToken })
-                });
-
-                const data = await response.json();
-                
-                if (!data.valid) {
-                    logout();
-                    showMessage('Sessão expirada. Faça login novamente.', 'warning');
+        // Detectar quando a janela fica visível novamente
+        document.addEventListener('visibilitychange', async () => {
+            if (!document.hidden) {
+                const sessionInfo = sessionStorage.getItem('irUserSession');
+                if (sessionInfo) {
+                    const session = JSON.parse(sessionInfo);
+                    const isValid = await verifySession(session.sessionToken);
+                    
+                    if (!isValid) {
+                        forceLogout('Sua sessão expirou');
+                    }
                 }
             }
-        }, 60000); // Verifica a cada 1 minuto
+        });
     </script>
 </body>
 </html>
