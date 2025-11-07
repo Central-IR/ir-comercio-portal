@@ -62,54 +62,54 @@
 
         .login-content {
             width: 100%;
-            max-width: 460px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 140, 0, 0.1);
-            border-radius: 24px;
-            padding: 3rem 2.5rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            max-width: 500px;
+            padding: 0;
         }
 
         .logo-container {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         .logo-img {
-            width: 180px;
-            height: 180px;
+            width: 220px;
+            height: 220px;
             object-fit: contain;
             margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 12px rgba(255, 140, 0, 0.15));
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
             color: var(--text-primary);
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
         input {
             width: 100%;
-            padding: 16px 18px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            background-color: #FFFFFF;
+            padding: 18px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 1.05rem;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.1);
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 16px rgba(255, 140, 0, 0.15);
+            transform: translateY(-1px);
         }
 
         .password-container {
@@ -118,7 +118,7 @@
 
         .toggle-password {
             position: absolute;
-            right: 16px;
+            right: 18px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
@@ -126,8 +126,9 @@
             cursor: pointer;
             font-size: 0.75rem;
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .toggle-password:hover {
@@ -136,16 +137,18 @@
 
         .btn-login {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 8px 24px rgba(255, 140, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn-login:disabled {
@@ -154,16 +157,22 @@
         }
 
         .btn-login:hover:not(:disabled) {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 0 12px 32px rgba(255, 140, 0, 0.5);
         }
 
+        .btn-login:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
         .message {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 1.8rem;
+            font-size: 0.95rem;
             display: none;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .message.show {
@@ -171,31 +180,33 @@
         }
 
         .message.error {
-            background: rgba(239, 68, 68, 0.08);
+            background: rgba(239, 68, 68, 0.12);
             border-left: 4px solid var(--error);
             color: #DC2626;
         }
 
         .message.success {
-            background: rgba(34, 197, 94, 0.08);
+            background: rgba(34, 197, 94, 0.12);
             border-left: 4px solid var(--success);
             color: #15803D;
         }
 
         .message.warning {
-            background: rgba(245, 158, 11, 0.08);
+            background: rgba(245, 158, 11, 0.12);
             border-left: 4px solid var(--warning);
             color: #B45309;
         }
 
         .device-info {
-            margin-top: 2rem;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.02);
-            border-radius: 8px;
-            font-size: 0.75rem;
+            margin-top: 2.5rem;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             text-align: center;
+            border: 1px solid rgba(255, 140, 0, 0.1);
         }
 
         .dashboard-screen {
@@ -343,6 +354,11 @@
             .modules-grid {
                 grid-template-columns: 1fr;
             }
+
+            .logo-img {
+                width: 180px;
+                height: 180px;
+            }
         }
     </style>
 </head>
@@ -434,8 +450,8 @@
         // ======== PERMISSÕES POR USUÁRIO ==========
         // ==========================================
         const USER_PERMISSIONS = {
-            'Roberto': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'controle-frete', 'transportadoras' 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
-            'Rosemeire': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'controle-frete', 'transportadoras' 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'Roberto': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'Rosemeire': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
             'vendas': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
             'vendas2': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
             'financeiro1': ['faturamento', 'receber', 'pagamento', 'documentos'],
