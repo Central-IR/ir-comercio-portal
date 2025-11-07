@@ -8,6 +8,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ==========================================
+// ======== CONFIGURAÇÃO - IP AUTORIZADO ====
+// ==========================================
+const AUTHORIZED_IP = '187.36.172.217';
+
+// ==========================================
 // ======== CONFIGURAÇÃO DO SUPABASE ========
 // ==========================================
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -51,6 +56,27 @@ app.get('/api/ip', (req, res) => {
 });
 
 // ==========================================
+// ======== API - VERIFICAR IP AUTORIZADO ===
+// ==========================================
+app.get('/api/check-ip-access', (req, res) => {
+  const xForwardedFor = req.headers['x-forwarded-for'];
+  const clientIP = xForwardedFor
+    ? xForwardedFor.split(',')[0].trim()
+    : req.socket.remoteAddress;
+
+  const cleanIP = clientIP.replace('::ffff:', '');
+  const isAuthorized = cleanIP === AUTHORIZED_IP;
+
+  console.log(`🔒 Verificação de IP: ${cleanIP} | Autorizado: ${isAuthorized ? '✅' : '❌'}`);
+
+  res.json({ 
+    authorized: isAuthorized,
+    ip: cleanIP,
+    requiredIp: AUTHORIZED_IP
+  });
+});
+
+// ==========================================
 // ======== API - VERIFICAR HORÁRIO =========
 // ==========================================
 app.get('/api/business-hours', (req, res) => {
@@ -89,6 +115,16 @@ app.post('/api/login', async (req, res) => {
       ? xForwardedFor.split(',')[0].trim()
       : req.socket.remoteAddress;
     const cleanIP = clientIP.replace('::ffff:', '');
+
+    // 2.1 Verificar se o IP está autorizado
+    if (cleanIP !== AUTHORIZED_IP) {
+      console.log('❌ IP não autorizado tentando fazer login:', cleanIP);
+      await logLoginAttempt(username, false, 'IP não autorizado', deviceToken, cleanIP);
+      return res.status(403).json({ 
+        error: 'Acesso negado',
+        message: 'Seu IP não está autorizado a acessar este sistema' 
+      });
+    }
 
     // 3. Buscar usuário (case-insensitive)
     const usernameSearch = username.toLowerCase().trim();
@@ -462,6 +498,7 @@ app.listen(PORT, () => {
   console.log('='.repeat(50));
   console.log(`🚀 Portal Central rodando na porta ${PORT}`);
   console.log(`💾 Supabase configurado: ${supabaseUrl ? 'Sim ✅' : 'Não ❌'}`);
+  console.log(`🔒 IP autorizado: ${AUTHORIZED_IP}`);
   console.log('⏰ Horário comercial: Seg-Sex, 8h-18h (apenas não-admin)');
   console.log('='.repeat(50));
 });
