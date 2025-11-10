@@ -497,13 +497,13 @@
         // ======== PERMISSÕES POR USUÁRIO ==========
         // ==========================================
         const USER_PERMISSIONS = {
-            'Roberto': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
-            'Rosemeire': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
-            'vendas': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
-            'vendas2': ['pregões', 'compra', 'tabela-precos', 'cotacoes-frete', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
-            'financeiro1': ['faturamento', 'receber', 'pagamento', 'documentos'],
-            'financeiro2': ['faturamento', 'receber', 'pagamento', 'documentos'],
-            'almox': ['cotacoes-frete', 'controle-frete', 'transportadoras', 'estoque'],
+            'Roberto': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'Rosemeire': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'vendas': ['pregões', 'compra', 'tabela-precos', 'fornecedores' 'cotacoes-frete', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
+            'vendas2': ['pregões', 'compra', 'tabela-precos', 'fornecedores' 'cotacoes-frete', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
+            'financeiro1': ['pregões', 'faturamento', 'receber', 'pagamento', 'documentos'],
+            'financeiro2': ['pregões', 'faturamento', 'receber', 'pagamento', 'documentos'],
+            'almox': ['cotacoes-frete', 'controle-frete', 'transportadoras', 'faturamento', 'estoque'],
         };
 
         // URLs dos módulos
@@ -535,6 +535,13 @@
                 description: 'Consulta e atualiza preços de produtos e serviços.',
                 url: 'https://tabela-precos-udyp.onrender.com',
                 available: true
+            },
+            {
+                id: 'fornecedores',
+                name: 'Fornecedores',
+                description: 'Catálogos e Informações gerais de empresas parceiras',
+                url: null,
+                available: false
             },
             {
                 id: 'cotacoes-frete',
