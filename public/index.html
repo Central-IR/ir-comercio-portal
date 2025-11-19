@@ -497,8 +497,8 @@
         // ======== PERMISSÕES POR USUÁRIO ==========
         // ==========================================
         const USER_PERMISSIONS = {
-            'Roberto': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
-            'Rosemeire': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'Roberto': ['usuários', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'Rosemeire': ['usuários', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
             'vendas': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
             'vendas2': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
             'financeiro1': ['pregões', 'faturamento', 'receber', 'pagamento', 'documentos'],
@@ -508,6 +508,14 @@
 
         // URLs dos módulos
         const MODULES = [
+ {
+                id: 'usuários',
+                name: 'Gestão de Usuários',
+                description: 'Controle de acessos e permissões',
+                url: null,
+                available: false
+            },
+            
             {
                 id: 'vendas',
                 name: 'Painel de Vendas',
