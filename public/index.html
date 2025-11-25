@@ -6,13 +6,9 @@
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
     <title>Portal</title>
     <style>
-        /* ============================================
-           VARIÁVEIS BASE (DARK THEME - PADRÃO)
-           ============================================ */
         :root {
             --primary: #ff5100;
             --primary-dark: #E67E00;
-            --primary-light: #FF6A1A;
             --bg-primary: #000000;
             --bg-secondary:  #0A0A0A;
             --bg-card: #1A1A1A;
@@ -27,9 +23,6 @@
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* ============================================
-           LIGHT THEME (quando navegador está em light mode)
-           ============================================ */
         @media (prefers-color-scheme: light) {
             :root {
                 --bg-primary: #FFFFFF;
@@ -44,11 +37,7 @@
             }
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
@@ -72,16 +61,9 @@
             z-index: 0;
         }
 
-        .container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            z-index: 1;
-        }
+        .container { width: 100%; height: 100%; position: relative; z-index: 1; }
 
-        /* ============================================
-           BARRA DE NAVEGAÇÃO SUPERIOR
-           ============================================ */
+        /* BARRA DE NAVEGAÇÃO */
         .top-navbar {
             position: fixed;
             top: 0;
@@ -94,9 +76,7 @@
             display: none;
         }
 
-        .top-navbar.show {
-            display: block;
-        }
+        .top-navbar.show { display: block; }
 
         .navbar-content {
             display: flex;
@@ -112,24 +92,14 @@
             gap: 1rem;
             cursor: pointer;
             transition: opacity 0.3s ease;
-        }
-
-        .navbar-brand:hover {
-            opacity: 0.8;
-        }
-
-        .navbar-logo {
-            height: 45px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .navbar-title {
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--text-primary);
-            display: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+
+        .navbar-brand:hover { opacity: 0.8; }
 
         .navbar-menu {
             display: flex;
@@ -141,18 +111,9 @@
             padding: 0 1rem;
         }
 
-        .navbar-menu::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .navbar-menu::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .navbar-menu::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 2px;
-        }
+        .navbar-menu::-webkit-scrollbar { height: 4px; }
+        .navbar-menu::-webkit-scrollbar-track { background: transparent; }
+        .navbar-menu::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
 
         .nav-item {
             padding: 0.6rem 1.2rem;
@@ -175,21 +136,9 @@
             transform: translateY(-2px);
         }
 
-        .nav-item.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .nav-item.disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .nav-item.disabled:hover {
-            transform: none;
-            background: transparent;
-            color: var(--text-secondary);
-        }
+        .nav-item.active { background: var(--primary); color: white; }
+        .nav-item.disabled { opacity: 0.4; cursor: not-allowed; }
+        .nav-item.disabled:hover { transform: none; background: transparent; color: var(--text-secondary); }
 
         .navbar-actions {
             display: flex;
@@ -208,10 +157,7 @@
             color: var(--text-secondary);
         }
 
-        .user-badge-name {
-            color: var(--primary);
-            font-weight: 600;
-        }
+        .user-badge-name { color: var(--primary); font-weight: 600; }
 
         .navbar-logout {
             padding: 0.6rem 1.2rem;
@@ -226,14 +172,9 @@
             text-transform: uppercase;
         }
 
-        .navbar-logout:hover {
-            background: var(--error);
-            color: white;
-        }
+        .navbar-logout:hover { background: var(--error); color: white; }
 
-        /* ============================================
-           TELA DE LOGIN
-           ============================================ */
+        /* LOGIN */
         .login-screen {
             width: 100%;
             min-height: 100vh;
@@ -243,11 +184,7 @@
             padding: 2rem;
         }
 
-        .login-content {
-            width: 100%;
-            max-width: 500px;
-            padding: 0;
-        }
+        .login-content { width: 100%; max-width: 500px; padding: 0; }
 
         .logo-container {
             text-align: center;
@@ -268,28 +205,15 @@
             transition: opacity 0.3s ease;
         }
 
-        /* Logo escura visível apenas no tema escuro */
-        .logo-dark {
-            display: block;
-        }
-
-        .logo-light {
-            display: none;
-        }
+        .logo-dark { display: block; }
+        .logo-light { display: none; }
 
         @media (prefers-color-scheme: light) {
-            .logo-dark {
-                display: none;
-            }
-            
-            .logo-light {
-                display: block;
-            }
+            .logo-dark { display: none; }
+            .logo-light { display: block; }
         }
 
-        .form-group {
-            margin-bottom: 1.8rem;
-        }
+        .form-group { margin-bottom: 1.8rem; }
 
         label {
             display: block;
@@ -319,9 +243,7 @@
             transform: translateY(-1px);
         }
 
-        .password-container {
-            position: relative;
-        }
+        .password-container { position: relative; }
 
         .toggle-password {
             position: absolute;
@@ -340,9 +262,7 @@
             margin: 0;
         }
 
-        .toggle-password:hover {
-            color: var(--primary);
-        }
+        .toggle-password:hover { color: var(--primary); }
 
         .btn-login {
             width: 100%;
@@ -360,19 +280,14 @@
             letter-spacing: 1px;
         }
 
-        .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .btn-login:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 12px 32px rgba(255, 81, 0, 0.5);
         }
 
-        .btn-login:active:not(:disabled) {
-            transform: translateY(-1px);
-        }
+        .btn-login:active:not(:disabled) { transform: translateY(-1px); }
 
         .message {
             padding: 14px 18px;
@@ -384,109 +299,50 @@
             box-shadow: 0 4px 12px var(--shadow);
         }
 
-        .message.show {
-            display: block;
-        }
+        .message.show { display: block; }
+        .message.error { background: rgba(239, 68, 68, 0.15); border-left: 4px solid var(--error); color: #DC2626; }
+        .message.success { background: rgba(34, 197, 94, 0.15); border-left: 4px solid var(--success); color: #15803D; }
+        .message.warning { background: rgba(245, 158, 11, 0.15); border-left: 4px solid var(--warning); color: #B45309; }
 
-        .message.error {
-            background: rgba(239, 68, 68, 0.15);
-            border-left: 4px solid var(--error);
-            color: #DC2626;
-        }
+        /* DASHBOARD */
+        .dashboard-screen { display: none; min-height: 100vh; padding-top: 70px; }
 
-        .message.success {
-            background: rgba(34, 197, 94, 0.15);
-            border-left: 4px solid var(--success);
-            color: #15803D;
-        }
-
-        .message.warning {
-            background: rgba(245, 158, 11, 0.15);
-            border-left: 4px solid var(--warning);
-            color: #B45309;
-        }
-
-        /* ============================================
-           DASHBOARD
-           ============================================ */
-        .dashboard-screen {
-            display: none;
-            min-height: 100vh;
-            padding-top: 70px; /* Espaço para a navbar */
-        }
-
-        .dashboard-header {
+        .dashboard-intro {
             background: var(--bg-card);
-            padding: 2rem 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--card-shadow);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
         }
 
-        .user-welcome {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .header-logo {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-        }
-
-        .welcome-text {
-            font-size: 1.2rem;
+        .intro-title {
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
         }
 
-        .user-info {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .user-name {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .logout-btn {
-            padding: 0.9rem 1.8rem;
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error);
-            border: 1px solid var(--error);
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: var(--error);
-            color: white;
-            transform: translateY(-2px);
-        }
+        .intro-greeting { font-size: 1rem; color: var(--text-secondary); }
+        .intro-greeting-time { color: var(--text-primary); font-weight: 600; }
+        .intro-greeting-name { color: var(--primary); font-weight: 600; }
 
         .dashboard-content {
-            padding: 3rem 1.5rem;
-            max-width: 1400px;
+            padding: 0 2.5rem 3rem;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.5rem;
         }
 
         .module-card {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 1.8rem 2rem;
+            padding: 2rem;
             cursor: pointer;
             transition: all 0.4s ease;
             border: 1px solid var(--border-color);
@@ -500,24 +356,18 @@
             box-shadow: 0 12px 32px rgba(255, 81, 0, 0.2);
         }
 
-        .module-card.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .module-card.disabled:hover {
-            transform: none;
-        }
+        .module-card.disabled { opacity: 0.6; cursor: not-allowed; }
+        .module-card.disabled:hover { transform: none; }
 
         .module-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 0.8rem;
         }
 
         .module-description {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 1rem;
@@ -541,78 +391,113 @@
             color: #6B7280;
         }
 
-        .hidden {
-            display: none !important;
+        .hidden { display: none !important; }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            animation: fadeIn 0.2s ease forwards;
         }
 
-        /* ============================================
-           RESPONSIVIDADE
-           ============================================ */
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; } }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 60px var(--shadow);
+            border: 1px solid var(--border-color);
+            transform: scale(0.9);
+            animation: scaleIn 0.2s ease forwards;
+        }
+
+        @keyframes scaleIn { to { transform: scale(1); } }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .modal-message {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .modal-actions button {
+            margin: 0;
+            min-width: 100px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .modal-actions .secondary { background: #4B5563; color: white; }
+        .modal-actions .secondary:hover { opacity: 0.9; }
+        .modal-actions .danger { background: var(--error); color: white; }
+        .modal-actions .danger:hover { opacity: 0.9; }
+
+        /* RESPONSIVIDADE */
         @media (max-width: 1024px) {
-            .navbar-title {
-                display: none;
-            }
-            
-            .user-badge {
-                display: none;
-            }
+            .user-badge { display: none; }
         }
 
         @media (max-width: 768px) {
-            .dashboard-header {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .modules-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .logo-img {
-                height: 150px;
-            }
-
-            .navbar-content {
-                padding: 0.6rem 1rem;
-            }
-
-            .navbar-menu {
-                gap: 0.3rem;
-                padding: 0 0.5rem;
-            }
-
-            .nav-item {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.75rem;
-            }
-
-            .navbar-logout {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.75rem;
-            }
+            .modules-grid { grid-template-columns: 1fr; }
+            .logo-img { height: 150px; }
+            .navbar-content { padding: 0.6rem 1rem; }
+            .navbar-menu { gap: 0.3rem; padding: 0 0.5rem; }
+            .nav-item { padding: 0.5rem 0.8rem; font-size: 0.75rem; }
+            .navbar-logout { padding: 0.5rem 0.8rem; font-size: 0.75rem; }
+            .navbar-brand { font-size: 0.85rem; }
+            .dashboard-intro { padding: 1.5rem; }
+            .intro-title { font-size: 1.3rem; }
+            .intro-greeting { font-size: 0.9rem; }
+            .dashboard-content { padding: 0 1rem 2rem; }
+            .modal-actions { flex-direction: column-reverse; }
+            .modal-actions button { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <!-- BARRA DE NAVEGAÇÃO SUPERIOR -->
     <nav class="top-navbar" id="topNavbar">
         <div class="navbar-content">
-            <div class="navbar-brand" onclick="showHomeDashboard()">
-                <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png" 
-                     alt="Logo" 
-                     class="navbar-logo logo-dark"
-                     onerror="this.style.display='none'">
-                <img src="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS.png" 
-                     alt="Logo" 
-                     class="navbar-logo logo-light"
-                     onerror="this.style.display='none'">
-                <span class="navbar-title">I.R. COMÉRCIO</span>
-            </div>
-            
-            <div class="navbar-menu" id="navbarMenu">
-                <!-- Itens de menu serão inseridos aqui -->
-            </div>
-            
+            <div class="navbar-brand" onclick="showHomeDashboard()">HOME</div>
+            <div class="navbar-menu" id="navbarMenu"></div>
             <div class="navbar-actions">
                 <div class="user-badge">
                     <span id="navUserGreeting"></span>
@@ -624,89 +509,47 @@
     </nav>
 
     <div class="container">
-        <!-- TELA DE LOGIN -->
         <div id="loginScreen" class="login-screen">
             <div class="login-content">
                 <div class="logo-container">
-                    <!-- Logo para tema escuro -->
-                    <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png" 
-                         alt="Logo I.R. Comércio" 
-                         class="logo-img logo-dark" 
-                         onerror="this.style.display='none'">
-                    <!-- Logo para tema claro -->
-                    <img src="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS.png" 
-                         alt="Logo I.R. Comércio" 
-                         class="logo-img logo-light" 
-                         onerror="this.style.display='none'">
+                    <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png" alt="Logo" class="logo-img logo-dark" onerror="this.style.display='none'">
+                    <img src="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS.png" alt="Logo" class="logo-img logo-light" onerror="this.style.display='none'">
                 </div>
-
                 <div id="messageBox" class="message"></div>
-
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="username">Usuário</label>
-                        <input type="text" 
-                               id="username" 
-                               name="username" 
-                               required 
-                               autofocus 
-                               placeholder="Digite seu usuário"
-                               autocomplete="username">
+                        <input type="text" id="username" required autofocus placeholder="Digite seu usuário" autocomplete="username">
                     </div>
-
                     <div class="form-group">
                         <label for="password">Senha</label>
                         <div class="password-container">
-                            <input type="password" 
-                                   id="password" 
-                                   name="password" 
-                                   required 
-                                   placeholder="Digite sua senha"
-                                   autocomplete="current-password">
-                            <button type="button" 
-                                    class="toggle-password" 
-                                    onclick="togglePassword()">MOSTRAR</button>
+                            <input type="password" id="password" required placeholder="Digite sua senha" autocomplete="current-password">
+                            <button type="button" class="toggle-password" onclick="togglePassword()">MOSTRAR</button>
                         </div>
                     </div>
-
-                    <button type="submit" class="btn-login" id="loginBtn">
-                        Entrar
-                    </button>
+                    <button type="submit" class="btn-login" id="loginBtn">Entrar</button>
                 </form>
             </div>
         </div>
 
-        <!-- DASHBOARD -->
         <div id="dashboardScreen" class="dashboard-screen">
-            <div class="dashboard-header">
-                <div class="user-welcome"> 
-                    <div>
-                        <div class="welcome-text">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
-                        <div class="user-info">
-                            <span id="greetingText"></span>, <span class="user-name" id="userName"></span>
-                        </div>
-                    </div>
-                </div>
-                <button class="logout-btn" onclick="logout()">Sair</button>
+            <div class="dashboard-intro">
+                <h1 class="intro-title">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</h1>
+                <p class="intro-greeting">
+                    <span class="intro-greeting-time" id="greetingText"></span>, 
+                    <span class="intro-greeting-name" id="userName"></span>
+                </p>
             </div>
-
             <div class="dashboard-content">
-                <div class="modules-grid" id="modulesGrid">
-                    <!-- Módulos serão inseridos aqui -->
-                </div>
+                <div class="modules-grid" id="modulesGrid"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // ==========================================
-        // ======== CONFIGURAÇÃO ====================
-        // ==========================================
         const API_URL = window.location.origin + '/api';
 
-        // ==========================================
-        // ======== PERMISSÕES POR USUÁRIO ==========
-        // ==========================================
         const USER_PERMISSIONS = {
             'Roberto': ['usuários', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
             'Rosemeire': ['usuários', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
@@ -717,106 +560,21 @@
             'almox': ['cotacoes-frete', 'controle-frete', 'transportadoras', 'faturamento', 'estoque'],
         };
 
-        // URLs dos módulos
         const MODULES = [
-            {
-                id: 'usuários',
-                name: 'Usuários',
-                description: 'Controle de acessos e permissões',
-                url: null,
-                available: false
-            },
-            {
-                id: 'vendas',
-                name: 'Vendas',
-                description: 'Faturamento e valores de comissões.',
-                url: null,
-                available: false
-            },
-            {
-                id: 'pregões',
-                name: 'Pregões',
-                description: 'Procedimentos e documentação relacionados aos processos de licitação',
-                url: null,
-                available: false
-            },
-            {
-                id: 'compra',
-                name: 'Compras',
-                description: 'Registro e Ordens de Compra',
-                url: 'https://ir-comercio.github.io/ordem-compra/public/',
-                available: true
-            },
-            {
-                id: 'tabela-precos',
-                name: 'Preços',
-                description: 'Consulta e atualiza preços de produtos e serviços.',
-                url: 'https://tabela-precos-udyp.onrender.com',
-                available: true
-            },
-            {
-                id: 'fornecedores',
-                name: 'Fornecedores',
-                description: 'Catálogos e Informações gerais de empresas parceiras',
-                url: null,
-                available: false
-            },
-            {
-                id: 'cotacoes-frete',
-                name: 'Cotações',
-                description: 'Gerencia cotações com histórico e comparação entre transportadoras.',
-                url: 'https://cotacoes-frete-aikc.onrender.com',
-                available: true
-            },
-            {
-                id: 'controle-frete',
-                name: 'Frete',
-                description: 'Registro e monitoramento de expedição',
-                url: 'https://controle-frete.onrender.com',
-                available: true
-            },
-            {
-                id: 'transportadoras',
-                name: 'Transportadoras',
-                description: 'Informações gerais de transportadoras parceiras',
-                url: null,
-                available: false
-            },
-            {
-                id: 'faturamento',
-                name: 'Faturamento',
-                description: 'Pedidos de Faturamento para o Setor Financeiro.',
-                url: null,
-                available: false
-            },
-            {
-                id: 'receber',
-                name: 'Receber',
-                description: 'Pagamentos pendentes para empresa.',
-                url: 'https://contas-receber-kkf9.onrender.com',
-                available: true
-            },
-            {
-                id: 'pagamento',
-                name: 'Pagar',
-                description: 'Compromissos financeiros da empresa.',
-                url: 'https://ir-comercio.github.io/contas-a-pagar/',
-                available: true
-            },
-            {
-                id: 'estoque',
-                name: 'Estoque',
-                description: 'Gestão e processos relacionados a entrada, saída e inventário de materiais e suprimentos.',
-                url: null,
-                available: false
-            },
-            {
-                id: 'documentos',
-                name: 'Documentos',
-                description: 'Organização e armazenamento de documentos e pastas',
-                url: null,
-                available: false
-            }
+            { id: 'usuários', name: 'Usuários', description: 'Controle de acessos e permissões', url: null, available: false },
+            { id: 'vendas', name: 'Vendas', description: 'Faturamento e valores de comissões.', url: null, available: false },
+            { id: 'pregões', name: 'Pregões', description: 'Procedimentos e documentação relacionados aos processos de licitação', url: null, available: false },
+            { id: 'compra', name: 'Compras', description: 'Registro e Ordens de Compra', url: 'https://ir-comercio.github.io/ordem-compra/public/', available: true },
+            { id: 'tabela-precos', name: 'Preços', description: 'Consulta e atualiza preços de produtos e serviços.', url: 'https://tabela-precos-udyp.onrender.com', available: true },
+            { id: 'fornecedores', name: 'Fornecedores', description: 'Catálogos e Informações gerais de empresas parceiras', url: null, available: false },
+            { id: 'cotacoes-frete', name: 'Cotações', description: 'Gerencia cotações com histórico e comparação entre transportadoras.', url: 'https://cotacoes-frete-aikc.onrender.com', available: true },
+            { id: 'controle-frete', name: 'Frete', description: 'Registro e monitoramento de expedição', url: 'https://controle-frete.onrender.com', available: true },
+            { id: 'transportadoras', name: 'Transportadoras', description: 'Informações gerais de transportadoras parceiras', url: null, available: false },
+            { id: 'faturamento', name: 'Faturamento', description: 'Pedidos de Faturamento para o Setor Financeiro.', url: null, available: false },
+            { id: 'receber', name: 'Receber', description: 'Pagamentos pendentes para empresa.', url: 'https://contas-receber-kkf9.onrender.com', available: true },
+            { id: 'pagamento', name: 'Pagar', description: 'Compromissos financeiros da empresa.', url: 'https://ir-comercio.github.io/contas-a-pagar/', available: true },
+            { id: 'estoque', name: 'Estoque', description: 'Gestão e processos relacionados a entrada, saída e inventário de materiais e suprimentos.', url: null, available: false },
+            { id: 'documentos', name: 'Documentos', description: 'Organização e armazenamento de documentos e pastas', url: null, available: false }
         ];
 
         let deviceToken = null;
@@ -824,28 +582,42 @@
         let sessionCheckInterval = null;
         let currentSessionInfo = null;
 
-        // ==========================================
-        // ======== SAUDAÇÃO BASEADA NO HORÁRIO =====
-        // ==========================================
         function getGreeting() {
-            const brasiliaTime = new Date().toLocaleString('en-US', { 
-                timeZone: 'America/Sao_Paulo',
-                hour12: false 
-            });
+            const brasiliaTime = new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo', hour12: false });
             const hour = new Date(brasiliaTime).getHours();
-            
-            if (hour >= 0 && hour < 12) {
-                return 'Bom dia';
-            } else if (hour >= 12 && hour < 18) {
-                return 'Boa tarde';
-            } else {
-                return 'Boa noite';
-            }
+            if (hour >= 0 && hour < 12) return 'Bom dia';
+            else if (hour >= 12 && hour < 18) return 'Boa tarde';
+            else return 'Boa noite';
         }
 
-        // ==========================================
-        // ======== GERAÇÃO DE TOKEN ================
-        // ==========================================
+        function showConfirm(message, options = {}) {
+            return new Promise((resolve) => {
+                const { title = 'Confirmação', confirmText = 'Confirmar', cancelText = 'Cancelar', type = 'warning' } = options;
+                const modalHTML = `
+                    <div class="modal-overlay" id="confirmModal">
+                        <div class="modal-content">
+                            <div class="modal-header"><h3 class="modal-title">${title}</h3></div>
+                            <p class="modal-message">${message}</p>
+                            <div class="modal-actions">
+                                <button class="secondary" id="modalCancelBtn">${cancelText}</button>
+                                <button class="${type === 'warning' ? 'danger' : 'success'}" id="modalConfirmBtn">${confirmText}</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                const modal = document.getElementById('confirmModal');
+                const confirmBtn = document.getElementById('modalConfirmBtn');
+                const cancelBtn = document.getElementById('modalCancelBtn');
+                const closeModal = (result) => {
+                    modal.style.animation = 'fadeOut 0.2s ease forwards';
+                    setTimeout(() => { modal.remove(); resolve(result); }, 200);
+                };
+                confirmBtn.addEventListener('click', () => closeModal(true));
+                cancelBtn.addEventListener('click', () => closeModal(false));
+            });
+        }
+
         function getOrCreateDeviceToken() {
             let token = localStorage.getItem('irDeviceToken');
             if (!token) {
@@ -855,9 +627,6 @@
             return token;
         }
 
-        // ==========================================
-        // ======== OBTER IP PÚBLICO ================
-        // ==========================================
         async function getPublicIP() {
             try {
                 const response = await fetch(`${API_URL}/ip`);
@@ -869,9 +638,6 @@
             }
         }
 
-        // ==========================================
-        // ======== MOSTRAR MENSAGEM ================
-        // ==========================================
         function showMessage(message, type = 'error') {
             const messageBox = document.getElementById('messageBox');
             messageBox.textContent = message;
@@ -879,93 +645,51 @@
             setTimeout(() => messageBox.classList.remove('show'), 5000);
         }
 
-        // ==========================================
-        // ======== CRIAR NAVBAR ====================
-        // ==========================================
         function createNavbar(sessionInfo) {
             const navbarMenu = document.getElementById('navbarMenu');
             navbarMenu.innerHTML = '';
-            
             const userPermissions = USER_PERMISSIONS[sessionInfo.username] || [];
-            
-            // Adicionar item HOME
-            const homeItem = document.createElement('button');
-            homeItem.className = 'nav-item';
-            homeItem.textContent = 'HOME';
-            homeItem.onclick = () => showHomeDashboard();
-            navbarMenu.appendChild(homeItem);
-            
-            // Adicionar módulos permitidos
             MODULES.forEach(module => {
                 if (!userPermissions.includes(module.id)) return;
-                
                 const navItem = document.createElement('button');
                 navItem.className = 'nav-item' + (!module.available ? ' disabled' : '');
                 navItem.textContent = module.name;
                 navItem.title = module.description;
-                
                 if (module.available && module.url) {
                     navItem.onclick = () => openModule(module, sessionInfo);
                 }
-                
                 navbarMenu.appendChild(navItem);
             });
-            
-            // Atualizar informações do usuário
             document.getElementById('navUserGreeting').textContent = getGreeting();
             document.getElementById('navUserName').textContent = sessionInfo.name;
         }
 
-        // ==========================================
-        // ======== MOSTRAR DASHBOARD HOME ==========
-        // ==========================================
         function showHomeDashboard() {
             if (!currentSessionInfo) return;
-            
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboardScreen').style.display = 'block';
             document.getElementById('topNavbar').classList.add('show');
-            
-            // Remover classe active de todos os itens
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Adicionar active ao HOME
-            document.querySelector('.nav-item').classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         }
 
-        // ==========================================
-        // ======== LOGIN ===========================
-        // ==========================================
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const username = document.getElementById('username').value.toLowerCase().trim();
             const password = document.getElementById('password').value;
             const loginBtn = document.getElementById('loginBtn');
-            
             loginBtn.disabled = true;
             loginBtn.textContent = 'Autenticando...';
-            
             try {
                 const response = await fetch(`${API_URL}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username,
-                        password,
-                        deviceToken
-                    })
+                    body: JSON.stringify({ username, password, deviceToken })
                 });
-
                 const data = await response.json();
-
                 if (!response.ok) {
                     showMessage(data.message || data.error || 'Erro ao fazer login', 'error');
                     return;
                 }
-
                 if (data.success && data.session) {
                     sessionStorage.setItem('irUserSession', JSON.stringify(data.session));
                     currentSessionInfo = data.session;
@@ -974,7 +698,6 @@
                     startSessionCheck();
                     showMessage('Login realizado com sucesso!', 'success');
                 }
-                
             } catch (error) {
                 console.error('Erro no login:', error);
                 showMessage('Erro ao realizar login. Tente novamente.', 'error');
@@ -984,36 +707,19 @@
             }
         });
 
-        // ==========================================
-        // ======== VERIFICAÇÃO PERIÓDICA DE SESSÃO =
-        // ==========================================
         function startSessionCheck() {
-            if (sessionCheckInterval) {
-                clearInterval(sessionCheckInterval);
-            }
-
+            if (sessionCheckInterval) clearInterval(sessionCheckInterval);
             sessionCheckInterval = setInterval(async () => {
                 const sessionInfo = sessionStorage.getItem('irUserSession');
-                if (!sessionInfo) {
-                    stopSessionCheck();
-                    return;
-                }
-
+                if (!sessionInfo) { stopSessionCheck(); return; }
                 const session = JSON.parse(sessionInfo);
                 const isValid = await verifySession(session.sessionToken);
-
-                if (!isValid) {
-                    stopSessionCheck();
-                    forceLogout('Sua sessão expirou ou foi invalidada');
-                }
+                if (!isValid) { stopSessionCheck(); forceLogout('Sua sessão expirou ou foi invalidada'); }
             }, 30000);
         }
 
         function stopSessionCheck() {
-            if (sessionCheckInterval) {
-                clearInterval(sessionCheckInterval);
-                sessionCheckInterval = null;
-            }
+            if (sessionCheckInterval) { clearInterval(sessionCheckInterval); sessionCheckInterval = null; }
         }
 
         async function verifySession(sessionToken) {
@@ -1023,7 +729,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ sessionToken })
                 });
-
                 const data = await response.json();
                 return data.valid === true;
             } catch (error) {
@@ -1032,26 +737,18 @@
             }
         }
 
-        // ==========================================
-        // ======== MOSTRAR DASHBOARD ===============
-        // ==========================================
         function showDashboard(sessionInfo) {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboardScreen').style.display = 'block';
             document.getElementById('topNavbar').classList.add('show');
-            
             document.getElementById('greetingText').textContent = getGreeting();
             document.getElementById('userName').textContent = sessionInfo.name;
-            
             const modulesGrid = document.getElementById('modulesGrid');
             modulesGrid.innerHTML = '';
-            
             const userPermissions = USER_PERMISSIONS[sessionInfo.username] || [];
-            
             MODULES.forEach(module => {
                 if (!userPermissions.includes(module.id)) return;
                 if (module.adminOnly && !sessionInfo.isAdmin) return;
-                
                 const card = document.createElement('div');
                 card.className = 'module-card' + (!module.available ? ' disabled' : '');
                 card.innerHTML = `
@@ -1059,18 +756,11 @@
                     <div class="module-description">${module.description}</div>
                     <span class="module-status ${module.available ? '' : 'soon'}">${module.available ? 'Disponível' : 'Em breve'}</span>
                 `;
-                
-                if (module.available && module.url) {
-                    card.onclick = () => openModule(module, sessionInfo);
-                }
-                
+                if (module.available && module.url) card.onclick = () => openModule(module, sessionInfo);
                 modulesGrid.appendChild(card);
             });
         }
 
-        // ==========================================
-        // ======== ABRIR MÓDULO ====================
-        // ==========================================
         function openModule(module, sessionInfo) {
             const params = new URLSearchParams({
                 sessionToken: sessionInfo.sessionToken,
@@ -1079,32 +769,27 @@
                 userId: sessionInfo.userId,
                 ip: sessionInfo.ip
             });
-            
             window.location.href = `${module.url}?${params.toString()}`;
         }
 
-        // ==========================================
-        // ======== LOGOUT ==========================
-        // ==========================================
         async function logout() {
-            if (!confirm('Deseja realmente sair?')) return;
-            
+            const confirmed = await showConfirm('Deseja realmente sair?', {
+                title: 'Sair do Sistema',
+                confirmText: 'Sair',
+                cancelText: 'Cancelar',
+                type: 'warning'
+            });
+            if (!confirmed) return;
             try {
                 const sessionInfo = JSON.parse(sessionStorage.getItem('irUserSession'));
                 if (sessionInfo) {
                     await fetch(`${API_URL}/logout`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            sessionToken: sessionInfo.sessionToken,
-                            deviceToken: sessionInfo.deviceToken
-                        })
+                        body: JSON.stringify({ sessionToken: sessionInfo.sessionToken, deviceToken: sessionInfo.deviceToken })
                     });
                 }
-            } catch (error) {
-                console.error('Erro no logout:', error);
-            }
-            
+            } catch (error) { console.error('Erro no logout:', error); }
             performLogout();
         }
 
@@ -1123,9 +808,6 @@
             document.getElementById('password').value = '';
         }
 
-        // ==========================================
-        // ======== TOGGLE PASSWORD =================
-        // ==========================================
         function togglePassword() {
             const input = document.getElementById('password');
             const btn = document.querySelector('.toggle-password');
@@ -1138,19 +820,14 @@
             }
         }
 
-        // ==========================================
-        // ======== INICIALIZAÇÃO ===================
-        // ==========================================
         async function init() {
             try {
                 deviceToken = getOrCreateDeviceToken();
                 publicIP = await getPublicIP();
-                
                 const sessionInfo = sessionStorage.getItem('irUserSession');
                 if (sessionInfo) {
                     const session = JSON.parse(sessionInfo);
                     const isValid = await verifySession(session.sessionToken);
-                    
                     if (isValid) {
                         currentSessionInfo = session;
                         createNavbar(session);
@@ -1173,10 +850,7 @@
                 if (sessionInfo) {
                     const session = JSON.parse(sessionInfo);
                     const isValid = await verifySession(session.sessionToken);
-                    
-                    if (!isValid) {
-                        forceLogout('Sua sessão expirou');
-                    }
+                    if (!isValid) forceLogout('Sua sessão expirou');
                 }
             }
         });
