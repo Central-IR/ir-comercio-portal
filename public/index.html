@@ -424,8 +424,6 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            overflow: hidden;
-            height: calc(100vh - 140px);
         }
 
         .welcome-container {
@@ -433,41 +431,21 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100%;
+            min-height: 70vh;
             padding: 4rem 2rem;
             text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .welcome-greeting {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-        }
-
-        .welcome-user-name {
-            color: var(--primary);
-            font-weight: 700;
         }
 
         .welcome-instruction {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--text-secondary);
         }
 
         .iframe-container {
             display: none;
             width: 100%;
-            height: 100%;
+            min-height: calc(100vh - 140px);
             background: var(--bg-primary);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 2;
         }
 
         .iframe-container.active {
@@ -520,16 +498,12 @@
                 height: 150px;
             }
 
-            .welcome-greeting {
-                font-size: 1.5rem;
-            }
-
             .welcome-instruction {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
             
-            .dashboard-content {
-                height: calc(100vh - 180px);
+            .iframe-container {
+                min-height: calc(100vh - 180px);
             }
         }
     </style>
@@ -609,9 +583,6 @@
             <div class="dashboard-content" id="dashboardContent">
                 <!-- Tela de boas-vindas -->
                 <div id="welcomeScreen" class="welcome-container">
-                    <div class="welcome-greeting">
-                        <span id="greetingTextWelcome"></span>, <span class="welcome-user-name" id="userNameWelcome"></span>
-                    </div>
                     <div class="welcome-instruction">Selecione um módulo para começar</div>
                 </div>
 
@@ -913,10 +884,6 @@
             document.getElementById('greetingText').textContent = greeting;
             document.getElementById('userName').textContent = sessionInfo.name;
             
-            // Preenche informações na tela de boas-vindas
-            document.getElementById('greetingTextWelcome').textContent = greeting;
-            document.getElementById('userNameWelcome').textContent = sessionInfo.name;
-            
             // Adicionar módulos como abas clicáveis no cabeçalho
             const tabsContainer = document.getElementById('tabsContainer');
             const userPermissions = USER_PERMISSIONS[sessionInfo.username] || [];
@@ -1021,7 +988,6 @@
             // Esconde a tela de boas-vindas quando um módulo estiver ativo
             const welcomeScreen = document.getElementById('welcomeScreen');
             welcomeScreen.style.display = 'none';
-            welcomeScreen.style.zIndex = '1';
 
             activeTabId = tabId;
         }
@@ -1053,9 +1019,7 @@
                 if (openTabs.length > 0) {
                     switchToTab(openTabs[openTabs.length - 1].id);
                 } else {
-                    const welcomeScreen = document.getElementById('welcomeScreen');
-                    welcomeScreen.style.display = 'flex';
-                    welcomeScreen.style.zIndex = '10';
+                    document.getElementById('welcomeScreen').style.display = 'flex';
                     activeTabId = null;
                 }
             }
@@ -1104,10 +1068,7 @@
             document.getElementById('dashboardScreen').style.display = 'none';
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('password').value = '';
-            
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            welcomeScreen.style.display = 'flex';
-            welcomeScreen.style.zIndex = '10';
+            document.getElementById('welcomeScreen').style.display = 'flex';
         }
 
         // ==========================================
