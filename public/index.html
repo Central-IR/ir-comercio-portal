@@ -260,45 +260,31 @@
         .dashboard-screen {
             display: none;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .dashboard-header {
             background: var(--bg-card);
-            padding: 2rem 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 1.5rem 2.5rem 0;
             box-shadow: var(--card-shadow);
             border-bottom: 1px solid var(--border-color);
         }
 
-        .user-welcome {
-            flex: 1;
+        .header-top {
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
         }
 
-        .header-logo {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-        }
-
-        .welcome-text {
-            font-size: 1.2rem;
+        .company-name {
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--text-primary);
-        }
-
-        .user-info {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .user-name {
-            color: var(--primary);
-            font-weight: 600;
+            text-align: center;
+            flex: 1;
         }
 
         .logout-btn {
@@ -310,6 +296,8 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: absolute;
+            right: 0;
         }
 
         .logout-btn:hover {
@@ -318,74 +306,167 @@
             transform: translateY(-2px);
         }
 
-        .dashboard-content {
-            padding: 3rem 1.5rem;
-            max-width: 1400px;
-            margin: 0 auto;
+        /* ============================================
+           SISTEMA DE ABAS
+           ============================================ */
+        .tabs-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0;
+            margin-bottom: -1px;
+            min-height: 48px;
         }
 
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+        .tabs-container::-webkit-scrollbar {
+            height: 4px;
         }
 
-        .module-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 1.8rem 2rem;
+        .tabs-container::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        .tabs-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .tab-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
             cursor: pointer;
-            transition: all 0.4s ease;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--card-shadow);
-            min-height: 160px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: 0;
+            flex-shrink: 0;
         }
 
-        .module-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary);
-            box-shadow: 0 12px 32px rgba(255, 81, 0, 0.2);
+        .tab-item:hover {
+            background: rgba(255, 81, 0, 0.05);
+            border-bottom-color: var(--primary-light);
+            color: var(--text-primary);
         }
 
-        .module-card.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+        .tab-item.active {
+            background: transparent;
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: 700;
         }
 
-        .module-card.disabled:hover {
-            transform: none;
+        .tab-close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.3rem;
+            line-height: 1;
+            transition: all 0.2s ease;
         }
 
-        .module-title {
-            font-size: 1.1rem;
+        .tab-close:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        .tab-item.active .tab-close {
+            color: var(--primary);
+        }
+
+        .tab-item.active .tab-close:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+
+        .tab-item.module-selector {
+            cursor: pointer;
+        }
+
+        .tab-item.module-selector:hover {
+            background: rgba(255, 81, 0, 0.08);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-item.module-selector:not(.active) .tab-close {
+            display: none;
+        }
+
+        /* ============================================
+           CONTEÚDO PRINCIPAL
+           ============================================ */
+        .dashboard-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            height: calc(100vh - 140px);
+        }
+
+        .welcome-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .welcome-greeting {
+            font-size: 2rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
         }
 
-        .module-description {
-            font-size: 0.85rem;
+        .welcome-user {
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-instruction {
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 1rem;
         }
 
-        .module-status {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: rgba(34, 197, 94, 0.2);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 8px;
-            font-size: 0.7rem;
-            color: var(--success);
-            font-weight: 700;
-            text-transform: uppercase;
+        .iframe-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
 
-        .module-status.soon {
-            background: rgba(156, 163, 175, 0.2);
-            border-color: rgba(156, 163, 175, 0.3);
-            color: #6B7280;
+        .iframe-container.active {
+            display: block;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .hidden {
@@ -396,17 +477,48 @@
            RESPONSIVIDADE
            ============================================ */
         @media (max-width: 768px) {
-            .dashboard-header {
+            .header-top {
                 flex-direction: column;
                 gap: 1rem;
             }
+            
+            .logout-btn {
+                position: static;
+            }
 
-            .modules-grid {
-                grid-template-columns: 1fr;
+            .company-name {
+                font-size: 1.1rem;
+                text-align: center;
+            }
+
+            .tabs-container {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .tab-item {
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem;
             }
 
             .logo-img {
                 height: 150px;
+            }
+
+            .welcome-greeting {
+                font-size: 1.5rem;
+            }
+
+            .welcome-user {
+                font-size: 1rem;
+            }
+
+            .welcome-instruction {
+                font-size: 0.95rem;
+            }
+            
+            .dashboard-content {
+                height: calc(100vh - 180px);
             }
         }
     </style>
@@ -468,21 +580,28 @@
         <!-- DASHBOARD -->
         <div id="dashboardScreen" class="dashboard-screen">
             <div class="dashboard-header">
-                <div class="user-welcome"> 
-                    <div>
-                        <div class="welcome-text">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
-                        <div class="user-info">
-                            <span id="greetingText"></span>, <span class="user-name" id="userName"></span>
-                        </div>
-                    </div>
+                <div class="header-top">
+                    <div class="company-name">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
+                    <button class="logout-btn" onclick="logout()">Sair</button>
                 </div>
-                <button class="logout-btn" onclick="logout()">Sair</button>
+                
+                <div class="tabs-container" id="tabsContainer">
+                    <!-- Abas serão inseridas aqui -->
+                </div>
             </div>
 
-            <div class="dashboard-content">
-                <div class="modules-grid" id="modulesGrid">
-                    <!-- Módulos serão inseridos aqui -->
+            <div class="dashboard-content" id="dashboardContent">
+                <!-- Tela de boas-vindas -->
+                <div id="welcomeScreen" class="welcome-container">
+                    <div class="welcome-greeting" id="greetingText"></div>
+                    <div class="welcome-user">
+                        <span id="userName"></span>
+                    </div>
+                    <div class="welcome-instruction">Selecione um módulo para começar</div>
                 </div>
+
+                <!-- Containers de iframes serão inseridos aqui -->
+                <div id="iframesContainer"></div>
             </div>
         </div>
     </div>
@@ -508,14 +627,13 @@
 
         // URLs dos módulos
         const MODULES = [
- {
+            {
                 id: 'usuários',
                 name: 'Gestão de Usuários',
                 description: 'Controle de acessos e permissões',
                 url: null,
                 available: false
             },
-            
             {
                 id: 'vendas',
                 name: 'Painel de Vendas',
@@ -612,12 +730,14 @@
         let deviceToken = null;
         let publicIP = null;
         let sessionCheckInterval = null;
+        let currentSessionInfo = null;
+        let openTabs = [];
+        let activeTabId = null;
 
         // ==========================================
         // ======== SAUDAÇÃO BASEADA NO HORÁRIO =====
         // ==========================================
         function getGreeting() {
-            // Obtém a hora no fuso horário de Brasília (UTC-3)
             const brasiliaTime = new Date().toLocaleString('en-US', { 
                 timeZone: 'America/Sao_Paulo',
                 hour12: false 
@@ -702,6 +822,7 @@
 
                 if (data.success && data.session) {
                     sessionStorage.setItem('irUserSession', JSON.stringify(data.session));
+                    currentSessionInfo = data.session;
                     showDashboard(data.session);
                     startSessionCheck();
                     showMessage('Login realizado com sucesso!', 'success');
@@ -769,53 +890,149 @@
         // ==========================================
         function showDashboard(sessionInfo) {
             document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('dashboardScreen').style.display = 'block';
+            document.getElementById('dashboardScreen').style.display = 'flex';
             
-            // Define a saudação baseada no horário
             document.getElementById('greetingText').textContent = getGreeting();
             document.getElementById('userName').textContent = sessionInfo.name;
             
-            const modulesGrid = document.getElementById('modulesGrid');
-            modulesGrid.innerHTML = '';
-            
-            // Obter permissões do usuário
+            // Adicionar módulos como abas clicáveis no cabeçalho
+            const tabsContainer = document.getElementById('tabsContainer');
             const userPermissions = USER_PERMISSIONS[sessionInfo.username] || [];
             
             MODULES.forEach(module => {
-                // Verificar se o usuário tem permissão para ver este módulo
                 if (!userPermissions.includes(module.id)) return;
-                
                 if (module.adminOnly && !sessionInfo.isAdmin) return;
+                if (!module.available || !module.url) return; // Só mostrar módulos disponíveis
                 
-                const card = document.createElement('div');
-                card.className = 'module-card' + (!module.available ? ' disabled' : '');
-                card.innerHTML = `
-                    <div class="module-title">${module.name}</div>
-                    <div class="module-description">${module.description}</div>
-                    <span class="module-status ${module.available ? '' : 'soon'}">${module.available ? 'Disponível' : 'Em breve'}</span>
-                `;
+                const moduleTab = document.createElement('div');
+                moduleTab.className = 'tab-item module-selector';
+                moduleTab.id = `module-selector-${module.id}`;
+                moduleTab.innerHTML = `<span class="tab-name">${module.name}</span>`;
                 
-                if (module.available && module.url) {
-                    card.onclick = () => openModule(module, sessionInfo);
-                }
+                moduleTab.onclick = () => openModuleTab(module);
                 
-                modulesGrid.appendChild(card);
+                tabsContainer.appendChild(moduleTab);
             });
         }
 
         // ==========================================
-        // ======== ABRIR MÓDULO ====================
+        // ======== GERENCIAMENTO DE ABAS ===========
         // ==========================================
-        function openModule(module, sessionInfo) {
+        function openModuleTab(module) {
+            // Verifica se a aba já está aberta
+            const existingTab = openTabs.find(tab => tab.id === module.id);
+            if (existingTab) {
+                switchToTab(module.id);
+                return;
+            }
+
+            // Cria nova aba
+            const tab = {
+                id: module.id,
+                name: module.name,
+                url: module.url
+            };
+
+            openTabs.push(tab);
+            
+            // Atualiza o seletor de módulo para mostrar que está ativo
+            const moduleSelector = document.getElementById(`module-selector-${module.id}`);
+            if (moduleSelector) {
+                moduleSelector.classList.add('active');
+                
+                // Adiciona botão de fechar
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'tab-close';
+                closeBtn.innerHTML = '×';
+                closeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    closeTab(module.id);
+                };
+                moduleSelector.appendChild(closeBtn);
+            }
+            
+            createIframeContainer(tab);
+            switchToTab(module.id);
+        }
+
+        function createIframeContainer(tab) {
+            const iframesContainer = document.getElementById('iframesContainer');
+            
             const params = new URLSearchParams({
-                sessionToken: sessionInfo.sessionToken,
-                deviceToken: sessionInfo.deviceToken,
-                username: sessionInfo.username,
-                userId: sessionInfo.userId,
-                ip: sessionInfo.ip
+                sessionToken: currentSessionInfo.sessionToken,
+                deviceToken: currentSessionInfo.deviceToken,
+                username: currentSessionInfo.username,
+                userId: currentSessionInfo.userId,
+                ip: currentSessionInfo.ip
             });
             
-            window.open(`${module.url}?${params.toString()}`, '_blank');
+            const container = document.createElement('div');
+            container.className = 'iframe-container';
+            container.id = `iframe-${tab.id}`;
+            container.innerHTML = `
+                <iframe src="${tab.url}?${params.toString()}" title="${tab.name}"></iframe>
+            `;
+            
+            iframesContainer.appendChild(container);
+        }
+
+        function switchToTab(tabId) {
+            // Remove active de todas as abas
+            document.querySelectorAll('.tab-item.module-selector').forEach(tab => {
+                const id = tab.id.replace('module-selector-', '');
+                if (id !== tabId && openTabs.find(t => t.id === id)) {
+                    tab.classList.remove('active');
+                } else if (id === tabId) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Remove active de todos os iframes
+            document.querySelectorAll('.iframe-container').forEach(container => {
+                container.classList.remove('active');
+            });
+
+            // Adiciona active no iframe selecionado
+            const activeIframe = document.getElementById(`iframe-${tabId}`);
+            if (activeIframe) activeIframe.classList.add('active');
+
+            // Esconde a tela de boas-vindas
+            document.getElementById('welcomeScreen').style.display = 'none';
+
+            activeTabId = tabId;
+        }
+
+        function closeTab(tabId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+
+            // Remove a aba do array
+            openTabs = openTabs.filter(tab => tab.id !== tabId);
+
+            // Remove iframe do DOM
+            const iframeContainer = document.getElementById(`iframe-${tabId}`);
+            if (iframeContainer) iframeContainer.remove();
+            
+            // Atualiza o seletor de módulo
+            const moduleSelector = document.getElementById(`module-selector-${tabId}`);
+            if (moduleSelector) {
+                moduleSelector.classList.remove('active');
+                
+                // Remove o botão de fechar
+                const closeBtn = moduleSelector.querySelector('.tab-close');
+                if (closeBtn) closeBtn.remove();
+            }
+
+            // Se era a aba ativa, muda para outra ou mostra welcome
+            if (activeTabId === tabId) {
+                if (openTabs.length > 0) {
+                    switchToTab(openTabs[openTabs.length - 1].id);
+                } else {
+                    document.getElementById('welcomeScreen').style.display = 'flex';
+                    activeTabId = null;
+                }
+            }
         }
 
         // ==========================================
@@ -851,9 +1068,17 @@
         function performLogout() {
             stopSessionCheck();
             sessionStorage.removeItem('irUserSession');
+            
+            // Limpa todas as abas
+            openTabs = [];
+            activeTabId = null;
+            document.getElementById('tabsContainer').innerHTML = '';
+            document.getElementById('iframesContainer').innerHTML = '';
+            
             document.getElementById('dashboardScreen').style.display = 'none';
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('password').value = '';
+            document.getElementById('welcomeScreen').style.display = 'flex';
         }
 
         // ==========================================
@@ -885,6 +1110,7 @@
                     const isValid = await verifySession(session.sessionToken);
                     
                     if (isValid) {
+                        currentSessionInfo = session;
                         showDashboard(session);
                         startSessionCheck();
                     } else {
