@@ -279,12 +279,26 @@
             position: relative;
         }
 
+        .company-info {
+            text-align: center;
+            flex: 1;
+        }
+
         .company-name {
             font-size: 1.4rem;
             font-weight: 700;
             color: var(--text-primary);
-            text-align: center;
-            flex: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-greeting {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .user-greeting .user-name {
+            color: var(--primary);
+            font-weight: 600;
         }
 
         .logout-btn {
@@ -426,24 +440,24 @@
             height: 100%;
             padding: 4rem 2rem;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .welcome-greeting {
             font-size: 2rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .welcome-user {
-            font-size: 1.2rem;
+        .welcome-user-name {
             color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 2rem;
+            font-weight: 700;
         }
 
         .welcome-instruction {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: var(--text-secondary);
         }
 
@@ -457,6 +471,7 @@
             left: 0;
             right: 0;
             bottom: 0;
+            z-index: 2;
         }
 
         .iframe-container.active {
@@ -488,7 +503,10 @@
 
             .company-name {
                 font-size: 1.1rem;
-                text-align: center;
+            }
+            
+            .user-greeting {
+                font-size: 0.85rem;
             }
 
             .tabs-container {
@@ -509,12 +527,8 @@
                 font-size: 1.5rem;
             }
 
-            .welcome-user {
-                font-size: 1rem;
-            }
-
             .welcome-instruction {
-                font-size: 0.95rem;
+                font-size: 1rem;
             }
             
             .dashboard-content {
@@ -581,7 +595,12 @@
         <div id="dashboardScreen" class="dashboard-screen">
             <div class="dashboard-header">
                 <div class="header-top">
-                    <div class="company-name">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
+                    <div class="company-info">
+                        <div class="company-name">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
+                        <div class="user-greeting">
+                            <span id="greetingText"></span>, <span class="user-name" id="userName"></span>
+                        </div>
+                    </div>
                     <button class="logout-btn" onclick="logout()">Sair</button>
                 </div>
                 
@@ -593,9 +612,8 @@
             <div class="dashboard-content" id="dashboardContent">
                 <!-- Tela de boas-vindas -->
                 <div id="welcomeScreen" class="welcome-container">
-                    <div class="welcome-greeting" id="greetingText"></div>
-                    <div class="welcome-user">
-                        <span id="userName"></span>
+                    <div class="welcome-greeting">
+                        <span id="greetingTextWelcome"></span>, <span class="welcome-user-name" id="userNameWelcome"></span>
                     </div>
                     <div class="welcome-instruction">Selecione um módulo para começar</div>
                 </div>
@@ -892,8 +910,15 @@
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboardScreen').style.display = 'flex';
             
-            document.getElementById('greetingText').textContent = getGreeting();
+            const greeting = getGreeting();
+            
+            // Preenche informações no cabeçalho
+            document.getElementById('greetingText').textContent = greeting;
             document.getElementById('userName').textContent = sessionInfo.name;
+            
+            // Preenche informações na tela de boas-vindas
+            document.getElementById('greetingTextWelcome').textContent = greeting;
+            document.getElementById('userNameWelcome').textContent = sessionInfo.name;
             
             // Adicionar módulos como abas clicáveis no cabeçalho
             const tabsContainer = document.getElementById('tabsContainer');
@@ -996,8 +1021,10 @@
             const activeIframe = document.getElementById(`iframe-${tabId}`);
             if (activeIframe) activeIframe.classList.add('active');
 
-            // Esconde a tela de boas-vindas
-            document.getElementById('welcomeScreen').style.display = 'none';
+            // Esconde a tela de boas-vindas quando um módulo estiver ativo
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            welcomeScreen.style.display = 'none';
+            welcomeScreen.style.zIndex = '1';
 
             activeTabId = tabId;
         }
@@ -1029,7 +1056,9 @@
                 if (openTabs.length > 0) {
                     switchToTab(openTabs[openTabs.length - 1].id);
                 } else {
-                    document.getElementById('welcomeScreen').style.display = 'flex';
+                    const welcomeScreen = document.getElementById('welcomeScreen');
+                    welcomeScreen.style.display = 'flex';
+                    welcomeScreen.style.zIndex = '10';
                     activeTabId = null;
                 }
             }
@@ -1078,7 +1107,10 @@
             document.getElementById('dashboardScreen').style.display = 'none';
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('password').value = '';
-            document.getElementById('welcomeScreen').style.display = 'flex';
+            
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            welcomeScreen.style.display = 'flex';
+            welcomeScreen.style.zIndex = '10';
         }
 
         // ==========================================
