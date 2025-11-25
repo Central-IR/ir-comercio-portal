@@ -80,6 +80,158 @@
         }
 
         /* ============================================
+           BARRA DE NAVEGAÇÃO SUPERIOR
+           ============================================ */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow);
+            z-index: 1000;
+            display: none;
+        }
+
+        .top-navbar.show {
+            display: block;
+        }
+
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 2rem;
+            max-width: 100%;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            opacity: 0.8;
+        }
+
+        .navbar-logo {
+            height: 45px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .navbar-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: none;
+        }
+
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            justify-content: center;
+            overflow-x: auto;
+            padding: 0 1rem;
+        }
+
+        .navbar-menu::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .navbar-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .navbar-menu::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .nav-item {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 81, 0, 0.1);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-item.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .nav-item.disabled:hover {
+            transform: none;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 81, 0, 0.1);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .user-badge-name {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .navbar-logout {
+            padding: 0.6rem 1.2rem;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid var(--error);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .navbar-logout:hover {
+            background: var(--error);
+            color: white;
+        }
+
+        /* ============================================
            TELA DE LOGIN
            ============================================ */
         .login-screen {
@@ -260,6 +412,7 @@
         .dashboard-screen {
             display: none;
             min-height: 100vh;
+            padding-top: 70px; /* Espaço para a navbar */
         }
 
         .dashboard-header {
@@ -395,6 +548,16 @@
         /* ============================================
            RESPONSIVIDADE
            ============================================ */
+        @media (max-width: 1024px) {
+            .navbar-title {
+                display: none;
+            }
+            
+            .user-badge {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
             .dashboard-header {
                 flex-direction: column;
@@ -408,10 +571,58 @@
             .logo-img {
                 height: 150px;
             }
+
+            .navbar-content {
+                padding: 0.6rem 1rem;
+            }
+
+            .navbar-menu {
+                gap: 0.3rem;
+                padding: 0 0.5rem;
+            }
+
+            .nav-item {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.75rem;
+            }
+
+            .navbar-logout {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- BARRA DE NAVEGAÇÃO SUPERIOR -->
+    <nav class="top-navbar" id="topNavbar">
+        <div class="navbar-content">
+            <div class="navbar-brand" onclick="showHomeDashboard()">
+                <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png" 
+                     alt="Logo" 
+                     class="navbar-logo logo-dark"
+                     onerror="this.style.display='none'">
+                <img src="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS.png" 
+                     alt="Logo" 
+                     class="navbar-logo logo-light"
+                     onerror="this.style.display='none'">
+                <span class="navbar-title">I.R. COMÉRCIO</span>
+            </div>
+            
+            <div class="navbar-menu" id="navbarMenu">
+                <!-- Itens de menu serão inseridos aqui -->
+            </div>
+            
+            <div class="navbar-actions">
+                <div class="user-badge">
+                    <span id="navUserGreeting"></span>
+                    <span class="user-badge-name" id="navUserName"></span>
+                </div>
+                <button class="navbar-logout" onclick="logout()">Sair</button>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <!-- TELA DE LOGIN -->
         <div id="loginScreen" class="login-screen">
@@ -508,17 +719,16 @@
 
         // URLs dos módulos
         const MODULES = [
- {
+            {
                 id: 'usuários',
-                name: 'Gestão de Usuários',
+                name: 'Usuários',
                 description: 'Controle de acessos e permissões',
                 url: null,
                 available: false
             },
-            
             {
                 id: 'vendas',
-                name: 'Painel de Vendas',
+                name: 'Vendas',
                 description: 'Faturamento e valores de comissões.',
                 url: null,
                 available: false
@@ -532,14 +742,14 @@
             },
             {
                 id: 'compra',
-                name: 'Ordens de Compra',
+                name: 'Compras',
                 description: 'Registro e Ordens de Compra',
                 url: 'https://ir-comercio.github.io/ordem-compra/public/',
                 available: true
             },
             {
                 id: 'tabela-precos',
-                name: 'Tabela de Preços',
+                name: 'Preços',
                 description: 'Consulta e atualiza preços de produtos e serviços.',
                 url: 'https://tabela-precos-udyp.onrender.com',
                 available: true
@@ -553,14 +763,14 @@
             },
             {
                 id: 'cotacoes-frete',
-                name: 'Cotações de Frete',
+                name: 'Cotações',
                 description: 'Gerencia cotações com histórico e comparação entre transportadoras.',
                 url: 'https://cotacoes-frete-aikc.onrender.com',
                 available: true
             },
             {
                 id: 'controle-frete',
-                name: 'Controle de Frete',
+                name: 'Frete',
                 description: 'Registro e monitoramento de expedição',
                 url: 'https://controle-frete.onrender.com',
                 available: true
@@ -574,21 +784,21 @@
             },
             {
                 id: 'faturamento',
-                name: 'Pedidos de Faturamento',
+                name: 'Faturamento',
                 description: 'Pedidos de Faturamento para o Setor Financeiro.',
                 url: null,
                 available: false
             },
             {
                 id: 'receber',
-                name: 'Contas a Receber',
+                name: 'Receber',
                 description: 'Pagamentos pendentes para empresa.',
                 url: 'https://contas-receber-kkf9.onrender.com',
                 available: true
             },
             {
                 id: 'pagamento',
-                name: 'Contas a Pagar',
+                name: 'Pagar',
                 description: 'Compromissos financeiros da empresa.',
                 url: 'https://ir-comercio.github.io/contas-a-pagar/',
                 available: true
@@ -612,12 +822,12 @@
         let deviceToken = null;
         let publicIP = null;
         let sessionCheckInterval = null;
+        let currentSessionInfo = null;
 
         // ==========================================
         // ======== SAUDAÇÃO BASEADA NO HORÁRIO =====
         // ==========================================
         function getGreeting() {
-            // Obtém a hora no fuso horário de Brasília (UTC-3)
             const brasiliaTime = new Date().toLocaleString('en-US', { 
                 timeZone: 'America/Sao_Paulo',
                 hour12: false 
@@ -670,6 +880,62 @@
         }
 
         // ==========================================
+        // ======== CRIAR NAVBAR ====================
+        // ==========================================
+        function createNavbar(sessionInfo) {
+            const navbarMenu = document.getElementById('navbarMenu');
+            navbarMenu.innerHTML = '';
+            
+            const userPermissions = USER_PERMISSIONS[sessionInfo.username] || [];
+            
+            // Adicionar item HOME
+            const homeItem = document.createElement('button');
+            homeItem.className = 'nav-item';
+            homeItem.textContent = 'HOME';
+            homeItem.onclick = () => showHomeDashboard();
+            navbarMenu.appendChild(homeItem);
+            
+            // Adicionar módulos permitidos
+            MODULES.forEach(module => {
+                if (!userPermissions.includes(module.id)) return;
+                
+                const navItem = document.createElement('button');
+                navItem.className = 'nav-item' + (!module.available ? ' disabled' : '');
+                navItem.textContent = module.name;
+                navItem.title = module.description;
+                
+                if (module.available && module.url) {
+                    navItem.onclick = () => openModule(module, sessionInfo);
+                }
+                
+                navbarMenu.appendChild(navItem);
+            });
+            
+            // Atualizar informações do usuário
+            document.getElementById('navUserGreeting').textContent = getGreeting();
+            document.getElementById('navUserName').textContent = sessionInfo.name;
+        }
+
+        // ==========================================
+        // ======== MOSTRAR DASHBOARD HOME ==========
+        // ==========================================
+        function showHomeDashboard() {
+            if (!currentSessionInfo) return;
+            
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').style.display = 'block';
+            document.getElementById('topNavbar').classList.add('show');
+            
+            // Remover classe active de todos os itens
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Adicionar active ao HOME
+            document.querySelector('.nav-item').classList.add('active');
+        }
+
+        // ==========================================
         // ======== LOGIN ===========================
         // ==========================================
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -702,6 +968,8 @@
 
                 if (data.success && data.session) {
                     sessionStorage.setItem('irUserSession', JSON.stringify(data.session));
+                    currentSessionInfo = data.session;
+                    createNavbar(data.session);
                     showDashboard(data.session);
                     startSessionCheck();
                     showMessage('Login realizado com sucesso!', 'success');
@@ -770,21 +1038,18 @@
         function showDashboard(sessionInfo) {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboardScreen').style.display = 'block';
+            document.getElementById('topNavbar').classList.add('show');
             
-            // Define a saudação baseada no horário
             document.getElementById('greetingText').textContent = getGreeting();
             document.getElementById('userName').textContent = sessionInfo.name;
             
             const modulesGrid = document.getElementById('modulesGrid');
             modulesGrid.innerHTML = '';
             
-            // Obter permissões do usuário
             const userPermissions = USER_PERMISSIONS[sessionInfo.username] || [];
             
             MODULES.forEach(module => {
-                // Verificar se o usuário tem permissão para ver este módulo
                 if (!userPermissions.includes(module.id)) return;
-                
                 if (module.adminOnly && !sessionInfo.isAdmin) return;
                 
                 const card = document.createElement('div');
@@ -815,7 +1080,6 @@
                 ip: sessionInfo.ip
             });
             
-            // Mudança aqui: usar window.location.href ao invés de window.open
             window.location.href = `${module.url}?${params.toString()}`;
         }
 
@@ -852,7 +1116,9 @@
         function performLogout() {
             stopSessionCheck();
             sessionStorage.removeItem('irUserSession');
+            currentSessionInfo = null;
             document.getElementById('dashboardScreen').style.display = 'none';
+            document.getElementById('topNavbar').classList.remove('show');
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('password').value = '';
         }
@@ -886,6 +1152,8 @@
                     const isValid = await verifySession(session.sessionToken);
                     
                     if (isValid) {
+                        currentSessionInfo = session;
+                        createNavbar(session);
                         showDashboard(session);
                         startSessionCheck();
                     } else {
