@@ -815,8 +815,7 @@
                 ip: sessionInfo.ip
             });
             
-            // Mudança aqui: usar window.location.href ao invés de window.open
-            window.location.href = `${module.url}?${params.toString()}`;
+            window.open(`${module.url}?${params.toString()}`, '_blank');
         }
 
         // ==========================================
