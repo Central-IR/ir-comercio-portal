@@ -273,15 +273,13 @@
 
         .header-top {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
-            position: relative;
         }
 
         .company-info {
-            text-align: center;
-            flex: 1;
+            text-align: left;
         }
 
         .company-name {
@@ -310,8 +308,6 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: absolute;
-            right: 0;
         }
 
         .logout-btn:hover {
@@ -495,10 +491,7 @@
             .header-top {
                 flex-direction: column;
                 gap: 1rem;
-            }
-            
-            .logout-btn {
-                position: static;
+                align-items: flex-start;
             }
 
             .company-name {
@@ -507,6 +500,10 @@
             
             .user-greeting {
                 font-size: 0.85rem;
+            }
+            
+            .logout-btn {
+                align-self: stretch;
             }
 
             .tabs-container {
