@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
-    <title>Portal</title>
+    <title>Portal I.R. Comércio</title>
     <style>
         /* ============================================
            VARIÁVEIS BASE (DARK THEME - PADRÃO)
@@ -14,7 +14,8 @@
             --primary-dark: #E67E00;
             --primary-light: #FF6A1A;
             --bg-primary: #000000;
-            --bg-secondary:  #0A0A0A;
+            --bg-secondary: #0A0A0A;
+            --bg-sidebar: #0F0F0F;
             --bg-card: #1A1A1A;
             --text-primary: #FFFFFF;
             --text-secondary: #A0A0A0;
@@ -24,7 +25,7 @@
             --success: #22C55E;
             --warning: #F59E0B;
             --shadow: rgba(0, 0, 0, 0.5);
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --online-green: #22C55E;
         }
 
         /* ============================================
@@ -34,13 +35,13 @@
             :root {
                 --bg-primary: #FFFFFF;
                 --bg-secondary: #F5F5F5;
+                --bg-sidebar: #FAFAFA;
                 --bg-card: #FFFFFF;
                 --text-primary: #1E1E1E;
                 --text-secondary: #666666;
                 --border-color: #E5E5E5;
                 --input-bg: #FFFFFF;
                 --shadow: rgba(0, 0, 0, 0.08);
-                --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             }
         }
 
@@ -54,30 +55,8 @@
             font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
             background: var(--bg-secondary);
             color: var(--text-primary);
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 81, 0, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 81, 0, 0.02) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            z-index: 1;
+            height: 100vh;
+            overflow: hidden;
         }
 
         /* ============================================
@@ -90,20 +69,17 @@
             align-items: center;
             justify-content: center;
             padding: 2rem;
+            background: var(--bg-secondary);
         }
 
         .login-content {
             width: 100%;
             max-width: 500px;
-            padding: 0;
         }
 
         .logo-container {
             text-align: center;
             margin-bottom: 3rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .logo-img {
@@ -111,29 +87,7 @@
             height: 200px;
             max-width: 100%;
             object-fit: contain;
-            object-position: center;
-            margin-bottom: 1rem;
             filter: drop-shadow(0 4px 12px rgba(255, 81, 0, 0.15));
-            transition: opacity 0.3s ease;
-        }
-
-        /* Logo escura visível apenas no tema escuro */
-        .logo-dark {
-            display: block;
-        }
-
-        .logo-light {
-            display: none;
-        }
-
-        @media (prefers-color-scheme: light) {
-            .logo-dark {
-                display: none;
-            }
-            
-            .logo-light {
-                display: block;
-            }
         }
 
         .form-group {
@@ -157,15 +111,12 @@
             color: var(--text-primary);
             font-size: 1.05rem;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px var(--shadow);
         }
 
         input:focus {
             outline: none;
             border-color: var(--primary);
             background-color: var(--bg-card);
-            box-shadow: 0 4px 16px rgba(255, 81, 0, 0.2);
-            transform: translateY(-1px);
         }
 
         .password-container {
@@ -184,9 +135,6 @@
             color: var(--text-secondary);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 0;
-            margin: 0;
         }
 
         .toggle-password:hover {
@@ -204,14 +152,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 24px rgba(255, 81, 0, 0.4);
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
 
         .btn-login:hover:not(:disabled) {
@@ -219,8 +160,9 @@
             box-shadow: 0 12px 32px rgba(255, 81, 0, 0.5);
         }
 
-        .btn-login:active:not(:disabled) {
-            transform: translateY(-1px);
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .message {
@@ -230,7 +172,6 @@
             font-size: 0.95rem;
             display: none;
             font-weight: 500;
-            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .message.show {
@@ -249,47 +190,91 @@
             color: #15803D;
         }
 
-        .message.warning {
-            background: rgba(245, 158, 11, 0.15);
-            border-left: 4px solid var(--warning);
-            color: #B45309;
-        }
-
         /* ============================================
-           DASHBOARD
+           DASHBOARD LAYOUT
            ============================================ */
         .dashboard-screen {
             display: none;
-            min-height: 100vh;
-            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .dashboard-header {
-            background: var(--bg-card);
-            box-shadow: var(--card-shadow);
-        }
-
-        .header-top {
+        .dashboard-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 2.5rem;
-            border-bottom: 1px solid var(--border-color);
+            height: 100vh;
         }
 
-        .company-info {
-            text-align: left;
+        /* ============================================
+           SIDEBAR (MENU LATERAL)
+           ============================================ */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            padding: 1.5rem 0.75rem;
+        }
+
+        .sidebar.collapsed .company-name,
+        .sidebar.collapsed .user-greeting {
+            display: none;
+        }
+
+        .sidebar.collapsed .module-item span:not(.module-icon) {
+            display: none;
+        }
+
+        .sidebar.collapsed .module-item {
+            justify-content: center;
+            padding: 1rem 0.75rem;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: padding 0.3s ease;
+        }
+
+        .sidebar-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 1.2rem;
+            margin: 0 auto;
+        }
+
+        .sidebar.collapsed .sidebar-logo {
+            display: flex;
         }
 
         .company-name {
-            font-size: 1.4rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 0.5rem;
+            line-height: 1.3;
         }
 
         .user-greeting {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
         }
 
@@ -298,175 +283,289 @@
             font-weight: 600;
         }
 
-        .logout-btn {
-            padding: 0.9rem 1.8rem;
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error);
-            border: 1px solid var(--error);
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .sidebar-modules {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
         }
 
-        .logout-btn:hover {
-            background: var(--error);
-            color: white;
-            transform: translateY(-2px);
+        .sidebar-modules::-webkit-scrollbar {
+            width: 6px;
         }
 
-        /* ============================================
-           SISTEMA DE ABAS
-           ============================================ */
-        .tabs-wrapper {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--bg-card);
-        }
-
-        .tabs-container {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            overflow-x: auto;
-            padding: 0 2.5rem;
-            min-height: 48px;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: var(--card-shadow);
-        }
-
-        .tabs-container::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .tabs-container::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-
-        .tabs-container::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 2px;
-        }
-
-        .tab-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.85rem 1.5rem;
+        .sidebar-modules::-webkit-scrollbar-track {
             background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
+        }
+
+        .sidebar-modules::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .module-item {
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            white-space: nowrap;
+            border-left: 3px solid transparent;
+            color: var(--text-secondary);
             font-size: 0.95rem;
             font-weight: 500;
-            color: var(--text-secondary);
-            border-radius: 0;
+            position: relative;
+        }
+
+        .module-item:hover {
+            background: rgba(255, 81, 0, 0.1);
+            color: var(--text-primary);
+            border-left-color: var(--primary);
+        }
+
+        .module-item.active {
+            background: rgba(255, 81, 0, 0.15);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .module-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
         }
 
-        .tab-item:hover {
-            background: rgba(255, 81, 0, 0.05);
-            border-bottom-color: var(--primary-light);
+        .module-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Tooltip para modo retraído */
+        .sidebar.collapsed .module-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-card);
             color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 4px 12px var(--shadow);
+            border: 1px solid var(--border-color);
+            z-index: 1000;
         }
 
-        .tab-item.active {
-            background: transparent;
-            border-bottom-color: var(--primary);
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        .tab-close {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 1.3rem;
-            line-height: 1;
-            transition: all 0.2s ease;
-        }
-
-        .tab-close:hover {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--error);
-        }
-
-        .tab-item.active .tab-close {
-            color: var(--primary);
-        }
-
-        .tab-item.active .tab-close:hover {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--error);
-        }
-
-        .tab-item.module-selector {
-            cursor: pointer;
-        }
-
-        .tab-item.module-selector:hover {
-            background: rgba(255, 81, 0, 0.08);
-            border-bottom-color: var(--primary);
-        }
-
-        .tab-item.module-selector:not(.active) .tab-close {
-            display: none;
+        .sidebar.collapsed .module-item:hover::after {
+            opacity: 1;
         }
 
         /* ============================================
-           CONTEÚDO PRINCIPAL
+           MAIN CONTENT
            ============================================ */
-        .dashboard-content {
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            height: 60px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--bg-card);
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--online-green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 81, 0, 0.4);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 200px;
+            display: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .user-dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-dropdown-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .user-dropdown-sector {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .user-dropdown-item {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .user-dropdown-item:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        /* ============================================
+           CONTENT AREA
+           ============================================ */
+        .content-area {
+            flex: 1;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        .welcome-container {
+        .welcome-screen {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: calc(100vh - 150px);
-            padding: 4rem 2rem;
+            height: 100%;
             text-align: center;
+            padding: 2rem;
+        }
+
+        .welcome-greeting {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-user-name {
+            color: var(--primary);
         }
 
         .welcome-instruction {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
-        }
-
-        #iframesContainer {
-            width: 100%;
+            margin-top: 1rem;
         }
 
         .iframe-container {
             display: none;
             width: 100%;
-            background: var(--bg-primary);
+            height: 100%;
         }
 
         .iframe-container.active {
             display: block;
-            min-height: calc(100vh - 48px);
         }
 
         .iframe-container iframe {
             width: 100%;
-            height: 100vh;
+            height: 100%;
             border: none;
-            display: block;
         }
 
         .hidden {
@@ -477,128 +576,134 @@
            RESPONSIVIDADE
            ============================================ */
         @media (max-width: 768px) {
-            .header-top {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-                padding: 1rem 1.5rem;
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(0);
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(-280px);
+                width: 280px;
             }
 
             .company-name {
-                font-size: 1.1rem;
-            }
-            
-            .user-greeting {
                 font-size: 0.85rem;
             }
-            
-            .logout-btn {
-                align-self: stretch;
-            }
 
-            .tabs-container {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding: 0 1.5rem;
-            }
-
-            .tab-item {
-                font-size: 0.85rem;
-                padding: 0.6rem 1rem;
-            }
-
-            .logo-img {
-                height: 150px;
-            }
-
-            .welcome-instruction {
-                font-size: 1.1rem;
+            .welcome-greeting {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- TELA DE LOGIN -->
-        <div id="loginScreen" class="login-screen">
-            <div class="login-content">
-                <div class="logo-container">
-                    <!-- Logo para tema escuro -->
-                    <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png" 
-                         alt="Logo I.R. Comércio" 
-                         class="logo-img logo-dark" 
-                         onerror="this.style.display='none'">
-                    <!-- Logo para tema claro -->
-                    <img src="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS.png" 
-                         alt="Logo I.R. Comércio" 
-                         class="logo-img logo-light" 
-                         onerror="this.style.display='none'">
+    <!-- TELA DE LOGIN -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-content">
+            <div class="logo-container">
+                <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png" 
+                     alt="Logo I.R. Comércio" 
+                     class="logo-img"
+                     onerror="this.style.display='none'">
+            </div>
+
+            <div id="messageBox" class="message"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Usuário</label>
+                    <input type="text" 
+                           id="username" 
+                           name="username" 
+                           required 
+                           autofocus 
+                           placeholder="Digite seu usuário"
+                           autocomplete="username">
                 </div>
 
-                <div id="messageBox" class="message"></div>
-
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="username">Usuário</label>
-                        <input type="text" 
-                               id="username" 
-                               name="username" 
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <div class="password-container">
+                        <input type="password" 
+                               id="password" 
+                               name="password" 
                                required 
-                               autofocus 
-                               placeholder="Digite seu usuário"
-                               autocomplete="username">
+                               placeholder="Digite sua senha"
+                               autocomplete="current-password">
+                        <button type="button" 
+                                class="toggle-password" 
+                                onclick="togglePassword()">MOSTRAR</button>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="password">Senha</label>
-                        <div class="password-container">
-                            <input type="password" 
-                                   id="password" 
-                                   name="password" 
-                                   required 
-                                   placeholder="Digite sua senha"
-                                   autocomplete="current-password">
-                            <button type="button" 
-                                    class="toggle-password" 
-                                    onclick="togglePassword()">MOSTRAR</button>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-login" id="loginBtn">
-                        Entrar
-                    </button>
-                </form>
-            </div>
+                <button type="submit" class="btn-login" id="loginBtn">
+                    Entrar
+                </button>
+            </form>
         </div>
+    </div>
 
-        <!-- DASHBOARD -->
-        <div id="dashboardScreen" class="dashboard-screen">
-            <div class="dashboard-header">
-                <div class="header-top">
-                    <div class="company-info">
-                        <div class="company-name">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
-                        <div class="user-greeting">
-                            <span id="greetingText"></span>, <span class="user-name" id="userName"></span>
+    <!-- DASHBOARD -->
+    <div id="dashboardScreen" class="dashboard-screen">
+        <div class="dashboard-container">
+            <!-- SIDEBAR -->
+            <div id="sidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-logo">IR</div>
+                    <div class="company-name">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
+                    <div class="user-greeting">
+                        <span id="sidebarGreeting"></span>, <span class="user-name" id="sidebarUserName"></span>
+                    </div>
+                </div>
+
+                <div class="sidebar-modules" id="sidebarModules">
+                    <!-- Módulos serão inseridos aqui -->
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="main-content">
+                <!-- TOP BAR -->
+                <div class="top-bar">
+                    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                    
+                    <div class="top-bar-right">
+                        <div class="status-indicator">
+                            <div class="status-dot"></div>
+                            <span>Online</span>
+                        </div>
+
+                        <div class="user-menu">
+                            <div class="user-avatar" id="userAvatar" onclick="toggleUserDropdown()">MA</div>
+                            <div class="user-dropdown" id="userDropdown">
+                                <div class="user-dropdown-header">
+                                    <div class="user-dropdown-name" id="dropdownUserName"></div>
+                                    <div class="user-dropdown-sector" id="dropdownUserSector"></div>
+                                </div>
+                                <div class="user-dropdown-item" onclick="logout()">
+                                    <span>🚪</span>
+                                    <span>Sair</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <button class="logout-btn" onclick="logout()">Sair</button>
-                </div>
-            </div>
-            
-            <div class="tabs-wrapper">
-                <div class="tabs-container" id="tabsContainer">
-                    <!-- Abas serão inseridas aqui -->
-                </div>
-            </div>
-
-            <div class="dashboard-content" id="dashboardContent">
-                <!-- Tela de boas-vindas -->
-                <div id="welcomeScreen" class="welcome-container">
-                    <div class="welcome-instruction">Selecione um módulo para começar</div>
                 </div>
 
-                <!-- Containers de iframes serão inseridos aqui -->
-                <div id="iframesContainer"></div>
+                <!-- CONTENT AREA -->
+                <div class="content-area">
+                    <div id="welcomeScreen" class="welcome-screen">
+                        <div class="welcome-greeting">
+                            <span id="welcomeGreeting"></span>, <span class="welcome-user-name" id="welcomeUserName"></span>
+                        </div>
+                        <div class="welcome-instruction">Selecione um módulo para começar</div>
+                    </div>
+
+                    <div id="iframesContainer"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -609,9 +714,18 @@
         // ==========================================
         const API_URL = window.location.origin + '/api';
 
-        // ==========================================
-        // ======== PERMISSÕES POR USUÁRIO ==========
-        // ==========================================
+        // Setores por usuário
+        const USER_SECTORS = {
+            'Roberto': 'Administrador',
+            'Rosemeire': 'Administrador',
+            'vendas': 'Vendas',
+            'vendas2': 'Vendas',
+            'financeiro1': 'Financeiro',
+            'financeiro2': 'Financeiro',
+            'almox': 'Almoxarifado'
+        };
+
+        // Permissões por usuário
         const USER_PERMISSIONS = {
             'Roberto': ['usuários', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
             'Rosemeire': ['usuários', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
@@ -622,105 +736,61 @@
             'almox': ['cotacoes-frete', 'controle-frete', 'transportadoras', 'faturamento', 'estoque'],
         };
 
-        // URLs dos módulos
+        // Ícones SVG para os módulos
+        const MODULE_ICONS = {
+            'compra': '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',
+            'tabela-precos': '<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>',
+            'cotacoes-frete': '<svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>',
+            'controle-frete': '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
+            'receber': '<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>',
+            'pagamento': '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',
+            'vendas': '<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>',
+            'pregoes': '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
+            'fornecedores': '<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+            'transportadoras': '<svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>',
+            'faturamento': '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
+            'estoque': '<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
+            'documentos': '<svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>',
+            'usuarios': '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>'
+        };
+
+        // Módulos disponíveis
         const MODULES = [
-            {
-                id: 'usuários',
-                name: 'Gestão de Usuários',
-                description: 'Controle de acessos e permissões',
-                url: null,
-                available: false
-            },
-            {
-                id: 'vendas',
-                name: 'Painel de Vendas',
-                description: 'Faturamento e valores de comissões.',
-                url: null,
-                available: false
-            },
-            {
-                id: 'pregões',
-                name: 'Pregões',
-                description: 'Procedimentos e documentação relacionados aos processos de licitação',
-                url: null,
-                available: false
-            },
             {
                 id: 'compra',
                 name: 'Ordens de Compra',
-                description: 'Registro e Ordens de Compra',
                 url: 'https://ir-comercio.github.io/ordem-compra/public/',
                 available: true
             },
             {
                 id: 'tabela-precos',
                 name: 'Tabela de Preços',
-                description: 'Consulta e atualiza preços de produtos e serviços.',
                 url: 'https://tabela-precos-udyp.onrender.com',
                 available: true
             },
             {
-                id: 'fornecedores',
-                name: 'Fornecedores',
-                description: 'Catálogos e Informações gerais de empresas parceiras',
-                url: null,
-                available: false
-            },
-            {
                 id: 'cotacoes-frete',
                 name: 'Cotações de Frete',
-                description: 'Gerencia cotações com histórico e comparação entre transportadoras.',
                 url: 'https://cotacoes-frete-aikc.onrender.com',
                 available: true
             },
             {
                 id: 'controle-frete',
                 name: 'Controle de Frete',
-                description: 'Registro e monitoramento de expedição',
                 url: 'https://controle-frete.onrender.com',
                 available: true
             },
             {
-                id: 'transportadoras',
-                name: 'Transportadoras',
-                description: 'Informações gerais de transportadoras parceiras',
-                url: null,
-                available: false
-            },
-            {
-                id: 'faturamento',
-                name: 'Pedidos de Faturamento',
-                description: 'Pedidos de Faturamento para o Setor Financeiro.',
-                url: null,
-                available: false
-            },
-            {
                 id: 'receber',
                 name: 'Contas a Receber',
-                description: 'Pagamentos pendentes para empresa.',
                 url: 'https://contas-receber-kkf9.onrender.com',
                 available: true
             },
             {
                 id: 'pagamento',
                 name: 'Contas a Pagar',
-                description: 'Compromissos financeiros da empresa.',
                 url: 'https://ir-comercio.github.io/contas-a-pagar/',
                 available: true
-            },
-            {
-                id: 'estoque',
-                name: 'Estoque',
-                description: 'Gestão e processos relacionados a entrada, saída e inventário de materiais e suprimentos.',
-                url: null,
-                available: false
-            },
-            {
-                id: 'documentos',
-                name: 'Documentos',
-                description: 'Organização e armazenamento de documentos e pastas',
-                url: null,
-                available: false
             }
         ];
 
@@ -728,11 +798,10 @@
         let publicIP = null;
         let sessionCheckInterval = null;
         let currentSessionInfo = null;
-        let openTabs = [];
-        let activeTabId = null;
+        let activeModuleId = null;
 
         // ==========================================
-        // ======== SAUDAÇÃO BASEADA NO HORÁRIO =====
+        // ======== FUNÇÕES AUXILIARES ==============
         // ==========================================
         function getGreeting() {
             const brasiliaTime = new Date().toLocaleString('en-US', { 
@@ -741,18 +810,11 @@
             });
             const hour = new Date(brasiliaTime).getHours();
             
-            if (hour >= 0 && hour < 12) {
-                return 'Bom dia';
-            } else if (hour >= 12 && hour < 18) {
-                return 'Boa tarde';
-            } else {
-                return 'Boa noite';
-            }
+            if (hour >= 0 && hour < 12) return 'Bom dia';
+            else if (hour >= 12 && hour < 18) return 'Boa tarde';
+            else return 'Boa noite';
         }
 
-        // ==========================================
-        // ======== GERAÇÃO DE TOKEN ================
-        // ==========================================
         function getOrCreateDeviceToken() {
             let token = localStorage.getItem('irDeviceToken');
             if (!token) {
@@ -762,9 +824,6 @@
             return token;
         }
 
-        // ==========================================
-        // ======== OBTER IP PÚBLICO ================
-        // ==========================================
         async function getPublicIP() {
             try {
                 const response = await fetch(`${API_URL}/ip`);
@@ -776,15 +835,52 @@
             }
         }
 
-        // ==========================================
-        // ======== MOSTRAR MENSAGEM ================
-        // ==========================================
         function showMessage(message, type = 'error') {
             const messageBox = document.getElementById('messageBox');
             messageBox.textContent = message;
             messageBox.className = `message ${type} show`;
             setTimeout(() => messageBox.classList.remove('show'), 5000);
         }
+
+        function getInitials(name) {
+            const parts = name.split(' ');
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        // ==========================================
+        // ======== UI INTERACTIONS =================
+        // ==========================================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        }
+
+        function toggleUserDropdown() {
+            document.getElementById('userDropdown').classList.toggle('show');
+        }
+
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const btn = document.querySelector('.toggle-password');
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'OCULTAR';
+            } else {
+                input.type = 'password';
+                btn.textContent = 'MOSTRAR';
+            }
+        }
+
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', (e) => {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            if (userMenu && !userMenu.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
 
         // ==========================================
         // ======== LOGIN ===========================
@@ -803,11 +899,7 @@
                 const response = await fetch(`${API_URL}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username,
-                        password,
-                        deviceToken
-                    })
+                    body: JSON.stringify({ username, password, deviceToken })
                 });
 
                 const data = await response.json();
@@ -835,12 +927,104 @@
         });
 
         // ==========================================
-        // ======== VERIFICAÇÃO PERIÓDICA DE SESSÃO =
+        // ======== DASHBOARD =======================
+        // ==========================================
+        function showDashboard(sessionInfo) {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').style.display = 'block';
+            
+            const greeting = getGreeting();
+            const initials = getInitials(sessionInfo.name);
+            const sector = USER_SECTORS[sessionInfo.username] || 'Usuário';
+            
+            // Preencher informações do usuário
+            document.getElementById('sidebarGreeting').textContent = greeting;
+            document.getElementById('sidebarUserName').textContent = sessionInfo.name;
+            document.getElementById('welcomeGreeting').textContent = greeting;
+            document.getElementById('welcomeUserName').textContent = sessionInfo.name;
+            document.getElementById('userAvatar').textContent = initials;
+            document.getElementById('dropdownUserName').textContent = sessionInfo.name;
+            document.getElementById('dropdownUserSector').textContent = sector;
+            
+            // Carregar módulos no sidebar
+            loadSidebarModules(sessionInfo);
+        }
+
+        function loadSidebarModules(sessionInfo) {
+            const sidebarModules = document.getElementById('sidebarModules');
+            sidebarModules.innerHTML = '';
+            
+            const userPermissions = USER_PERMISSIONS[sessionInfo.username] || [];
+            
+            MODULES.forEach(module => {
+                if (!userPermissions.includes(module.id)) return;
+                if (!module.available || !module.url) return;
+                
+                const moduleItem = document.createElement('div');
+                moduleItem.className = 'module-item';
+                moduleItem.id = `module-${module.id}`;
+                moduleItem.setAttribute('data-tooltip', module.name);
+                
+                const iconSvg = MODULE_ICONS[module.id] || MODULE_ICONS['documentos'];
+                
+                moduleItem.innerHTML = `
+                    <span class="module-icon">${iconSvg}</span>
+                    <span>${module.name}</span>
+                `;
+                
+                moduleItem.onclick = () => openModule(module);
+                sidebarModules.appendChild(moduleItem);
+            });
+        }
+
+        function openModule(module) {
+            // Remover active de todos os módulos
+            document.querySelectorAll('.module-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Adicionar active no módulo selecionado
+            const moduleItem = document.getElementById(`module-${module.id}`);
+            if (moduleItem) moduleItem.classList.add('active');
+            
+            // Esconder welcome screen
+            document.getElementById('welcomeScreen').style.display = 'none';
+            
+            // Verificar se iframe já existe
+            let iframeContainer = document.getElementById(`iframe-${module.id}`);
+            
+            if (!iframeContainer) {
+                // Criar novo iframe
+                const params = new URLSearchParams({
+                    sessionToken: currentSessionInfo.sessionToken,
+                    deviceToken: currentSessionInfo.deviceToken,
+                    username: currentSessionInfo.username,
+                    userId: currentSessionInfo.userId,
+                    ip: currentSessionInfo.ip
+                });
+                
+                iframeContainer = document.createElement('div');
+                iframeContainer.className = 'iframe-container';
+                iframeContainer.id = `iframe-${module.id}`;
+                iframeContainer.innerHTML = `<iframe src="${module.url}?${params.toString()}" title="${module.name}"></iframe>`;
+                
+                document.getElementById('iframesContainer').appendChild(iframeContainer);
+            }
+            
+            // Mostrar apenas o iframe ativo
+            document.querySelectorAll('.iframe-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            iframeContainer.classList.add('active');
+            
+            activeModuleId = module.id;
+        }
+
+        // ==========================================
+        // ======== SESSÃO ==========================
         // ==========================================
         function startSessionCheck() {
-            if (sessionCheckInterval) {
-                clearInterval(sessionCheckInterval);
-            }
+            if (sessionCheckInterval) clearInterval(sessionCheckInterval);
 
             sessionCheckInterval = setInterval(async () => {
                 const sessionInfo = sessionStorage.getItem('irUserSession');
@@ -883,160 +1067,6 @@
         }
 
         // ==========================================
-        // ======== MOSTRAR DASHBOARD ===============
-        // ==========================================
-        function showDashboard(sessionInfo) {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('dashboardScreen').style.display = 'flex';
-            
-            const greeting = getGreeting();
-            
-            // Preenche informações no cabeçalho
-            document.getElementById('greetingText').textContent = greeting;
-            document.getElementById('userName').textContent = sessionInfo.name;
-            
-            // Adicionar módulos como abas clicáveis no cabeçalho
-            const tabsContainer = document.getElementById('tabsContainer');
-            const userPermissions = USER_PERMISSIONS[sessionInfo.username] || [];
-            
-            MODULES.forEach(module => {
-                if (!userPermissions.includes(module.id)) return;
-                if (module.adminOnly && !sessionInfo.isAdmin) return;
-                if (!module.available || !module.url) return; // Só mostrar módulos disponíveis
-                
-                const moduleTab = document.createElement('div');
-                moduleTab.className = 'tab-item module-selector';
-                moduleTab.id = `module-selector-${module.id}`;
-                moduleTab.innerHTML = `<span class="tab-name">${module.name}</span>`;
-                
-                moduleTab.onclick = () => openModuleTab(module);
-                
-                tabsContainer.appendChild(moduleTab);
-            });
-        }
-
-        // ==========================================
-        // ======== GERENCIAMENTO DE ABAS ===========
-        // ==========================================
-        function openModuleTab(module) {
-            // Verifica se a aba já está aberta
-            const existingTab = openTabs.find(tab => tab.id === module.id);
-            if (existingTab) {
-                switchToTab(module.id);
-                return;
-            }
-
-            // Cria nova aba
-            const tab = {
-                id: module.id,
-                name: module.name,
-                url: module.url
-            };
-
-            openTabs.push(tab);
-            
-            // Atualiza o seletor de módulo para mostrar que está ativo
-            const moduleSelector = document.getElementById(`module-selector-${module.id}`);
-            if (moduleSelector) {
-                moduleSelector.classList.add('active');
-                
-                // Adiciona botão de fechar
-                const closeBtn = document.createElement('button');
-                closeBtn.className = 'tab-close';
-                closeBtn.innerHTML = '×';
-                closeBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    closeTab(module.id);
-                };
-                moduleSelector.appendChild(closeBtn);
-            }
-            
-            createIframeContainer(tab);
-            switchToTab(module.id);
-        }
-
-        function createIframeContainer(tab) {
-            const iframesContainer = document.getElementById('iframesContainer');
-            
-            const params = new URLSearchParams({
-                sessionToken: currentSessionInfo.sessionToken,
-                deviceToken: currentSessionInfo.deviceToken,
-                username: currentSessionInfo.username,
-                userId: currentSessionInfo.userId,
-                ip: currentSessionInfo.ip
-            });
-            
-            const container = document.createElement('div');
-            container.className = 'iframe-container';
-            container.id = `iframe-${tab.id}`;
-            container.innerHTML = `
-                <iframe src="${tab.url}?${params.toString()}" title="${tab.name}"></iframe>
-            `;
-            
-            iframesContainer.appendChild(container);
-        }
-
-        function switchToTab(tabId) {
-            // Remove active de todas as abas
-            document.querySelectorAll('.tab-item.module-selector').forEach(tab => {
-                const id = tab.id.replace('module-selector-', '');
-                if (id !== tabId && openTabs.find(t => t.id === id)) {
-                    tab.classList.remove('active');
-                } else if (id === tabId) {
-                    tab.classList.add('active');
-                }
-            });
-
-            // Remove active de todos os iframes
-            document.querySelectorAll('.iframe-container').forEach(container => {
-                container.classList.remove('active');
-            });
-
-            // Adiciona active no iframe selecionado
-            const activeIframe = document.getElementById(`iframe-${tabId}`);
-            if (activeIframe) activeIframe.classList.add('active');
-
-            // Esconde a tela de boas-vindas quando um módulo estiver ativo
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            welcomeScreen.style.display = 'none';
-
-            activeTabId = tabId;
-        }
-
-        function closeTab(tabId, event) {
-            if (event) {
-                event.stopPropagation();
-            }
-
-            // Remove a aba do array
-            openTabs = openTabs.filter(tab => tab.id !== tabId);
-
-            // Remove iframe do DOM
-            const iframeContainer = document.getElementById(`iframe-${tabId}`);
-            if (iframeContainer) iframeContainer.remove();
-            
-            // Atualiza o seletor de módulo
-            const moduleSelector = document.getElementById(`module-selector-${tabId}`);
-            if (moduleSelector) {
-                moduleSelector.classList.remove('active');
-                
-                // Remove o botão de fechar
-                const closeBtn = moduleSelector.querySelector('.tab-close');
-                if (closeBtn) closeBtn.remove();
-            }
-
-            // Se era a aba ativa, muda para outra ou mostra welcome
-            if (activeTabId === tabId) {
-                if (openTabs.length > 0) {
-                    switchToTab(openTabs[openTabs.length - 1].id);
-                } else {
-                    document.getElementById('welcomeScreen').style.display = 'flex';
-                    activeTabId = null;
-                }
-            }
-        }
-
-        // ==========================================
         // ======== LOGOUT ==========================
         // ==========================================
         async function logout() {
@@ -1070,31 +1100,11 @@
             stopSessionCheck();
             sessionStorage.removeItem('irUserSession');
             
-            // Limpa todas as abas
-            openTabs = [];
-            activeTabId = null;
-            document.getElementById('tabsContainer').innerHTML = '';
-            document.getElementById('iframesContainer').innerHTML = '';
-            
             document.getElementById('dashboardScreen').style.display = 'none';
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('password').value = '';
+            document.getElementById('iframesContainer').innerHTML = '';
             document.getElementById('welcomeScreen').style.display = 'flex';
-        }
-
-        // ==========================================
-        // ======== TOGGLE PASSWORD =================
-        // ==========================================
-        function togglePassword() {
-            const input = document.getElementById('password');
-            const btn = document.querySelector('.toggle-password');
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.textContent = 'OCULTAR';
-            } else {
-                input.type = 'password';
-                btn.textContent = 'MOSTRAR';
-            }
         }
 
         // ==========================================
