@@ -409,7 +409,7 @@
             padding: 0.5rem 0;
         }
 
-        /* Scrollbar sutil e moderna */
+        /* Scrollbar padrão cinza - só aparece ao hover */
         .sidebar-modules::-webkit-scrollbar {
             width: 8px;
         }
@@ -419,19 +419,23 @@
         }
 
         .sidebar-modules::-webkit-scrollbar-thumb {
-            background: rgba(255, 81, 0, 0.2);
+            background: #888;
             border-radius: 4px;
-            transition: background 0.3s ease;
         }
 
         .sidebar-modules::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 81, 0, 0.4);
+            background: #555;
+        }
+
+        /* Scrollbar só aparece ao passar mouse */
+        .sidebar-modules:not(:hover)::-webkit-scrollbar-thumb {
+            background: transparent;
         }
 
         /* Para Firefox */
         .sidebar-modules {
             scrollbar-width: thin;
-            scrollbar-color: rgba(255, 81, 0, 0.2) transparent;
+            scrollbar-color: #888 transparent;
         }
 
         /* FOOTER DO SIDEBAR */
@@ -458,7 +462,7 @@
             position: relative;
         }
 
-        /* Tooltip sempre visível ao hover */
+        /* Tooltip sempre visível ao hover (quando NÃO colapsado) */
         .module-item::before {
             content: attr(data-tooltip);
             position: absolute;
@@ -538,206 +542,6 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-        }
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .top-bar {
-            height: 60px;
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .top-bar-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .menu-toggle {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .menu-toggle:hover {
-            background: var(--bg-card);
-        }
-
-        .top-bar-company {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .top-bar-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            background: var(--online-green);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-            box-shadow: 0 0 8px var(--online-green);
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.7;
-                transform: scale(1.15);
-            }
-        }
-
-        .user-info-top {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        .user-info-name {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .user-info-sector {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .user-menu {
-            position: relative;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .user-avatar:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 81, 0, 0.4);
-        }
-
-        .user-dropdown {
-            position: absolute;
-            top: calc(100% + 0.5rem);
-            right: 0;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 0;
-            min-width: 280px;
-            display: none;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .user-dropdown.show {
-            display: block;
-        }
-
-        .user-dropdown-header {
-            padding: 1.25rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .user-dropdown-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .user-dropdown-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-dropdown-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-            font-size: 0.95rem;
-        }
-
-        .user-dropdown-sector {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .user-dropdown-item {
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .user-dropdown-item:hover {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error);
-        }
-
-        .user-dropdown-item svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
         }
 
         /* ============================================
@@ -977,7 +781,7 @@
         const USER_NAMES = {
             'Roberto': 'Roberto Gravino',
             'Rosemeire': 'Rosemeire Gravino',
-            'vendas': 'Isaque Gravino',
+            'vendas': 'Isaque Carvalho',
             'vendas2': 'Miguel Alves',
             'financeiro1': 'Financeiro 1',
             'financeiro2': 'Financeiro 2',
@@ -992,7 +796,7 @@
             'vendas2': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
             'financeiro1': ['pregões', 'faturamento', 'receber', 'pagamento', 'documentos'],
             'financeiro2': ['pregões', 'faturamento', 'receber', 'pagamento', 'documentos'],
-            'almox': ['cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'faturamento', 'estoque'],
+            'almox': ['cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'faturamento', 'estoque']
         };
 
         // Ícones SVG para TODOS os módulos
@@ -1051,14 +855,12 @@
                 url: 'https://cotacoes-frete-aikc.onrender.com',
                 available: true
             },
-
-{
+            {
                 id: 'faturamento',
                 name: 'Pedidos de Faturamento',
-                url: null,
-                available: true
+                url: '',
+                available: false
             },
-            
             {
                 id: 'controle-frete',
                 name: 'Controle de Frete',
@@ -1151,14 +953,6 @@
             setTimeout(() => messageBox.classList.remove('show'), 5000);
         }
 
-        function getInitials(name) {
-            const parts = name.split(' ');
-            if (parts.length >= 2) {
-                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-            }
-            return name.substring(0, 2).toUpperCase();
-        }
-
         // ==========================================
         // ======== UI INTERACTIONS =================
         // ==========================================
@@ -1177,15 +971,6 @@
                 btn.textContent = 'MOSTRAR';
             }
         }
-
-        // Fechar dropdown ao clicar fora
-        document.addEventListener('click', (e) => {
-            const userMenu = document.querySelector('.user-menu');
-            const dropdown = document.getElementById('userDropdown');
-            if (userMenu && !userMenu.contains(e.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
 
         // ==========================================
         // ======== LOGIN ===========================
@@ -1254,11 +1039,22 @@
             // Carregar módulos no sidebar
             loadSidebarModules(sessionInfo);
             
-            // Remover splash após 3 segundos
-            setTimeout(() => {
-                const splash = document.getElementById('splashWelcome');
-                if (splash) splash.style.display = 'none';
-            }, 3000);
+            // Mostrar splash screen toda vez
+            const splash = document.getElementById('splashWelcome');
+            if (splash) {
+                splash.style.display = 'flex';
+                splash.style.animation = 'none';
+                
+                // Forçar reflow para reiniciar animação
+                void splash.offsetWidth;
+                
+                splash.style.animation = 'fadeOut 0.5s ease 2.5s forwards';
+                
+                // Remover splash após 3 segundos
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 3000);
+            }
         }
 
         function loadSidebarModules(sessionInfo) {
@@ -1318,13 +1114,9 @@
             let iframeContainer = document.getElementById(`iframe-${module.id}`);
             
             if (!iframeContainer) {
-                // Criar novo iframe
+                // CRÍTICO: Passar apenas sessionToken - SEM username/password na URL
                 const params = new URLSearchParams({
-                    sessionToken: currentSessionInfo.sessionToken,
-                    deviceToken: currentSessionInfo.deviceToken,
-                    username: currentSessionInfo.username,
-                    userId: currentSessionInfo.userId,
-                    ip: currentSessionInfo.ip
+                    sessionToken: currentSessionInfo.sessionToken
                 });
                 
                 iframeContainer = document.createElement('div');
