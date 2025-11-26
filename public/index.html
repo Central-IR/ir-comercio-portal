@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
-    <title>Portal I.R. Comércio</title>
+    <title>Portal</title>
     <style>
         /* ============================================
            VARIÁVEIS BASE (DARK THEME - PADRÃO)
@@ -268,11 +268,6 @@
             padding: 1.5rem 0.75rem;
         }
 
-        .sidebar.collapsed .company-name,
-        .sidebar.collapsed .user-greeting {
-            display: none;
-        }
-
         .sidebar.collapsed .module-item span:not(.module-icon) {
             display: none;
         }
@@ -280,6 +275,14 @@
         .sidebar.collapsed .module-item {
             justify-content: center;
             padding: 1rem 0.75rem;
+        }
+
+        .sidebar.collapsed .logout-button span {
+            display: none;
+        }
+
+        .sidebar.collapsed .logout-button {
+            justify-content: center;
         }
 
         .sidebar-header {
@@ -306,13 +309,6 @@
             display: flex;
         }
 
-        .company-name {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.3;
-        }
-
         .sidebar-modules {
             flex: 1;
             overflow-y: auto;
@@ -330,6 +326,43 @@
         .sidebar-modules::-webkit-scrollbar-thumb {
             background: var(--border-color);
             border-radius: 3px;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logout-button {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            background: transparent;
+            border: none;
+        }
+
+        .logout-button:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .logout-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
         }
 
         .module-item {
@@ -443,10 +476,48 @@
         .menu-toggle:hover {
             background: var(--bg-card);
         }
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            height: 60px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--bg-card);
+        }
 
         .top-bar-company {
-            font-size: 0.95rem;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
             color: var(--text-primary);
         }
 
@@ -480,6 +551,23 @@
                 opacity: 0.7;
                 transform: scale(1.15);
             }
+        }
+
+        .user-info-top {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .user-info-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-info-sector {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
         }
 
         .user-menu {
@@ -755,11 +843,21 @@
             <div id="sidebar" class="sidebar">
                 <div class="sidebar-header">
                     <div class="sidebar-logo">IR</div>
-                    <div class="company-name">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
                 </div>
 
                 <div class="sidebar-modules" id="sidebarModules">
                     <!-- Módulos serão inseridos aqui -->
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="logout-button" onclick="logout()">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>Sair</span>
+                    </div>
                 </div>
             </div>
 
@@ -777,25 +875,9 @@
                             <div class="status-dot"></div>
                         </div>
 
-                        <div class="user-menu">
-                            <div class="user-avatar" id="userAvatar" onclick="toggleUserDropdown()">MA</div>
-                            <div class="user-dropdown" id="userDropdown">
-                                <div class="user-dropdown-header">
-                                    <div class="user-dropdown-avatar" id="dropdownAvatar">MA</div>
-                                    <div class="user-dropdown-info">
-                                        <div class="user-dropdown-name" id="dropdownUserName"></div>
-                                        <div class="user-dropdown-sector" id="dropdownUserSector"></div>
-                                    </div>
-                                </div>
-                                <div class="user-dropdown-item" onclick="logout()">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                        <polyline points="16 17 21 12 16 7"></polyline>
-                                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                                    </svg>
-                                    <span>Sair</span>
-                                </div>
-                            </div>
+                        <div class="user-info-top">
+                            <div class="user-info-name" id="topUserName"></div>
+                            <div class="user-info-sector" id="topUserSector"></div>
                         </div>
                     </div>
                 </div>
@@ -964,10 +1046,6 @@
             document.getElementById('sidebar').classList.toggle('collapsed');
         }
 
-        function toggleUserDropdown() {
-            document.getElementById('userDropdown').classList.toggle('show');
-        }
-
         function togglePassword() {
             const input = document.getElementById('password');
             const btn = document.querySelector('.toggle-password');
@@ -1041,16 +1119,15 @@
             document.getElementById('dashboardScreen').style.display = 'block';
             
             const greeting = getGreeting();
-            const initials = getInitials(sessionInfo.name);
             const sector = USER_SECTORS[sessionInfo.username] || 'Usuário';
             
-            // Preencher informações do usuário
+            // Preencher informações do usuário no top bar
+            document.getElementById('topUserName').textContent = sessionInfo.name;
+            document.getElementById('topUserSector').textContent = sector;
+            
+            // Preencher informações na tela de boas-vindas
             document.getElementById('welcomeGreeting').textContent = greeting;
             document.getElementById('welcomeUserName').textContent = sessionInfo.name;
-            document.getElementById('userAvatar').textContent = initials;
-            document.getElementById('dropdownAvatar').textContent = initials;
-            document.getElementById('dropdownUserName').textContent = sessionInfo.name;
-            document.getElementById('dropdownUserSector').textContent = sector;
             
             // Carregar módulos no sidebar
             loadSidebarModules(sessionInfo);
