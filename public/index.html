@@ -986,13 +986,13 @@
 
         // Permissões por usuário
         const USER_PERMISSIONS = {
-            'Roberto': ['usuarios', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
-            'Rosemeire': ['usuarios', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
-            'vendas': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
-            'vendas2': ['usuários', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'controle-frete', 'transportadoras', 'vendas', 'faturamento', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'Roberto': ['usuarios', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'vendas', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'Rosemeire': ['usuarios', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'vendas', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'vendas': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
+            'vendas2': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
             'financeiro1': ['pregões', 'faturamento', 'receber', 'pagamento', 'documentos'],
             'financeiro2': ['pregões', 'faturamento', 'receber', 'pagamento', 'documentos'],
-            'almox': ['cotacoes-frete', 'controle-frete', 'transportadoras', 'faturamento', 'estoque'],
+            'almox': ['cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'faturamento', 'estoque'],
         };
 
         // Ícones SVG para TODOS os módulos
@@ -1051,6 +1051,14 @@
                 url: 'https://cotacoes-frete-aikc.onrender.com',
                 available: true
             },
+
+{
+                id: 'faturamento',
+                name: 'Pedidos de Faturamento',
+                url: null,
+                available: true
+            },
+            
             {
                 id: 'controle-frete',
                 name: 'Controle de Frete',
@@ -1066,12 +1074,6 @@
             {
                 id: 'vendas',
                 name: 'Vendas',
-                url: '',
-                available: false
-            },
-            {
-                id: 'faturamento',
-                name: 'Faturamento',
                 url: '',
                 available: false
             },
