@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
-    <title>Portal I.R. Comércio</title>
+    <title>Portal</title>
     <style>
         /* ============================================
            VARIÁVEIS BASE (DARK THEME - PADRÃO)
@@ -267,10 +267,6 @@
             animation: smoothFadeIn 1.5s ease-out 0.3s forwards;
         }
 
-        .splash-user-name {
-            color: var(--primary);
-        }
-
         @keyframes smoothFadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -411,32 +407,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-        }
-
-        .status-indicator-sidebar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            background: var(--online-green);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-            box-shadow: 0 0 8px var(--online-green);
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.7;
-                transform: scale(1.15);
-            }
+            min-height: 50px;
         }
 
         .module-item {
@@ -891,9 +862,7 @@
     <div id="dashboardScreen" class="dashboard-screen">
         <!-- SPLASH SCREEN DE BOAS-VINDAS -->
         <div class="splash-welcome" id="splashWelcome">
-            <h1 class="splash-greeting">
-                <span id="splashGreeting"></span>, <span id="splashUserName" class="splash-user-name"></span>
-            </h1>
+            <h1 class="splash-greeting">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</h1>
         </div>
 
         <div class="dashboard-container">
@@ -903,7 +872,7 @@
                 <div class="sidebar-header">
                     <button class="menu-toggle-sidebar" onclick="toggleSidebar()">☰</button>
                     <div class="sidebar-title">
-                        <div class="company-name-sidebar">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
+                        <div class="company-name-sidebar" id="sidebarGreeting"></div>
                         <button class="logout-btn-sidebar" onclick="logout()">Sair</button>
                     </div>
                 </div>
@@ -915,9 +884,7 @@
 
                 <!-- FOOTER DO SIDEBAR -->
                 <div class="sidebar-footer">
-                    <div class="status-indicator-sidebar">
-                        <div class="status-dot"></div>
-                    </div>
+                    <!-- Footer vazio - removido status -->
                 </div>
             </div>
 
@@ -966,7 +933,7 @@
         // Ícones SVG para TODOS os módulos
         const MODULE_ICONS = {
             'usuarios': '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
-            'pregões': '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+            'pregões': '🔨',
             'compra': '<svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>',
             'tabela-precos': '<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>',
             'fornecedores': '<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
@@ -1206,9 +1173,8 @@
             
             const greeting = getGreeting();
             
-            // Preencher splash screen de boas-vindas
-            document.getElementById('splashGreeting').textContent = greeting;
-            document.getElementById('splashUserName').textContent = sessionInfo.name;
+            // Preencher saudação no header do sidebar
+            document.getElementById('sidebarGreeting').textContent = `${greeting}, ${sessionInfo.name}`;
             
             // Carregar módulos no sidebar
             loadSidebarModules(sessionInfo);
@@ -1243,10 +1209,16 @@
                     moduleItem.onclick = () => openModule(module);
                 }
                 
-                const iconSvg = MODULE_ICONS[module.id] || MODULE_ICONS['documentos'];
+                const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos'];
+                
+                // Verificar se é emoji ou SVG
+                const isEmoji = !icon.includes('<svg');
+                const iconHtml = isEmoji 
+                    ? `<span style="font-size: 1.25rem;">${icon}</span>`
+                    : icon;
                 
                 moduleItem.innerHTML = `
-                    <span class="module-icon">${iconSvg}</span>
+                    <span class="module-icon">${iconHtml}</span>
                     <span>${module.name}</span>
                 `;
                 
