@@ -12,6 +12,10 @@ const PORT = process.env.PORT || 3000;
 // ==========================================
 const AUTHORIZED_IP = '187.36.172.217';
 
+// ==========================================
+// ======== CONFIGURAÇÃO - ALERTAS ==========
+// ==========================================
+const USUARIOS_API_URL = 'https://usuarios-eff2.onrender.com/api';
 
 // ==========================================
 // ======== CONFIGURAÇÃO DO SUPABASE ========
@@ -35,6 +39,29 @@ app.options('*', cors());
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// ==========================================
+// ======== FUNÇÃO - ENVIAR ALERTA ==========
+// ==========================================
+async function sendSecurityAlert(alertData) {
+  try {
+    const response = await fetch(`${USUARIOS_API_URL}/alerts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(alertData)
+    });
+    
+    if (response.ok) {
+      console.log('🚨 Alerta de segurança enviado:', alertData.alert_type);
+    } else {
+      console.error('❌ Erro ao enviar alerta - Status:', response.status);
+    }
+  } catch (error) {
+    console.error('❌ Erro ao enviar alerta:', error.message);
+  }
+}
 
 // ==========================================
 // ======== ROTA PRINCIPAL ==================
@@ -121,6 +148,22 @@ app.post('/api/login', async (req, res) => {
     if (cleanIP !== AUTHORIZED_IP) {
       console.log('❌ IP não autorizado tentando fazer login:', cleanIP);
       await logLoginAttempt(username, false, 'IP não autorizado', deviceToken, cleanIP);
+      
+      // 🚨 ENVIAR ALERTA DE IP NÃO AUTORIZADO
+      await sendSecurityAlert({
+        alert_type: 'unauthorized_ip',
+        severity: 'high',
+        ip_address: cleanIP,
+        username: username,
+        attempted_system: 'portal',
+        message: `Tentativa de login de IP não autorizado: ${cleanIP}`,
+        details: {
+          timestamp: new Date().toISOString(),
+          user_agent: req.headers['user-agent'] || 'Unknown',
+          device_token: deviceToken
+        }
+      });
+      
       return res.status(403).json({ 
         error: 'Acesso negado',
         message: 'Seu IP não está autorizado a acessar este sistema' 
@@ -162,11 +205,35 @@ app.post('/api/login', async (req, res) => {
       const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
       const dayOfWeek = brasiliaTime.getDay();
       const hour = brasiliaTime.getHours();
+      const minute = brasiliaTime.getMinutes();
       const isBusinessHours = dayOfWeek >= 1 && dayOfWeek <= 5 && hour >= 8 && hour < 18;
 
       if (!isBusinessHours) {
         console.log('❌ Tentativa de login fora do horário comercial:', username);
         await logLoginAttempt(username, false, 'Fora do horário comercial', deviceToken, cleanIP);
+        
+        // 🚨 ENVIAR ALERTA DE ACESSO FORA DO HORÁRIO
+        const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+        const dayName = dayNames[dayOfWeek];
+        const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        
+        await sendSecurityAlert({
+          alert_type: 'after_hours',
+          severity: 'medium',
+          ip_address: cleanIP,
+          username: username,
+          attempted_system: 'portal',
+          message: `Tentativa de login fora do horário: ${dayName} às ${timeStr}`,
+          details: {
+            timestamp: new Date().toISOString(),
+            day_of_week: dayName,
+            day_number: dayOfWeek,
+            hour: hour,
+            minute: minute,
+            user_agent: req.headers['user-agent'] || 'Unknown'
+          }
+        });
+        
         return res.status(403).json({ 
           error: 'Fora do horário comercial',
           message: 'Acesso de usuários permitido apenas de segunda a sexta, das 8h às 18h (horário de Brasília)' 
@@ -177,7 +244,41 @@ app.post('/api/login', async (req, res) => {
     // 6. Verificar senha
     if (password !== userData.password) {
       console.log('❌ Senha incorreta para usuário:', username);
+      
+      // Contar tentativas recentes falhas (últimos 10 minutos)
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+      
+      const { data: recentAttempts } = await supabase
+        .from('login_attempts')
+        .select('*')
+        .eq('username', username)
+        .eq('success', false)
+        .gte('timestamp', tenMinutesAgo.toISOString())
+        .order('timestamp', { ascending: false });
+      
+      const failureCount = (recentAttempts?.length || 0) + 1;
+      
       await logLoginAttempt(username, false, 'Senha incorreta', deviceToken, cleanIP);
+      
+      // 🚨 ENVIAR ALERTA SE MÚLTIPLAS TENTATIVAS FALHAS
+      if (failureCount >= 3) {
+        await sendSecurityAlert({
+          alert_type: 'multiple_failures',
+          severity: failureCount >= 5 ? 'critical' : 'high',
+          ip_address: cleanIP,
+          username: username,
+          attempted_system: 'portal',
+          message: `${failureCount} tentativas de login falhas em 10 minutos`,
+          details: {
+            timestamp: new Date().toISOString(),
+            failure_count: failureCount,
+            user_agent: req.headers['user-agent'] || 'Unknown',
+            device_token: deviceToken,
+            recent_attempts: recentAttempts ? recentAttempts.length : 0
+          }
+        });
+      }
+      
       return res.status(401).json({ 
         error: 'Usuário ou senha incorretos' 
       });
@@ -500,6 +601,7 @@ app.listen(PORT, () => {
   console.log(`🚀 Portal Central rodando na porta ${PORT}`);
   console.log(`💾 Supabase configurado: ${supabaseUrl ? 'Sim ✅' : 'Não ❌'}`);
   console.log(`🔒 IP autorizado: ${AUTHORIZED_IP}`);
+  console.log(`🚨 Sistema de alertas: ${USUARIOS_API_URL}`);
   console.log('⏰ Horário comercial: Seg-Sex, 8h-18h (apenas não-admin)');
   console.log('='.repeat(50));
 });
