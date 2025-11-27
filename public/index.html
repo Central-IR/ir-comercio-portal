@@ -791,13 +791,13 @@
 
         // Permissões por usuário
         const USER_PERMISSIONS = {
-            'Roberto': ['usuarios', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'vendas', 'receber', 'pagamento', 'estoque', 'documentos'],
-            'Rosemeire': ['usuarios', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'vendas', 'receber', 'pagamento', 'estoque', 'documentos'],
-            'vendas': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
-            'vendas2': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
-            'financeiro1': ['pregões', 'faturamento', 'receber', 'pagamento', 'documentos'],
-            'almox': ['cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'faturamento', 'estoque'],
-            'suporte': ['cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'faturamento', 'estoque']
+            'Roberto': ['usuarios', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'etiqueta', 'controle-frete', 'transportadoras', 'vendas', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'Rosemeire': ['usuarios', 'pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'etiqueta', 'controle-frete', 'transportadoras', 'vendas', 'receber', 'pagamento', 'estoque', 'documentos'],
+            'vendas': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'etiqueta', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
+            'vendas2': ['pregões', 'compra', 'tabela-precos', 'fornecedores', 'cotacoes-frete', 'faturamento', 'etiqueta', 'controle-frete', 'vendas', 'faturamento', 'estoque', 'documentos'],
+            'financeiro1': ['pregões', 'controle-frete', 'faturamento', 'receber', 'pagamento', 'documentos'],
+            'almox': ['cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'faturamento', 'etiqueta', 'estoque'],
+            'suporte': ['cotacoes-frete', 'faturamento', 'controle-frete', 'transportadoras', 'faturamento', 'etiqueta', 'estoque']
         };
 
         // Ícones SVG para TODOS os módulos
@@ -812,6 +812,7 @@
             'transportadoras': '<svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>',
             'vendas': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
             'faturamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-input-icon lucide-file-input"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M2 15h10"/><path d="m9 18 3-3-3-3"/></svg>',
+            'etiqueta': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag-icon lucide-tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>',
             'receber': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote-arrow-down-icon lucide-banknote-arrow-down"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="m16 19 3 3 3-3"/><path d="M18 12h.01"/><path d="M19 16v6"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
             'pagamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote-arrow-up-icon lucide-banknote-arrow-up"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="M18 12h.01"/><path d="M19 22v-6"/><path d="m22 19-3-3-3 3"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
             'estoque': '<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
@@ -853,6 +854,12 @@
             {
                 id: 'faturamento',
                 name: 'Pedidos de Faturamento',
+                url: '',
+                available: false
+            },
+            {
+                id: 'etiqueta',
+                name: 'Etiqueta de Envio',
                 url: '',
                 available: false
             },
