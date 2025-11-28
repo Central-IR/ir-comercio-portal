@@ -123,7 +123,7 @@ app.post('/api/login', async (req, res) => {
       await logLoginAttempt(username, false, 'IP não autorizado', deviceToken, cleanIP);
       return res.status(403).json({ 
         error: 'Acesso negado',
-        message: 'Seu IP não está autorizado a acessar este sistema' 
+        message: 'Este acesso não está autorizado fora do ambiente de trabalho.' 
       });
     }
 
@@ -169,7 +169,7 @@ app.post('/api/login', async (req, res) => {
         await logLoginAttempt(username, false, 'Fora do horário comercial', deviceToken, cleanIP);
         return res.status(403).json({ 
           error: 'Fora do horário comercial',
-          message: 'Acesso de usuários permitido apenas de segunda a sexta, das 8h às 18h (horário de Brasília)' 
+          message: 'Este acesso é disponibilizado em conformidade com o horário comercial da empresa.' 
         });
       }
     }
@@ -233,7 +233,7 @@ app.post('/api/login', async (req, res) => {
       .maybeSingle();
 
     if (existingSession) {
-      console.log('ℹ️ Sessão ativa encontrada - atualizando');
+      console.log('Sessão ativa encontrada - atualizando');
 
       // Atualizar sessão existente
       const { error: sessionError } = await supabase
@@ -254,9 +254,9 @@ app.post('/api/login', async (req, res) => {
         });
       }
 
-      console.log('✅ Sessão atualizada com sucesso');
+      console.log('Sessão atualizada com sucesso');
     } else {
-      console.log('ℹ️ Criando nova sessão');
+      console.log('Criando nova sessão');
 
       // Desativar sessões antigas deste usuário + dispositivo
       await supabase
@@ -286,12 +286,12 @@ app.post('/api/login', async (req, res) => {
         });
       }
 
-      console.log('✅ Nova sessão criada com sucesso');
+      console.log('Nova sessão criada com sucesso');
     }
 
     // 9. Log de sucesso
     await logLoginAttempt(username, true, null, deviceToken, cleanIP);
-    console.log('✅ Login realizado com sucesso:', username, '| IP:', cleanIP);
+    console.log('Login realizado com sucesso:', username, '| IP:', cleanIP);
 
     // 10. Retornar dados da sessão
     res.json({
@@ -426,7 +426,7 @@ app.post('/api/verify-session', async (req, res) => {
         return res.status(403).json({ 
           valid: false, 
           reason: 'outside_business_hours',
-          message: 'Acesso permitido apenas de segunda a sexta, das 8h às 18h (horário de Brasília)'
+          message: 'Este acesso é disponibilizado em conformidade com o horário comercial da empresa.'
         });
       }
     }
