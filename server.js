@@ -131,9 +131,10 @@ app.post('/api/login', async (req, res) => {
     const usernameSearch = username.toLowerCase().trim();
     console.log('🔍 Buscando usuário:', usernameSearch);
 
+    // ✅ CORREÇÃO: Buscar também o campo 'sector'
     const { data: userData, error: userError } = await supabase
       .from('users')
-      .select('*')
+      .select('id, username, password, name, is_admin, is_active, sector')
       .ilike('username', usernameSearch)
       .single();
 
@@ -145,7 +146,7 @@ app.post('/api/login', async (req, res) => {
       });
     }
 
-    console.log('✅ Usuário encontrado:', userData.username);
+    console.log('✅ Usuário encontrado:', userData.username, '| Setor:', userData.sector);
 
     // 4. Verificar se usuário está ativo
     if (userData.is_active === false) {
@@ -294,12 +295,14 @@ app.post('/api/login', async (req, res) => {
     console.log('Login realizado com sucesso:', username, '| IP:', cleanIP);
 
     // 10. Retornar dados da sessão
+    // ✅ CORREÇÃO: Adicionar campo 'sector' na resposta
     res.json({
       success: true,
       session: {
         userId: userData.id,
         username: userData.username,
         name: userData.name,
+        sector: userData.sector,        // ← ADICIONADO
         isAdmin: userData.is_admin,
         sessionToken: sessionToken,
         deviceToken: deviceToken,
@@ -364,7 +367,7 @@ app.post('/api/verify-session', async (req, res) => {
       });
     }
 
-    // Buscar sessão
+    // ✅ CORREÇÃO: Buscar também o campo 'sector'
     const { data: session, error } = await supabase
       .from('active_sessions')
       .select(`
@@ -373,6 +376,7 @@ app.post('/api/verify-session', async (req, res) => {
           id,
           username,
           name,
+          sector,
           is_admin,
           is_active
         )
@@ -437,12 +441,14 @@ app.post('/api/verify-session', async (req, res) => {
       .update({ last_activity: new Date().toISOString() })
       .eq('session_token', sessionToken);
 
+    // ✅ CORREÇÃO: Retornar também o campo 'sector'
     res.json({ 
       valid: true,
       session: {
         userId: session.users.id,
         username: session.users.username,
         name: session.users.name,
+        sector: session.users.sector,    // ← ADICIONADO
         isAdmin: session.users.is_admin
       }
     });
