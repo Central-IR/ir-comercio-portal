@@ -407,9 +407,15 @@
             overflow-y: auto;
             overflow-x: hidden;
             padding: 0.5rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
         }
 
-        /* Scrollbar padrão cinza - só aparece ao hover */
+        /* Scrollbar só aparece ao hover */
+        .sidebar-modules:hover {
+            scrollbar-color: #888 transparent;
+        }
+
         .sidebar-modules::-webkit-scrollbar {
             width: 8px;
         }
@@ -419,23 +425,17 @@
         }
 
         .sidebar-modules::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-
-        .sidebar-modules::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        /* Scrollbar só aparece ao passar mouse */
-        .sidebar-modules:not(:hover)::-webkit-scrollbar-thumb {
             background: transparent;
+            border-radius: 4px;
+            transition: background 0.2s ease;
         }
 
-        /* Para Firefox */
-        .sidebar-modules {
-            scrollbar-width: thin;
-            scrollbar-color: #888 transparent;
+        .sidebar-modules:hover::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        .sidebar-modules:hover::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
 
         /* FOOTER DO SIDEBAR */
@@ -766,38 +766,44 @@
         // ==========================================
         const API_URL = window.location.origin + '/api';
 
-        // Setores por usuário
-        const USER_SECTORS = {
-            'Roberto': 'Administrador',
-            'Rosemeire': 'Administrador',
-            'vendas': 'Vendas',
-            'vendas2': 'Vendas',
-            'financeiro1': 'Financeiro',
-            'financeiro2': 'Financeiro',
-            'almox': 'Almoxarifado',
-            'suporte': 'Almoxarifado'
-        };
-
-        // Mapeamento de username para nome completo
-        const USER_NAMES = {
-            'Roberto': 'Roberto Gravino',
-            'Rosemeire': 'Rosemeire Gravino',
-            'vendas': 'Isaque Gravino',
-            'vendas2': 'Miguel Alves',
-            'financeiro1': 'Pollyanna Pereira',
-            'almox': 'Gustavo Nichetti',
-            'suporte': 'Luiz Guilherme'
-        };
-
-        // Permissões por usuário
-        const USER_PERMISSIONS = {
-            'Roberto': ['pregões', 'fornecedores', 'catalogos', 'tabela-precos', 'compra',  'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos'],
-            'Rosemeire': ['pregões', 'fornecedores', 'catalogos', 'tabela-precos', 'compra',  'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos'],
-            'vendas': ['pregões', 'fornecedores', 'catalogos', 'tabela-precos', 'compra',  'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas', 'documentos'],
-            'vendas2': ['pregões', 'fornecedores', 'catalogos', 'tabela-precos', 'compra',  'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas', 'documentos'],
-            'financeiro1': ['pregões', 'fornecedores','transportadoras',  'faturamento',  'controle-frete', 'receber', 'pagamento', 'documentos'],
-            'almox': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'faturamento', 'documentos'],
-            'suporte': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'faturamento', 'documentos']
+        // ==========================================
+        // PERMISSÕES POR SETOR (SEGURANÇA APRIMORADA)
+        // ==========================================
+        // Agora as permissões são definidas por SETOR, não por usuário
+        // Isso aumenta a segurança e facilita a manutenção
+        const SECTOR_PERMISSIONS = {
+            'Vendas': [
+                'pregões', 
+                'fornecedores', 
+                'catalogos', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'vendas', 
+                'documentos'
+            ],
+            'Financeiro': [
+                'pregões', 
+                'fornecedores',
+                'transportadoras', 
+                'faturamento', 
+                'controle-frete', 
+                'receber', 
+                'pagamento', 
+                'documentos'
+            ],
+            'Almoxarifado': [
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'documentos'
+            ]
         };
 
         // Ícones SVG para TODOS os módulos
@@ -826,13 +832,13 @@
                 url: '',
                 available: false
             },
-                        {
+            {
                 id: 'fornecedores',
                 name: 'Fornecedores',
                 url: '',
                 available: false
             },
-                        {
+            {
                 id: 'catalogos',
                 name: 'Cátalogos e Tabelas',
                 url: '',
@@ -850,62 +856,54 @@
                 url: 'https://ir-comercio.github.io/ordem-compra/public/',
                 available: true
             },
-
-                        {
+            {
                 id: 'transportadoras',
                 name: 'Transportadoras',
                 url: '',
                 available: false
             },
-                        {
+            {
                 id: 'cotacoes-frete',
                 name: 'Cotações de Frete',
                 url: 'https://cotacoes-frete-aikc.onrender.com',
                 available: true
             },
-            
-                        {
+            {
                 id: 'faturamento',
                 name: 'Pedidos de Faturamento',
                 url: '',
                 available: false
             },
-
-                        {
+            {
                 id: 'estoque',
                 name: 'Estoque',
                 url: '',
                 available: false
             },
-
-                        {
+            {
                 id: 'controle-frete',
                 name: 'Controle de Frete',
                 url: 'https://controle-frete.onrender.com',
                 available: true
             },
-
-                        {
+            {
                 id: 'receber',
                 name: 'Contas a Receber',
                 url: 'https://contas-receber-kkf9.onrender.com',
                 available: true
             },
-            
             {
                 id: 'vendas',
                 name: 'Vendas',
                 url: '',
                 available: false
             },
-            
             {
                 id: 'pagamento',
                 name: 'Contas a Pagar',
                 url: 'https://contas-a-pagar-ytr6.onrender.com/',
                 available: true
             },
-            
             {
                 id: 'documentos',
                 name: 'Documentos',
@@ -960,6 +958,22 @@
             messageBox.textContent = message;
             messageBox.className = `message ${type} show`;
             setTimeout(() => messageBox.classList.remove('show'), 5000);
+        }
+
+        /**
+         * Obtém as permissões de módulos para o usuário
+         * ADMINISTRADORES: Sempre têm acesso a todos os módulos
+         * OUTROS USUÁRIOS: Acesso baseado no setor
+         */
+        function getUserPermissions(sessionInfo) {
+            // Se for administrador, retorna todos os módulos
+            if (sessionInfo.isAdmin === true) {
+                return MODULES.map(m => m.id);
+            }
+            
+            // Se não for admin, retorna baseado no setor
+            const sector = sessionInfo.sector || '';
+            return SECTOR_PERMISSIONS[sector] || [];
         }
 
         // ==========================================
@@ -1034,9 +1048,9 @@
             
             const greeting = getGreeting();
             
-            // Usar nome do mapeamento local ou do backend
-            const userName = USER_NAMES[sessionInfo.username] || sessionInfo.name;
-            const userSector = USER_SECTORS[sessionInfo.username] || 'Usuário';
+            // Usar nome e setor retornados pelo backend
+            const userName = sessionInfo.name || sessionInfo.username;
+            const userSector = sessionInfo.sector || 'Usuário';
             
             // Preencher nome e setor no header do sidebar
             document.getElementById('sidebarUserName').textContent = userName;
@@ -1070,7 +1084,8 @@
             const sidebarModules = document.getElementById('sidebarModules');
             sidebarModules.innerHTML = '';
             
-            const userPermissions = USER_PERMISSIONS[sessionInfo.username] || [];
+            // Obter permissões baseadas no setor ou admin
+            const userPermissions = getUserPermissions(sessionInfo);
             
             MODULES.forEach(module => {
                 if (!userPermissions.includes(module.id)) return;
