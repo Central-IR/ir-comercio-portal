@@ -344,7 +344,7 @@
             display: block;
         }
 
-        /* Animação quando sidebar está aberto (não colapsado) */
+        /* Animação quando sidebar está EXPANDIDO (não colapsado) */
         .sidebar:not(.collapsed) .hamburger-line:nth-child(1) {
             transform: translateY(7px) rotate(45deg);
         }
@@ -462,7 +462,7 @@
             position: relative;
         }
 
-        /* Tooltip sempre visível ao hover (quando NÃO colapsado) */
+        /* Tooltip sempre visível ao hover */
         .module-item::before {
             content: attr(data-tooltip);
             position: absolute;
@@ -718,8 +718,8 @@
         </div>
 
         <div class="dashboard-container">
-            <!-- SIDEBAR -->
-            <div id="sidebar" class="sidebar">
+            <!-- SIDEBAR - COMEÇA MINIMIZADO -->
+            <div id="sidebar" class="sidebar collapsed">
                 <!-- HEADER DO SIDEBAR -->
                 <div class="sidebar-header">
                     <button class="menu-toggle-sidebar" onclick="toggleSidebar()">
@@ -769,8 +769,6 @@
         // ==========================================
         // PERMISSÕES POR SETOR (SEGURANÇA APRIMORADA)
         // ==========================================
-        // Agora as permissões são definidas por SETOR, não por usuário
-        // Isso aumenta a segurança e facilita a manutenção
         const SECTOR_PERMISSIONS = {
             'Vendas': [
                 'pregões', 
@@ -808,7 +806,7 @@
 
         // Ícones SVG para TODOS os módulos
         const MODULE_ICONS = {
-            'pregões': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gavel-icon lucide-gavel"><path d="m14 13-8.381 8.38a1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>',
+            'pregões': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gavel-icon lucide-gavel"><path d="m14 13-8.381 8.38a 1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>',
             'fornecedores': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-handshake-icon lucide-handshake"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>',
             'catalogos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag-icon lucide-tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>',
             'tabela-precos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column-stacked-icon lucide-chart-column-stacked"><path d="M11 13H7"/><path d="M19 9h-4"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="15" y="5" width="4" height="12" rx="1"/><rect x="7" y="8" width="4" height="9" rx="1"/></svg>',
@@ -826,90 +824,20 @@
 
         // Módulos disponíveis (todos os 14)
         const MODULES = [
-            {
-                id: 'pregões',
-                name: 'Pregões',
-                url: '',
-                available: false
-            },
-            {
-                id: 'fornecedores',
-                name: 'Fornecedores',
-                url: '',
-                available: false
-            },
-            {
-                id: 'catalogos',
-                name: 'Cátalogos e Tabelas',
-                url: '',
-                available: false
-            },
-            {
-                id: 'tabela-precos',
-                name: 'Tabela de Preços',
-                url: 'https://tabela-precos-udyp.onrender.com',
-                available: true
-            },
-            {
-                id: 'compra',
-                name: 'Ordens de Compra',
-                url: 'https://ir-comercio.github.io/ordem-compra/public/',
-                available: true
-            },
-            {
-                id: 'transportadoras',
-                name: 'Transportadoras',
-                url: '',
-                available: false
-            },
-            {
-                id: 'cotacoes-frete',
-                name: 'Cotações de Frete',
-                url: 'https://cotacoes-frete-aikc.onrender.com',
-                available: true
-            },
-            {
-                id: 'faturamento',
-                name: 'Pedidos de Faturamento',
-                url: '',
-                available: false
-            },
-            {
-                id: 'estoque',
-                name: 'Estoque',
-                url: '',
-                available: false
-            },
-            {
-                id: 'controle-frete',
-                name: 'Controle de Frete',
-                url: 'https://controle-frete.onrender.com',
-                available: true
-            },
-            {
-                id: 'receber',
-                name: 'Contas a Receber',
-                url: 'https://contas-receber-kkf9.onrender.com',
-                available: true
-            },
-            {
-                id: 'vendas',
-                name: 'Vendas',
-                url: '',
-                available: false
-            },
-            {
-                id: 'pagamento',
-                name: 'Contas a Pagar',
-                url: 'https://contas-a-pagar-ytr6.onrender.com/',
-                available: true
-            },
-            {
-                id: 'documentos',
-                name: 'Documentos',
-                url: '',
-                available: false
-            }
+            { id: 'pregões', name: 'Pregões', url: '', available: false },
+            { id: 'fornecedores', name: 'Fornecedores', url: '', available: false },
+            { id: 'catalogos', name: 'Cátalogos e Tabelas', url: '', available: false },
+            { id: 'tabela-precos', name: 'Tabela de Preços', url: 'https://tabela-precos-udyp.onrender.com', available: true },
+            { id: 'compra', name: 'Ordens de Compra', url: 'https://ir-comercio.github.io/ordem-compra/public/', available: true },
+            { id: 'transportadoras', name: 'Transportadoras', url: '', available: false },
+            { id: 'cotacoes-frete', name: 'Cotações de Frete', url: 'https://cotacoes-frete-aikc.onrender.com', available: true },
+            { id: 'faturamento', name: 'Pedidos de Faturamento', url: '', available: false },
+            { id: 'estoque', name: 'Estoque', url: '', available: false },
+            { id: 'controle-frete', name: 'Controle de Frete', url: 'https://controle-frete.onrender.com', available: true },
+            { id: 'receber', name: 'Contas a Receber', url: 'https://contas-receber-kkf9.onrender.com', available: true },
+            { id: 'vendas', name: 'Vendas', url: '', available: false },
+            { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com/', available: true },
+            { id: 'documentos', name: 'Documentos', url: '', available: false }
         ];
 
         let deviceToken = null;
@@ -960,18 +888,10 @@
             setTimeout(() => messageBox.classList.remove('show'), 5000);
         }
 
-        /**
-         * Obtém as permissões de módulos para o usuário
-         * ADMINISTRADORES: Sempre têm acesso a todos os módulos
-         * OUTROS USUÁRIOS: Acesso baseado no setor
-         */
         function getUserPermissions(sessionInfo) {
-            // Se for administrador, retorna todos os módulos
             if (sessionInfo.isAdmin === true) {
                 return MODULES.map(m => m.id);
             }
-            
-            // Se não for admin, retorna baseado no setor
             const sector = sessionInfo.sector || '';
             return SECTOR_PERMISSIONS[sector] || [];
         }
@@ -1047,36 +967,22 @@
             document.getElementById('dashboardScreen').style.display = 'block';
             
             const greeting = getGreeting();
-            
-            // Usar nome e setor retornados pelo backend
             const userName = sessionInfo.name || sessionInfo.username;
             const userSector = sessionInfo.sector || 'Usuário';
             
-            // Preencher nome e setor no header do sidebar
             document.getElementById('sidebarUserName').textContent = userName;
             document.getElementById('sidebarUserSector').textContent = userSector;
-            
-            // Preencher saudação na welcome screen
             document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
             
-            // Carregar módulos no sidebar
             loadSidebarModules(sessionInfo);
             
-            // Mostrar splash screen toda vez
             const splash = document.getElementById('splashWelcome');
             if (splash) {
                 splash.style.display = 'flex';
                 splash.style.animation = 'none';
-                
-                // Forçar reflow para reiniciar animação
                 void splash.offsetWidth;
-                
                 splash.style.animation = 'fadeOut 0.5s ease 2.5s forwards';
-                
-                // Remover splash após 3 segundos
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                }, 3000);
+                setTimeout(() => { splash.style.display = 'none'; }, 3000);
             }
         }
 
@@ -1084,7 +990,6 @@
             const sidebarModules = document.getElementById('sidebarModules');
             sidebarModules.innerHTML = '';
             
-            // Obter permissões baseadas no setor ou admin
             const userPermissions = getUserPermissions(sessionInfo);
             
             MODULES.forEach(module => {
@@ -1093,7 +998,6 @@
                 const moduleItem = document.createElement('div');
                 moduleItem.className = 'module-item';
                 
-                // Se não tiver URL, adiciona classe disabled
                 if (!module.available || !module.url) {
                     moduleItem.classList.add('disabled');
                     moduleItem.style.opacity = '0.5';
@@ -1105,12 +1009,8 @@
                 }
                 
                 const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos'];
-                
-                // Verificar se é emoji ou SVG
                 const isEmoji = !icon.includes('<svg');
-                const iconHtml = isEmoji 
-                    ? `<span style="font-size: 1.25rem;">${icon}</span>`
-                    : icon;
+                const iconHtml = isEmoji ? `<span style="font-size: 1.25rem;">${icon}</span>` : icon;
                 
                 moduleItem.innerHTML = `
                     <span class="module-icon">${iconHtml}</span>
@@ -1122,23 +1022,18 @@
         }
 
         function openModule(module) {
-            // Remover active de todos os módulos
             document.querySelectorAll('.module-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            // Adicionar active no módulo selecionado
             const moduleItem = document.getElementById(`module-${module.id}`);
             if (moduleItem) moduleItem.classList.add('active');
             
-            // Esconder welcome screen
             document.getElementById('welcomeScreen').style.display = 'none';
             
-            // Verificar se iframe já existe
             let iframeContainer = document.getElementById(`iframe-${module.id}`);
             
             if (!iframeContainer) {
-                // CRÍTICO: Passar apenas sessionToken - SEM username/password na URL
                 const params = new URLSearchParams({
                     sessionToken: currentSessionInfo.sessionToken
                 });
@@ -1151,7 +1046,6 @@
                 document.getElementById('iframesContainer').appendChild(iframeContainer);
             }
             
-            // Mostrar apenas o iframe ativo
             document.querySelectorAll('.iframe-container').forEach(container => {
                 container.classList.remove('active');
             });
