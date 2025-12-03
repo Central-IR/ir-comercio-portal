@@ -301,16 +301,22 @@
         }
 
         .sidebar.collapsed {
-            width: 56px;
+            width: 64px;
         }
 
         /* HEADER DO SIDEBAR */
         .sidebar-header {
-            padding: 1rem;
+            padding: 1.25rem 1rem;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 0.75rem;
             flex-shrink: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            padding: 1rem;
+            justify-content: center;
         }
 
         .menu-toggle-sidebar {
@@ -332,7 +338,11 @@
             position: relative;
             /* Desabilitar o botão visualmente, mas manter para estrutura */
             pointer-events: none;
-            opacity: 0.3;
+            opacity: 0.4;
+        }
+
+        .sidebar:hover .menu-toggle-sidebar {
+            opacity: 0.6;
         }
 
         .menu-toggle-sidebar:hover {
@@ -418,7 +428,7 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 0.5rem 0;
+            padding: 0.75rem 0;
             scrollbar-width: thin;
             scrollbar-color: transparent transparent;
         }
@@ -503,7 +513,7 @@
 
         .sidebar.collapsed .module-item {
             justify-content: center;
-            padding: 0.6rem 0.75rem;
+            padding: 0.65rem 0;
             transition: all 0.15s ease-out;
             overflow: hidden;
         }
@@ -522,15 +532,19 @@
         }
 
         .module-item:hover {
-            background: rgba(255, 81, 0, 0.1);
+            background: rgba(255, 81, 0, 0.08);
             color: var(--text-primary);
         }
 
         .module-item.active {
-            background: rgba(255, 81, 0, 0.15);
+            background: rgba(255, 81, 0, 0.12);
             color: var(--primary);
             border-left-color: var(--primary);
             font-weight: 600;
+        }
+
+        .module-item.active:hover {
+            background: rgba(255, 81, 0, 0.15);
         }
 
         .module-icon {
@@ -540,10 +554,6 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-        }
-
-        .sidebar.collapsed .module-icon {
-            margin: 0 0.3rem;
         }
 
         .module-icon svg {
