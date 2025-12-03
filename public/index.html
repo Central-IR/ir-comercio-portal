@@ -291,14 +291,11 @@
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: width 0.3s ease, margin-left 0.3s ease;
             position: relative;
             z-index: 100;
             flex-shrink: 0;
             height: 100vh;
-            will-change: width;
-            overflow-x: hidden;
-            overflow-y: hidden;
         }
 
         .sidebar.collapsed {
@@ -307,17 +304,11 @@
 
         /* HEADER DO SIDEBAR */
         .sidebar-header {
-            padding: 1.25rem 1rem;
+            padding: 1rem;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.75rem;
             flex-shrink: 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .sidebar.collapsed .sidebar-header {
-            padding: 1rem;
-            justify-content: center;
         }
 
         .menu-toggle-sidebar {
@@ -327,7 +318,7 @@
             cursor: pointer;
             padding: 0.5rem;
             border-radius: 6px;
-            transition: all 0.15s ease-out;
+            transition: all 0.2s ease;
             flex-shrink: 0;
             width: 32px;
             height: 32px;
@@ -339,15 +330,7 @@
             position: relative;
             /* Desabilitar o botão visualmente, mas manter para estrutura */
             pointer-events: none;
-            opacity: 0.7;
-        }
-
-        .sidebar:hover .menu-toggle-sidebar {
-            opacity: 0.9;
-        }
-
-        .sidebar.collapsed .menu-toggle-sidebar {
-            opacity: 1;
+            opacity: 0.3;
         }
 
         .menu-toggle-sidebar:hover {
@@ -360,7 +343,7 @@
             height: 2px;
             background: currentColor;
             border-radius: 2px;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.3s ease;
             display: block;
         }
 
@@ -383,13 +366,6 @@
             gap: 0.25rem;
             flex: 1;
             min-width: 0;
-            transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s;
-        }
-
-        .sidebar.collapsed .sidebar-title {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .user-name-sidebar {
@@ -433,7 +409,7 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 0.75rem 0;
+            padding: 0.5rem 0;
             scrollbar-width: thin;
             scrollbar-color: transparent transparent;
         }
@@ -481,29 +457,12 @@
             align-items: center;
             gap: 0.75rem;
             cursor: pointer;
-            transition: all 0.15s ease-out;
+            transition: all 0.2s ease;
             border-left: 3px solid transparent;
             color: var(--text-secondary);
             font-size: 0.9rem;
             font-weight: 500;
             position: relative;
-            min-width: 0;
-            max-width: 100%;
-        }
-
-        .sidebar.collapsed .module-item {
-            justify-content: center;
-            padding: 0.75rem;
-            border-left: 0;
-        }
-
-        .module-item .module-icon {
-            color: var(--text-secondary);
-        }
-
-        .module-item:hover .module-icon,
-        .module-item.active .module-icon {
-            color: var(--primary);
         }
 
         /* Tooltip - agora só aparece quando sidebar está colapsado */
@@ -520,7 +479,7 @@
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.15s ease-out;
+            transition: opacity 0.2s ease;
             box-shadow: 0 2px 8px var(--shadow);
             border: 1px solid var(--border-color);
             z-index: 1000;
@@ -532,41 +491,25 @@
             opacity: 1;
         }
 
-
-
-        .module-item span:not(.module-icon) {
-            white-space: nowrap;
-            visibility: visible;
-            transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s, visibility 0s 0s;
+        .sidebar.collapsed .module-item {
+            justify-content: center;
+            padding: 0.75rem;
         }
 
         .sidebar.collapsed .module-item span:not(.module-icon) {
-            opacity: 0;
-            visibility: hidden;
-            white-space: nowrap;
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.2s;
-        }
-
-        /* Garantir que o ícone sempre fique visível */
-        .module-icon {
-            opacity: 1 !important;
-            visibility: visible !important;
+            display: none;
         }
 
         .module-item:hover {
-            background: rgba(255, 81, 0, 0.08);
+            background: rgba(255, 81, 0, 0.1);
             color: var(--text-primary);
         }
 
         .module-item.active {
-            background: rgba(255, 81, 0, 0.12);
+            background: rgba(255, 81, 0, 0.15);
             color: var(--primary);
             border-left-color: var(--primary);
             font-weight: 600;
-        }
-
-        .module-item.active:hover {
-            background: rgba(255, 81, 0, 0.15);
         }
 
         .module-icon {
@@ -865,7 +808,7 @@
             'catalogos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag-icon lucide-tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>',
             'tabela-precos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column-stacked-icon lucide-chart-column-stacked"><path d="M11 13H7"/><path d="M19 9h-4"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="15" y="5" width="4" height="12" rx="1"/><rect x="7" y="8" width="4" height="9" rx="1"/></svg>',
             'compra': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>',
-            'transportadoras': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+            'transportadoras': '<svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>',
             'cotacoes-frete': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-search-icon lucide-package-search"><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="m7.5 4.27 9 5.15"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/><circle cx="18.5" cy="15.5" r="2.5"/><path d="M20.27 17.27 22 19"/></svg>',
             'faturamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-input-icon lucide-file-input"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M2 15h10"/><path d="m9 18 3-3-3-3"/></svg>',
             'estoque': '<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
@@ -918,7 +861,7 @@
                 // Pequeno delay para evitar fechamento acidental
                 hoverTimeout = setTimeout(() => {
                     sidebar.classList.add('collapsed');
-                }, 200);
+                }, 300);
             });
         }
 
