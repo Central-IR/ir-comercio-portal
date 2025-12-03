@@ -291,8 +291,8 @@
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                        box-shadow 0.3s ease;
+            transition: width 0.15s ease, 
+                        box-shadow 0.15s ease;
             position: relative;
             z-index: 100;
             flex-shrink: 0;
@@ -317,12 +317,12 @@
             gap: 0.75rem;
             flex-shrink: 0;
             opacity: 1;
-            transition: opacity 0.3s ease 0.1s;
+            transition: opacity 0.1s ease;
         }
 
         .sidebar.collapsed .sidebar-header {
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.08s ease;
         }
 
         .menu-toggle-sidebar {
@@ -381,15 +381,15 @@
             min-width: 0;
             opacity: 1;
             transform: translateX(0);
-            transition: opacity 0.3s ease 0.1s, 
-                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+            transition: opacity 0.1s ease, 
+                        transform 0.1s ease;
         }
 
         .sidebar.collapsed .sidebar-title {
             opacity: 0;
             transform: translateX(-10px);
-            transition: opacity 0.2s ease, 
-                        transform 0.2s ease;
+            transition: opacity 0.08s ease, 
+                        transform 0.08s ease;
         }
 
         .user-name-sidebar {
@@ -431,7 +431,7 @@
             padding: 0.5rem 0;
             scrollbar-width: thin;
             scrollbar-color: transparent transparent;
-            transition: scrollbar-color 0.3s ease;
+            transition: scrollbar-color 0.1s ease;
         }
 
         /* Scrollbar só aparece ao hover */
@@ -450,7 +450,7 @@
         .sidebar-modules::-webkit-scrollbar-thumb {
             background: transparent;
             border-radius: 4px;
-            transition: background 0.3s ease;
+            transition: background 0.1s ease;
         }
 
         .sidebar:not(.collapsed) .sidebar-modules:hover::-webkit-scrollbar-thumb {
@@ -477,7 +477,7 @@
             align-items: center;
             gap: 0.75rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.15s ease;
             border-left: 3px solid transparent;
             color: var(--text-secondary);
             font-size: 0.9rem;
@@ -490,15 +490,15 @@
         .module-item span:not(.module-icon) {
             opacity: 1;
             transform: translateX(0);
-            transition: opacity 0.3s ease 0.1s, 
-                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+            transition: opacity 0.1s ease, 
+                        transform 0.1s ease;
         }
 
         .sidebar.collapsed .module-item span:not(.module-icon) {
             opacity: 0;
             transform: translateX(-10px);
-            transition: opacity 0.2s ease, 
-                        transform 0.2s ease;
+            transition: opacity 0.08s ease, 
+                        transform 0.08s ease;
             position: absolute;
         }
 
@@ -516,8 +516,8 @@
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease, 
-                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.15s ease, 
+                        transform 0.15s ease;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border: 1px solid var(--border-color);
             z-index: 1000;
@@ -559,7 +559,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.15s ease;
         }
 
         .module-item:hover .module-icon {
@@ -916,10 +916,10 @@
             
             // Quando o mouse sai do sidebar
             sidebar.addEventListener('mouseleave', () => {
-                // Delay de 400ms para evitar fechamento acidental
+                // Delay de 100ms (quase instantâneo, mas evita fechamento acidental)
                 hoverTimeout = setTimeout(() => {
                     sidebar.classList.add('collapsed');
-                }, 400);
+                }, 100);
             });
         }
 
