@@ -283,7 +283,7 @@
         }
 
         /* ============================================
-           SIDEBAR (MENU LATERAL) - AGORA COM HOVER
+           SIDEBAR (MENU LATERAL) - HOVER ELEGANTE
            ============================================ */
         .sidebar {
             width: 280px;
@@ -291,15 +291,22 @@
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            transition: width 0.3s ease, margin-left 0.3s ease;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        box-shadow 0.3s ease;
             position: relative;
             z-index: 100;
             flex-shrink: 0;
             height: 100vh;
+            overflow: hidden;
         }
 
         .sidebar.collapsed {
-            width: 56px;
+            width: 70px;
+        }
+
+        /* Efeito de elevação quando expandido */
+        .sidebar:not(.collapsed) {
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
         }
 
         /* HEADER DO SIDEBAR */
@@ -309,6 +316,13 @@
             align-items: flex-start;
             gap: 0.75rem;
             flex-shrink: 0;
+            opacity: 1;
+            transition: opacity 0.3s ease 0.1s;
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            opacity: 0;
+            transition: opacity 0.2s ease;
         }
 
         .menu-toggle-sidebar {
@@ -328,7 +342,6 @@
             justify-content: center;
             gap: 5px;
             position: relative;
-            /* Desabilitar o botão visualmente, mas manter para estrutura */
             pointer-events: none;
             opacity: 0.3;
         }
@@ -347,7 +360,7 @@
             display: block;
         }
 
-        /* Animação quando sidebar está EXPANDIDO (não colapsado) */
+        /* Animação quando sidebar está EXPANDIDO */
         .sidebar:not(.collapsed) .hamburger-line:nth-child(1) {
             transform: translateY(7px) rotate(45deg);
         }
@@ -366,6 +379,17 @@
             gap: 0.25rem;
             flex: 1;
             min-width: 0;
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.3s ease 0.1s, 
+                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: opacity 0.2s ease, 
+                        transform 0.2s ease;
         }
 
         .user-name-sidebar {
@@ -399,11 +423,6 @@
             color: var(--error);
         }
 
-        /* Esconder texto quando colapsado */
-        .sidebar.collapsed .sidebar-title {
-            display: none;
-        }
-
         /* MÓDULOS */
         .sidebar-modules {
             flex: 1;
@@ -412,11 +431,12 @@
             padding: 0.5rem 0;
             scrollbar-width: thin;
             scrollbar-color: transparent transparent;
+            transition: scrollbar-color 0.3s ease;
         }
 
         /* Scrollbar só aparece ao hover */
-        .sidebar-modules:hover {
-            scrollbar-color: #888 transparent;
+        .sidebar:not(.collapsed) .sidebar-modules:hover {
+            scrollbar-color: rgba(136, 136, 136, 0.5) transparent;
         }
 
         .sidebar-modules::-webkit-scrollbar {
@@ -430,15 +450,15 @@
         .sidebar-modules::-webkit-scrollbar-thumb {
             background: transparent;
             border-radius: 4px;
-            transition: background 0.2s ease;
+            transition: background 0.3s ease;
         }
 
-        .sidebar-modules:hover::-webkit-scrollbar-thumb {
-            background: #888;
+        .sidebar:not(.collapsed) .sidebar-modules:hover::-webkit-scrollbar-thumb {
+            background: rgba(136, 136, 136, 0.5);
         }
 
-        .sidebar-modules:hover::-webkit-scrollbar-thumb:hover {
-            background: #555;
+        .sidebar:not(.collapsed) .sidebar-modules:hover::-webkit-scrollbar-thumb:hover {
+            background: rgba(85, 85, 85, 0.7);
         }
 
         /* FOOTER DO SIDEBAR */
@@ -457,38 +477,57 @@
             align-items: center;
             gap: 0.75rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border-left: 3px solid transparent;
             color: var(--text-secondary);
             font-size: 0.9rem;
             font-weight: 500;
             position: relative;
+            white-space: nowrap;
         }
 
-        /* Tooltip - agora só aparece quando sidebar está colapsado */
+        /* Animação do texto do módulo */
+        .module-item span:not(.module-icon) {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.3s ease 0.1s, 
+                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+        }
+
+        .sidebar.collapsed .module-item span:not(.module-icon) {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: opacity 0.2s ease, 
+                        transform 0.2s ease;
+            position: absolute;
+        }
+
+        /* Tooltip elegante - só aparece quando colapsado */
         .sidebar.collapsed .module-item::before {
             content: attr(data-tooltip);
             position: absolute;
             left: 100%;
             top: 50%;
-            transform: translateY(-50%);
+            transform: translateY(-50%) translateX(-5px);
             background: var(--bg-card);
             color: var(--text-primary);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.2s ease;
-            box-shadow: 0 2px 8px var(--shadow);
+            transition: opacity 0.3s ease, 
+                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border: 1px solid var(--border-color);
             z-index: 1000;
             font-size: 0.85rem;
-            margin-left: 0.5rem;
+            font-weight: 500;
         }
 
         .sidebar.collapsed .module-item:hover::before {
             opacity: 1;
+            transform: translateY(-50%) translateX(5px);
         }
 
         .sidebar.collapsed .module-item {
@@ -496,13 +535,14 @@
             padding: 0.75rem;
         }
 
-        .sidebar.collapsed .module-item span:not(.module-icon) {
-            display: none;
-        }
-
         .module-item:hover {
             background: rgba(255, 81, 0, 0.1);
             color: var(--text-primary);
+            transform: translateX(3px);
+        }
+
+        .sidebar.collapsed .module-item:hover {
+            transform: translateX(0) scale(1.05);
         }
 
         .module-item.active {
@@ -519,6 +559,11 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .module-item:hover .module-icon {
+            transform: scale(1.1);
         }
 
         .module-icon svg {
@@ -542,7 +587,7 @@
         }
 
         /* ============================================
-           CONTENT AREA - TRANSIÇÕES SUAVES ADICIONADAS
+           CONTENT AREA - TRANSIÇÕES SUAVES
            ============================================ */
         .content-area {
             flex: 1;
@@ -858,7 +903,7 @@
         let hoverTimeout = null;
 
         // ==========================================
-        // ======== HOVER AUTOMÁTICO SIDEBAR ========
+        // ======== HOVER ELEGANTE SIDEBAR ==========
         // ==========================================
         function setupSidebarHover() {
             const sidebar = document.getElementById('sidebar');
@@ -871,10 +916,10 @@
             
             // Quando o mouse sai do sidebar
             sidebar.addEventListener('mouseleave', () => {
-                // Pequeno delay para evitar fechamento acidental
+                // Delay de 400ms para evitar fechamento acidental
                 hoverTimeout = setTimeout(() => {
                     sidebar.classList.add('collapsed');
-                }, 300);
+                }, 400);
             });
         }
 
@@ -1003,7 +1048,7 @@
             document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
             
             loadSidebarModules(sessionInfo);
-            setupSidebarHover(); // Configurar hover automático
+            setupSidebarHover(); // Configurar hover elegante
             
             const splash = document.getElementById('splashWelcome');
             if (splash) {
