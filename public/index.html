@@ -493,7 +493,7 @@
 
         .sidebar.collapsed .module-item {
             justify-content: center;
-            padding: 0.75rem 17px;
+            padding: 0.75rem;
             border-left: 0;
         }
 
@@ -1240,29 +1240,7 @@
             }
         }
 
-        // ==========================================
-        // ======== HOVER AUTOMÁTICO SIDEBAR ========
-        // ==========================================
-        function setupSidebarHover() {
-            const sidebar = document.getElementById('sidebar');
-            let hoverTimeout;
-
-            sidebar.addEventListener('mouseenter', () => {
-                clearTimeout(hoverTimeout);
-                sidebar.classList.remove('collapsed');
-            });
-
-            sidebar.addEventListener('mouseleave', () => {
-                hoverTimeout = setTimeout(() => {
-                    sidebar.classList.add('collapsed');
-                }, 800); // Aumentado de 200ms para 800ms - dá tempo de ver os ícones
-            });
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            init();
-            setupSidebarHover();
-        });
+        window.addEventListener('DOMContentLoaded', init);
 
         document.addEventListener('visibilitychange', async () => {
             if (!document.hidden) {
