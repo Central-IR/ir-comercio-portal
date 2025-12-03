@@ -542,7 +542,7 @@
         }
 
         /* ============================================
-           CONTENT AREA
+           CONTENT AREA - TRANSIÇÕES SUAVES ADICIONADAS
            ============================================ */
         .content-area {
             flex: 1;
@@ -569,6 +569,13 @@
             right: 0;
             bottom: 0;
             gap: 1rem;
+            opacity: 1;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .welcome-screen.hidden-smooth {
+            opacity: 0;
+            visibility: hidden;
         }
 
         .welcome-greeting {
@@ -590,7 +597,7 @@
         }
 
         .iframe-container {
-            display: none;
+            display: block;
             width: 100%;
             height: 100%;
             position: absolute;
@@ -598,10 +605,16 @@
             left: 0;
             right: 0;
             bottom: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.98);
+            transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
         }
 
         .iframe-container.active {
-            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
         }
 
         .iframe-container iframe {
@@ -1038,14 +1051,18 @@
         }
 
         function openModule(module) {
+            // Remove active de todos os módulos
             document.querySelectorAll('.module-item').forEach(item => {
                 item.classList.remove('active');
             });
             
+            // Adiciona active ao módulo clicado
             const moduleItem = document.getElementById(`module-${module.id}`);
             if (moduleItem) moduleItem.classList.add('active');
             
-            document.getElementById('welcomeScreen').style.display = 'none';
+            // Esconde a tela de boas-vindas com transição suave
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            welcomeScreen.classList.add('hidden-smooth');
             
             let iframeContainer = document.getElementById(`iframe-${module.id}`);
             
@@ -1062,10 +1079,15 @@
                 document.getElementById('iframesContainer').appendChild(iframeContainer);
             }
             
+            // Remove active de todos os iframes
             document.querySelectorAll('.iframe-container').forEach(container => {
                 container.classList.remove('active');
             });
-            iframeContainer.classList.add('active');
+            
+            // Pequeno delay para garantir transição suave
+            setTimeout(() => {
+                iframeContainer.classList.add('active');
+            }, 50);
             
             activeModuleId = module.id;
         }
@@ -1154,7 +1176,9 @@
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('password').value = '';
             document.getElementById('iframesContainer').innerHTML = '';
-            document.getElementById('welcomeScreen').style.display = 'flex';
+            
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            welcomeScreen.classList.remove('hidden-smooth');
         }
 
         // ==========================================
