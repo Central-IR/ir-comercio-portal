@@ -283,7 +283,7 @@
         }
 
         /* ============================================
-           SIDEBAR (MENU LATERAL)
+           SIDEBAR (MENU LATERAL) - AGORA COM HOVER
            ============================================ */
         .sidebar {
             width: 280px;
@@ -328,6 +328,9 @@
             justify-content: center;
             gap: 5px;
             position: relative;
+            /* Desabilitar o botão visualmente, mas manter para estrutura */
+            pointer-events: none;
+            opacity: 0.3;
         }
 
         .menu-toggle-sidebar:hover {
@@ -462,8 +465,8 @@
             position: relative;
         }
 
-        /* Tooltip sempre visível ao hover */
-        .module-item::before {
+        /* Tooltip - agora só aparece quando sidebar está colapsado */
+        .sidebar.collapsed .module-item::before {
             content: attr(data-tooltip);
             position: absolute;
             left: 100%;
@@ -484,7 +487,7 @@
             margin-left: 0.5rem;
         }
 
-        .module-item:hover::before {
+        .sidebar.collapsed .module-item:hover::before {
             opacity: 1;
         }
 
@@ -495,12 +498,6 @@
 
         .sidebar.collapsed .module-item span:not(.module-icon) {
             display: none;
-        }
-
-        /* Ajustar posição do tooltip quando colapsado */
-        .sidebar.collapsed .module-item::before {
-            left: 56px;
-            margin-left: 0;
         }
 
         .module-item:hover {
@@ -718,11 +715,11 @@
         </div>
 
         <div class="dashboard-container">
-            <!-- SIDEBAR - COMEÇA MINIMIZADO -->
+            <!-- SIDEBAR - COMEÇA MINIMIZADO E ABRE/FECHA COM HOVER -->
             <div id="sidebar" class="sidebar collapsed">
                 <!-- HEADER DO SIDEBAR -->
                 <div class="sidebar-header">
-                    <button class="menu-toggle-sidebar" onclick="toggleSidebar()">
+                    <button class="menu-toggle-sidebar">
                         <span class="hamburger-line"></span>
                         <span class="hamburger-line"></span>
                         <span class="hamburger-line"></span>
@@ -845,6 +842,28 @@
         let sessionCheckInterval = null;
         let currentSessionInfo = null;
         let activeModuleId = null;
+        let hoverTimeout = null;
+
+        // ==========================================
+        // ======== HOVER AUTOMÁTICO SIDEBAR ========
+        // ==========================================
+        function setupSidebarHover() {
+            const sidebar = document.getElementById('sidebar');
+            
+            // Quando o mouse entra no sidebar
+            sidebar.addEventListener('mouseenter', () => {
+                clearTimeout(hoverTimeout);
+                sidebar.classList.remove('collapsed');
+            });
+            
+            // Quando o mouse sai do sidebar
+            sidebar.addEventListener('mouseleave', () => {
+                // Pequeno delay para evitar fechamento acidental
+                hoverTimeout = setTimeout(() => {
+                    sidebar.classList.add('collapsed');
+                }, 300);
+            });
+        }
 
         // ==========================================
         // ======== FUNÇÕES AUXILIARES ==============
@@ -899,10 +918,6 @@
         // ==========================================
         // ======== UI INTERACTIONS =================
         // ==========================================
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-        }
-
         function togglePassword() {
             const input = document.getElementById('password');
             const btn = document.querySelector('.toggle-password');
@@ -975,6 +990,7 @@
             document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
             
             loadSidebarModules(sessionInfo);
+            setupSidebarHover(); // Configurar hover automático
             
             const splash = document.getElementById('splashWelcome');
             if (splash) {
