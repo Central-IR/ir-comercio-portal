@@ -283,7 +283,7 @@
         }
 
         /* ============================================
-           SIDEBAR (MENU LATERAL) - HOVER ELEGANTE
+           SIDEBAR (MENU LATERAL) - ANIMAÇÕES SUAVIZADAS
            ============================================ */
         .sidebar {
             width: 280px;
@@ -291,8 +291,8 @@
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            transition: width 0.15s ease, 
-                        box-shadow 0.15s ease;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             z-index: 100;
             flex-shrink: 0;
@@ -317,14 +317,14 @@
             gap: 0.75rem;
             flex-shrink: 0;
             opacity: 1;
-            transition: opacity 0.1s ease;
-            height: 90px; /* Altura fixa para manter posição dos módulos */
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 90px;
         }
 
         .sidebar.collapsed .sidebar-header {
             opacity: 0;
-            transition: opacity 0.08s ease;
-            height: 90px; /* Mantém mesma altura quando colapsado */
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 90px;
         }
 
         .menu-toggle-sidebar {
@@ -358,7 +358,7 @@
             height: 2px;
             background: currentColor;
             border-radius: 2px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: block;
         }
 
@@ -383,15 +383,15 @@
             min-width: 0;
             opacity: 1;
             transform: translateX(0);
-            transition: opacity 0.1s ease, 
-                        transform 0.1s ease;
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar.collapsed .sidebar-title {
             opacity: 0;
             transform: translateX(-10px);
-            transition: opacity 0.08s ease, 
-                        transform 0.08s ease;
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .user-name-sidebar {
@@ -433,7 +433,7 @@
             padding: 0.5rem 0;
             scrollbar-width: thin;
             scrollbar-color: transparent transparent;
-            transition: scrollbar-color 0.1s ease;
+            transition: scrollbar-color 0.3s ease;
         }
 
         /* Scrollbar só aparece ao hover */
@@ -452,7 +452,7 @@
         .sidebar-modules::-webkit-scrollbar-thumb {
             background: transparent;
             border-radius: 4px;
-            transition: background 0.1s ease;
+            transition: background 0.3s ease;
         }
 
         .sidebar:not(.collapsed) .sidebar-modules:hover::-webkit-scrollbar-thumb {
@@ -479,7 +479,7 @@
             align-items: center;
             gap: 0.75rem;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             border-left: 3px solid transparent;
             color: var(--text-secondary);
             font-size: 0.9rem;
@@ -492,15 +492,15 @@
         .module-item span:not(.module-icon) {
             opacity: 1;
             transform: translateX(0);
-            transition: opacity 0.1s ease, 
-                        transform 0.1s ease;
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar.collapsed .module-item span:not(.module-icon) {
             opacity: 0;
             transform: translateX(-10px);
-            transition: opacity 0.08s ease, 
-                        transform 0.08s ease;
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: absolute;
         }
 
@@ -518,8 +518,8 @@
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.15s ease, 
-                        transform 0.15s ease;
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border: 1px solid var(--border-color);
             z-index: 1000;
@@ -561,7 +561,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition: transform 0.15s ease;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .module-item:hover .module-icon {
@@ -617,7 +617,8 @@
             bottom: 0;
             gap: 1rem;
             opacity: 1;
-            transition: opacity 0.15s ease, visibility 0.15s ease;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .welcome-screen.hidden-smooth {
@@ -655,7 +656,9 @@
             opacity: 0;
             visibility: hidden;
             transform: scale(0.98);
-            transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .iframe-container.active {
@@ -829,8 +832,6 @@
         const SECTOR_PERMISSIONS = {
             'Vendas': [
                 'pregões', 
-                'fornecedores', 
-                'catalogos', 
                 'tabela-precos', 
                 'compra', 
                 'transportadoras', 
@@ -843,7 +844,6 @@
             ],
             'Financeiro': [
                 'pregões', 
-                'fornecedores',
                 'transportadoras', 
                 'faturamento', 
                 'controle-frete', 
@@ -864,8 +864,6 @@
         // Ícones SVG para TODOS os módulos
         const MODULE_ICONS = {
             'pregões': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gavel-icon lucide-gavel"><path d="m14 13-8.381 8.38a 1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>',
-            'fornecedores': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-handshake-icon lucide-handshake"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>',
-            'catalogos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag-icon lucide-tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>',
             'tabela-precos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column-stacked-icon lucide-chart-column-stacked"><path d="M11 13H7"/><path d="M19 9h-4"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="15" y="5" width="4" height="12" rx="1"/><rect x="7" y="8" width="4" height="9" rx="1"/></svg>',
             'compra': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>',
             'transportadoras': '<svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>',
@@ -879,11 +877,9 @@
             'documentos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-icon lucide-folder"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>'
         };
 
-        // Módulos disponíveis (todos os 14)
+        // Módulos disponíveis (REMOVIDOS: fornecedores e catalogos)
         const MODULES = [
             { id: 'pregões', name: 'Pregões', url: '', available: false },
-            { id: 'fornecedores', name: 'Fornecedores', url: '', available: false },
-            { id: 'catalogos', name: 'Cátalogos e Tabelas', url: '', available: false },
             { id: 'tabela-precos', name: 'Tabela de Preços', url: 'https://tabela-precos-udyp.onrender.com', available: true },
             { id: 'compra', name: 'Ordens de Compra', url: 'https://ordem-compra.onrender.com', available: true },
             { id: 'transportadoras', name: 'Transportadoras', url: '', available: false },
@@ -905,7 +901,7 @@
         let hoverTimeout = null;
 
         // ==========================================
-        // ======== HOVER ELEGANTE SIDEBAR ==========
+        // ======== HOVER SUAVIZADO SIDEBAR =========
         // ==========================================
         function setupSidebarHover() {
             const sidebar = document.getElementById('sidebar');
@@ -916,12 +912,12 @@
                 sidebar.classList.remove('collapsed');
             });
             
-            // Quando o mouse sai do sidebar
+            // Quando o mouse sai do sidebar (com delay mais longo)
             sidebar.addEventListener('mouseleave', () => {
-                // Delay de 100ms (quase instantâneo, mas evita fechamento acidental)
+                // Delay de 300ms para fechamento mais suave
                 hoverTimeout = setTimeout(() => {
                     sidebar.classList.add('collapsed');
-                }, 100);
+                }, 300);
             });
         }
 
@@ -1050,7 +1046,7 @@
             document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
             
             loadSidebarModules(sessionInfo);
-            setupSidebarHover(); // Configurar hover elegante
+            setupSidebarHover(); // Configurar hover suavizado
             
             const splash = document.getElementById('splashWelcome');
             if (splash) {
@@ -1134,7 +1130,7 @@
             // Pequeno delay para garantir transição suave
             setTimeout(() => {
                 iframeContainer.classList.add('active');
-            }, 20);
+            }, 50);
             
             activeModuleId = module.id;
         }
