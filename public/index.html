@@ -291,8 +291,8 @@
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             z-index: 100;
             flex-shrink: 0;
@@ -317,13 +317,13 @@
             gap: 0.75rem;
             flex-shrink: 0;
             opacity: 1;
-            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             height: 90px;
         }
 
         .sidebar.collapsed .sidebar-header {
             opacity: 0;
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             height: 90px;
         }
 
@@ -383,15 +383,15 @@
             min-width: 0;
             opacity: 1;
             transform: translateX(0);
-            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar.collapsed .sidebar-title {
             opacity: 0;
             transform: translateX(-10px);
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .user-name-sidebar {
@@ -492,15 +492,15 @@
         .module-item span:not(.module-icon) {
             opacity: 1;
             transform: translateX(0);
-            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar.collapsed .module-item span:not(.module-icon) {
             opacity: 0;
             transform: translateX(-10px);
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             position: absolute;
         }
 
@@ -518,8 +518,8 @@
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border: 1px solid var(--border-color);
             z-index: 1000;
@@ -561,7 +561,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .module-item:hover .module-icon {
@@ -912,12 +912,12 @@
                 sidebar.classList.remove('collapsed');
             });
             
-            // Quando o mouse sai do sidebar (com delay mais longo)
+            // Quando o mouse sai do sidebar (delay reduzido para igualar abertura)
             sidebar.addEventListener('mouseleave', () => {
-                // Delay de 300ms para fechamento mais suave
+                // Delay de 150ms - mesma sensação de rapidez da abertura
                 hoverTimeout = setTimeout(() => {
                     sidebar.classList.add('collapsed');
-                }, 300);
+                }, 150);
             });
         }
 
