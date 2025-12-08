@@ -8,10 +8,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ==========================================
-// ======== CONFIGURAÇÃO - IP AUTORIZADO ====
+// ======== CONFIGURAÇÃO - IPS AUTORIZADOS ==
 // ==========================================
-const AUTHORIZED_IP = '191.199.206.101';
-
+const AUTHORIZED_IPS = ['187.36.172.217', '179.181.234.135'];
 
 // ==========================================
 // ======== CONFIGURAÇÃO DO SUPABASE ========
@@ -66,14 +65,14 @@ app.get('/api/check-ip-access', (req, res) => {
     : req.socket.remoteAddress;
 
   const cleanIP = clientIP.replace('::ffff:', '');
-  const isAuthorized = cleanIP === AUTHORIZED_IP;
+  const isAuthorized = AUTHORIZED_IPS.includes(cleanIP);
 
   console.log(`🔒 Verificação de IP: ${cleanIP} | Autorizado: ${isAuthorized ? '✅' : '❌'}`);
 
   res.json({ 
     authorized: isAuthorized,
     ip: cleanIP,
-    requiredIp: AUTHORIZED_IP
+    authorizedIps: AUTHORIZED_IPS
   });
 });
 
@@ -118,7 +117,7 @@ app.post('/api/login', async (req, res) => {
     const cleanIP = clientIP.replace('::ffff:', '');
 
     // 2.1 Verificar se o IP está autorizado
-    if (cleanIP !== AUTHORIZED_IP) {
+    if (!AUTHORIZED_IPS.includes(cleanIP)) {
       console.log('❌ IP não autorizado tentando fazer login:', cleanIP);
       await logLoginAttempt(username, false, 'IP não autorizado', deviceToken, cleanIP);
       return res.status(403).json({ 
@@ -131,7 +130,6 @@ app.post('/api/login', async (req, res) => {
     const usernameSearch = username.toLowerCase().trim();
     console.log('🔍 Buscando usuário:', usernameSearch);
 
-    // ✅ CORREÇÃO: Buscar também o campo 'sector'
     const { data: userData, error: userError } = await supabase
       .from('users')
       .select('id, username, password, name, is_admin, is_active, sector')
@@ -295,14 +293,13 @@ app.post('/api/login', async (req, res) => {
     console.log('Login realizado com sucesso:', username, '| IP:', cleanIP);
 
     // 10. Retornar dados da sessão
-    // ✅ CORREÇÃO: Adicionar campo 'sector' na resposta
     res.json({
       success: true,
       session: {
         userId: userData.id,
         username: userData.username,
         name: userData.name,
-        sector: userData.sector,        // ← ADICIONADO
+        sector: userData.sector,
         isAdmin: userData.is_admin,
         sessionToken: sessionToken,
         deviceToken: deviceToken,
@@ -367,7 +364,6 @@ app.post('/api/verify-session', async (req, res) => {
       });
     }
 
-    // ✅ CORREÇÃO: Buscar também o campo 'sector'
     const { data: session, error } = await supabase
       .from('active_sessions')
       .select(`
@@ -441,14 +437,13 @@ app.post('/api/verify-session', async (req, res) => {
       .update({ last_activity: new Date().toISOString() })
       .eq('session_token', sessionToken);
 
-    // ✅ CORREÇÃO: Retornar também o campo 'sector'
     res.json({ 
       valid: true,
       session: {
         userId: session.users.id,
         username: session.users.username,
         name: session.users.name,
-        sector: session.users.sector,    // ← ADICIONADO
+        sector: session.users.sector,
         isAdmin: session.users.is_admin
       }
     });
@@ -505,7 +500,7 @@ app.listen(PORT, () => {
   console.log('='.repeat(50));
   console.log(`🚀 Portal Central rodando na porta ${PORT}`);
   console.log(`💾 Supabase configurado: ${supabaseUrl ? 'Sim ✅' : 'Não ❌'}`);
-  console.log(`🔒 IP autorizado: ${AUTHORIZED_IP}`);
+  console.log(`🔒 IPs autorizados: ${AUTHORIZED_IPS.join(', ')}`);
   console.log('⏰ Horário comercial: Seg-Sex, 8h-18h (apenas não-admin)');
   console.log('='.repeat(50));
 });
