@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
@@ -10,7 +11,10 @@ const PORT = process.env.PORT || 3000;
 // ==========================================
 // ======== CONFIGURAÇÃO - IPS AUTORIZADOS ==
 // ==========================================
-const AUTHORIZED_IPS = ['187.36.172.217', '179.181.230.103'];
+// IPs autorizados - usa variável de ambiente se existir, senão usa os valores padrão
+const AUTHORIZED_IPS = process.env.AUTHORIZED_IPS 
+  ? process.env.AUTHORIZED_IPS.split(',').map(ip => ip.trim())
+  : ['187.36.172.217', '179.181.230.103']; // Valores padrão (mantidos do código original)
 
 // ==========================================
 // ======== CONFIGURAÇÃO DO SUPABASE ========
@@ -22,6 +26,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // ==========================================
 // ======== MIDDLEWARES =====================
 // ==========================================
+// CORS - aceita todas as origens por padrão (igual ao código original)
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -29,11 +34,125 @@ app.use(cors({
   credentials: true
 }));
 
-// Responder a requisições OPTIONS (preflight)
 app.options('*', cors());
-
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// ==========================================
+// ======== FUNÇÕES AUXILIARES ==============
+// ==========================================
+
+/**
+ * Extrai o IP real do cliente
+ */
+function getClientIP(req) {
+  const xForwardedFor = req.headers['x-forwarded-for'];
+  const clientIP = xForwardedFor
+    ? xForwardedFor.split(',')[0].trim()
+    : req.socket.remoteAddress;
+  
+  return clientIP.replace('::ffff:', '');
+}
+
+/**
+ * Verifica se o IP está autorizado
+ */
+function isIPAuthorized(ip) {
+  if (AUTHORIZED_IPS.length === 0) {
+    console.warn('⚠️ Nenhum IP autorizado configurado!');
+    return false;
+  }
+  return AUTHORIZED_IPS.includes(ip);
+}
+
+/**
+ * Verifica se está em horário comercial (Brasil/São Paulo)
+ */
+function isBusinessHours() {
+  const now = new Date();
+  const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+  const dayOfWeek = brasiliaTime.getDay();
+  const hour = brasiliaTime.getHours();
+  
+  return dayOfWeek >= 1 && dayOfWeek <= 5 && hour >= 8 && hour < 18;
+}
+
+/**
+ * Gera um token de sessão criptograficamente seguro
+ */
+function generateSecureToken() {
+  return 'sess_' + crypto.randomBytes(32).toString('hex');
+}
+
+/**
+ * Sanitiza string para prevenir injeções
+ */
+function sanitizeString(str) {
+  if (typeof str !== 'string') return '';
+  return str.trim().replace(/[<>]/g, '');
+}
+
+/**
+ * Valida formato de username
+ */
+function isValidUsername(username) {
+  return /^[a-zA-Z0-9._-]{3,50}$/.test(username);
+}
+
+/**
+ * Registra tentativa de login
+ */
+async function logLoginAttempt(username, success, reason, deviceToken, ip) {
+  try {
+    await supabase.from('login_attempts').insert({
+      username: sanitizeString(username),
+      ip_address: ip,
+      device_token: sanitizeString(deviceToken),
+      success: success,
+      failure_reason: reason,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Erro ao registrar log:', error);
+  }
+}
+
+// ==========================================
+// ======== RATE LIMITING MANUAL ============
+// ==========================================
+const loginAttempts = new Map(); // IP -> { count, resetTime }
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const attempt = loginAttempts.get(ip);
+  
+  if (!attempt) {
+    loginAttempts.set(ip, { count: 1, resetTime: now + 15 * 60 * 1000 });
+    return true;
+  }
+  
+  if (now > attempt.resetTime) {
+    loginAttempts.set(ip, { count: 1, resetTime: now + 15 * 60 * 1000 });
+    return true;
+  }
+  
+  if (attempt.count >= 5) {
+    return false;
+  }
+  
+  attempt.count++;
+  return true;
+}
+
+// Limpar rate limit a cada hora
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, attempt] of loginAttempts.entries()) {
+    if (now > attempt.resetTime) {
+      loginAttempts.delete(ip);
+    }
+  }
+}, 60 * 60 * 1000);
 
 // ==========================================
 // ======== ROTA PRINCIPAL ==================
@@ -46,12 +165,7 @@ app.get('/', (req, res) => {
 // ======== API - OBTER IP PÚBLICO ==========
 // ==========================================
 app.get('/api/ip', (req, res) => {
-  const xForwardedFor = req.headers['x-forwarded-for'];
-  const clientIP = xForwardedFor
-    ? xForwardedFor.split(',')[0].trim()
-    : req.socket.remoteAddress;
-
-  const cleanIP = clientIP.replace('::ffff:', '');
+  const cleanIP = getClientIP(req);
   res.json({ ip: cleanIP });
 });
 
@@ -59,20 +173,16 @@ app.get('/api/ip', (req, res) => {
 // ======== API - VERIFICAR IP AUTORIZADO ===
 // ==========================================
 app.get('/api/check-ip-access', (req, res) => {
-  const xForwardedFor = req.headers['x-forwarded-for'];
-  const clientIP = xForwardedFor
-    ? xForwardedFor.split(',')[0].trim()
-    : req.socket.remoteAddress;
+  const cleanIP = getClientIP(req);
+  const authorized = isIPAuthorized(cleanIP);
 
-  const cleanIP = clientIP.replace('::ffff:', '');
-  const isAuthorized = AUTHORIZED_IPS.includes(cleanIP);
-
-  console.log(`🔒 Verificação de IP: ${cleanIP} | Autorizado: ${isAuthorized ? '✅' : '❌'}`);
+  console.log(`🔒 Verificação de IP: ${cleanIP} | Autorizado: ${authorized ? '✅' : '❌'}`);
 
   res.json({ 
-    authorized: isAuthorized,
+    authorized: authorized,
     ip: cleanIP,
-    authorizedIps: AUTHORIZED_IPS
+    // Não expor lista completa de IPs por segurança
+    message: authorized ? 'IP autorizado' : 'IP não autorizado'
   });
 });
 
@@ -84,11 +194,10 @@ app.get('/api/business-hours', (req, res) => {
   const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
   const dayOfWeek = brasiliaTime.getDay();
   const hour = brasiliaTime.getHours();
-
-  const isBusinessHours = dayOfWeek >= 1 && dayOfWeek <= 5 && hour >= 8 && hour < 18;
+  const inBusinessHours = isBusinessHours();
 
   res.json({
-    isBusinessHours,
+    isBusinessHours: inBusinessHours,
     currentTime: brasiliaTime.toLocaleString('pt-BR'),
     day: dayOfWeek,
     hour: hour
@@ -109,25 +218,48 @@ app.post('/api/login', async (req, res) => {
       });
     }
 
-    // 2. Obter IP do cliente
-    const xForwardedFor = req.headers['x-forwarded-for'];
-    const clientIP = xForwardedFor
-      ? xForwardedFor.split(',')[0].trim()
-      : req.socket.remoteAddress;
-    const cleanIP = clientIP.replace('::ffff:', '');
+    // Obter IP do cliente
+    const cleanIP = getClientIP(req);
 
-    // 2.1 Verificar se o IP está autorizado
-    if (!AUTHORIZED_IPS.includes(cleanIP)) {
+    // Verificar rate limiting
+    if (!checkRateLimit(cleanIP)) {
+      console.log('❌ Rate limit excedido:', cleanIP);
+      return res.status(429).json({ 
+        error: 'Muitas tentativas de login',
+        message: 'Tente novamente em 15 minutos.' 
+      });
+    }
+
+    // Sanitizar inputs
+    const sanitizedUsername = sanitizeString(username);
+    const sanitizedDeviceToken = sanitizeString(deviceToken);
+
+    // Validar formato do username
+    if (!isValidUsername(sanitizedUsername)) {
+      return res.status(400).json({ 
+        error: 'Formato de usuário inválido' 
+      });
+    }
+
+    // Validar tamanho da senha
+    if (password.length < 6 || password.length > 100) {
+      return res.status(400).json({ 
+        error: 'Senha inválida' 
+      });
+    }
+
+    // Verificar se o IP está autorizado
+    if (!isIPAuthorized(cleanIP)) {
       console.log('❌ IP não autorizado tentando fazer login:', cleanIP);
-      await logLoginAttempt(username, false, 'IP não autorizado', deviceToken, cleanIP);
+      await logLoginAttempt(sanitizedUsername, false, 'IP não autorizado', sanitizedDeviceToken, cleanIP);
       return res.status(403).json({ 
         error: 'Acesso negado',
         message: 'Este acesso não está autorizado fora do ambiente de trabalho.' 
       });
     }
 
-    // 3. Buscar usuário (case-insensitive)
-    const usernameSearch = username.toLowerCase().trim();
+    // Buscar usuário (case-insensitive)
+    const usernameSearch = sanitizedUsername.toLowerCase();
     console.log('🔍 Buscando usuário:', usernameSearch);
 
     const { data: userData, error: userError } = await supabase
@@ -138,7 +270,7 @@ app.post('/api/login', async (req, res) => {
 
     if (userError || !userData) {
       console.log('❌ Usuário não encontrado:', usernameSearch);
-      await logLoginAttempt(username, false, 'Usuário não encontrado', deviceToken, cleanIP);
+      await logLoginAttempt(sanitizedUsername, false, 'Usuário não encontrado', sanitizedDeviceToken, cleanIP);
       return res.status(401).json({ 
         error: 'Usuário ou senha incorretos' 
       });
@@ -146,37 +278,29 @@ app.post('/api/login', async (req, res) => {
 
     console.log('✅ Usuário encontrado:', userData.username, '| Setor:', userData.sector);
 
-    // 4. Verificar se usuário está ativo
+    // Verificar se usuário está ativo
     if (userData.is_active === false) {
-      console.log('❌ Usuário inativo:', username);
-      await logLoginAttempt(username, false, 'Usuário inativo', deviceToken, cleanIP);
+      console.log('❌ Usuário inativo:', sanitizedUsername);
+      await logLoginAttempt(sanitizedUsername, false, 'Usuário inativo', sanitizedDeviceToken, cleanIP);
       return res.status(401).json({ 
         error: 'Usuário inativo' 
       });
     }
 
-    // 5. Verificar horário comercial (apenas para não-admin)
-    if (!userData.is_admin) {
-      const now = new Date();
-      const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-      const dayOfWeek = brasiliaTime.getDay();
-      const hour = brasiliaTime.getHours();
-      const isBusinessHours = dayOfWeek >= 1 && dayOfWeek <= 5 && hour >= 8 && hour < 18;
-
-      if (!isBusinessHours) {
-        console.log('❌ Tentativa de login fora do horário comercial:', username);
-        await logLoginAttempt(username, false, 'Fora do horário comercial', deviceToken, cleanIP);
-        return res.status(403).json({ 
-          error: 'Fora do horário comercial',
-          message: 'Este acesso é disponibilizado em conformidade com o horário comercial da empresa.' 
-        });
-      }
+    // Verificar horário comercial (apenas para não-admin)
+    if (!userData.is_admin && !isBusinessHours()) {
+      console.log('❌ Tentativa de login fora do horário comercial:', sanitizedUsername);
+      await logLoginAttempt(sanitizedUsername, false, 'Fora do horário comercial', sanitizedDeviceToken, cleanIP);
+      return res.status(403).json({ 
+        error: 'Fora do horário comercial',
+        message: 'Este acesso é disponibilizado em conformidade com o horário comercial da empresa.' 
+      });
     }
 
-    // 6. Verificar senha
+    // Verificar senha (texto plano - TEMPORÁRIO)
     if (password !== userData.password) {
-      console.log('❌ Senha incorreta para usuário:', username);
-      await logLoginAttempt(username, false, 'Senha incorreta', deviceToken, cleanIP);
+      console.log('❌ Senha incorreta para usuário:', sanitizedUsername);
+      await logLoginAttempt(sanitizedUsername, false, 'Senha incorreta', sanitizedDeviceToken, cleanIP);
       return res.status(401).json({ 
         error: 'Usuário ou senha incorretos' 
       });
@@ -184,11 +308,14 @@ app.post('/api/login', async (req, res) => {
 
     console.log('✅ Senha correta');
 
-    // 7. Registrar/Atualizar dispositivo usando UPSERT
-    const deviceFingerprint = deviceToken + '_' + Date.now();
+    // Registrar/Atualizar dispositivo usando UPSERT
+    const deviceFingerprint = crypto.createHash('sha256')
+      .update(sanitizedDeviceToken + cleanIP)
+      .digest('hex');
+    
     const userAgent = req.headers['user-agent'] || 'Unknown';
-    const truncatedUserAgent = userAgent.substring(0, 95);
-    const truncatedDeviceName = userAgent.substring(0, 95);
+    const truncatedUserAgent = sanitizeString(userAgent.substring(0, 95));
+    const truncatedDeviceName = sanitizeString(userAgent.substring(0, 95));
 
     console.log('ℹ️ Registrando/atualizando dispositivo');
 
@@ -196,7 +323,7 @@ app.post('/api/login', async (req, res) => {
       .from('authorized_devices')
       .upsert({
         user_id: userData.id,
-        device_token: deviceToken,
+        device_token: sanitizedDeviceToken,
         device_fingerprint: deviceFingerprint,
         device_name: truncatedDeviceName,
         ip_address: cleanIP,
@@ -211,14 +338,13 @@ app.post('/api/login', async (req, res) => {
     if (deviceError) {
       console.error('❌ Erro ao registrar dispositivo:', deviceError);
       return res.status(500).json({ 
-        error: 'Erro ao registrar dispositivo',
-        details: deviceError.message 
+        error: 'Erro ao registrar dispositivo'
       });
     }
     console.log('✅ Dispositivo registrado/atualizado');
 
-    // 8. Criar ou atualizar sessão
-    const sessionToken = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 16);
+    // Criar ou atualizar sessão
+    const sessionToken = generateSecureToken();
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 8);
 
@@ -227,14 +353,13 @@ app.post('/api/login', async (req, res) => {
       .from('active_sessions')
       .select('*')
       .eq('user_id', userData.id)
-      .eq('device_token', deviceToken)
+      .eq('device_token', sanitizedDeviceToken)
       .eq('is_active', true)
       .maybeSingle();
 
     if (existingSession) {
       console.log('Sessão ativa encontrada - atualizando');
 
-      // Atualizar sessão existente
       const { error: sessionError } = await supabase
         .from('active_sessions')
         .update({
@@ -248,12 +373,11 @@ app.post('/api/login', async (req, res) => {
       if (sessionError) {
         console.error('❌ Erro ao atualizar sessão:', sessionError);
         return res.status(500).json({ 
-          error: 'Erro ao atualizar sessão',
-          details: sessionError.message 
+          error: 'Erro ao atualizar sessão'
         });
       }
 
-      console.log('Sessão atualizada com sucesso');
+      console.log('✅ Sessão atualizada com sucesso');
     } else {
       console.log('Criando nova sessão');
 
@@ -262,14 +386,14 @@ app.post('/api/login', async (req, res) => {
         .from('active_sessions')
         .update({ is_active: false })
         .eq('user_id', userData.id)
-        .eq('device_token', deviceToken);
+        .eq('device_token', sanitizedDeviceToken);
 
       // Criar nova sessão
       const { error: sessionError } = await supabase
         .from('active_sessions')
         .insert({
           user_id: userData.id,
-          device_token: deviceToken,
+          device_token: sanitizedDeviceToken,
           ip_address: cleanIP,
           session_token: sessionToken,
           expires_at: expiresAt.toISOString(),
@@ -280,19 +404,18 @@ app.post('/api/login', async (req, res) => {
       if (sessionError) {
         console.error('❌ Erro ao criar sessão:', sessionError);
         return res.status(500).json({ 
-          error: 'Erro ao criar sessão',
-          details: sessionError.message 
+          error: 'Erro ao criar sessão'
         });
       }
 
-      console.log('Nova sessão criada com sucesso');
+      console.log('✅ Nova sessão criada com sucesso');
     }
 
-    // 9. Log de sucesso
-    await logLoginAttempt(username, true, null, deviceToken, cleanIP);
-    console.log('Login realizado com sucesso:', username, '| IP:', cleanIP);
+    // Log de sucesso
+    await logLoginAttempt(sanitizedUsername, true, null, sanitizedDeviceToken, cleanIP);
+    console.log('✅ Login realizado com sucesso:', sanitizedUsername, '| IP:', cleanIP);
 
-    // 10. Retornar dados da sessão
+    // Retornar dados da sessão
     res.json({
       success: true,
       session: {
@@ -302,7 +425,7 @@ app.post('/api/login', async (req, res) => {
         sector: userData.sector,
         isAdmin: userData.is_admin,
         sessionToken: sessionToken,
-        deviceToken: deviceToken,
+        deviceToken: sanitizedDeviceToken,
         ip: cleanIP,
         expiresAt: expiresAt.toISOString()
       }
@@ -311,8 +434,7 @@ app.post('/api/login', async (req, res) => {
   } catch (error) {
     console.error('❌ Erro no login:', error);
     res.status(500).json({ 
-      error: 'Erro interno no servidor',
-      details: error.message 
+      error: 'Erro interno no servidor'
     });
   }
 });
@@ -322,11 +444,13 @@ app.post('/api/login', async (req, res) => {
 // ==========================================
 app.post('/api/logout', async (req, res) => {
   try {
-    const { sessionToken, deviceToken } = req.body;
+    const { sessionToken } = req.body;
 
     if (!sessionToken) {
       return res.status(400).json({ error: 'Session token ausente' });
     }
+
+    const sanitizedToken = sanitizeString(sessionToken);
 
     // Desativar a sessão
     const { error } = await supabase
@@ -335,14 +459,14 @@ app.post('/api/logout', async (req, res) => {
         is_active: false,
         logout_at: new Date().toISOString()
       })
-      .eq('session_token', sessionToken);
+      .eq('session_token', sanitizedToken);
 
     if (error) {
       console.error('❌ Erro ao fazer logout:', error);
       return res.status(500).json({ error: 'Erro ao fazer logout' });
     }
 
-    console.log('✅ Logout realizado:', sessionToken.substr(0, 20) + '...');
+    console.log('✅ Logout realizado:', sanitizedToken.substr(0, 20) + '...');
     res.json({ success: true });
   } catch (error) {
     console.error('❌ Erro no logout:', error);
@@ -364,6 +488,8 @@ app.post('/api/verify-session', async (req, res) => {
       });
     }
 
+    const sanitizedToken = sanitizeString(sessionToken);
+
     const { data: session, error } = await supabase
       .from('active_sessions')
       .select(`
@@ -377,7 +503,7 @@ app.post('/api/verify-session', async (req, res) => {
           is_active
         )
       `)
-      .eq('session_token', sessionToken)
+      .eq('session_token', sanitizedToken)
       .eq('is_active', true)
       .single();
 
@@ -388,12 +514,30 @@ app.post('/api/verify-session', async (req, res) => {
       });
     }
 
+    // Verificar se o IP atual está autorizado
+    const currentIP = getClientIP(req);
+    if (!isIPAuthorized(currentIP)) {
+      console.log('❌ Tentativa de acesso de IP não autorizado:', currentIP);
+      
+      // Desativar sessão por segurança
+      await supabase
+        .from('active_sessions')
+        .update({ is_active: false })
+        .eq('session_token', sanitizedToken);
+
+      return res.status(403).json({ 
+        valid: false, 
+        reason: 'ip_not_authorized',
+        message: 'Acesso negado. IP não autorizado.'
+      });
+    }
+
     // Verificar se o usuário ainda está ativo
     if (!session.users.is_active) {
       await supabase
         .from('active_sessions')
         .update({ is_active: false })
-        .eq('session_token', sessionToken);
+        .eq('session_token', sanitizedToken);
 
       return res.status(401).json({ 
         valid: false, 
@@ -406,7 +550,7 @@ app.post('/api/verify-session', async (req, res) => {
       await supabase
         .from('active_sessions')
         .update({ is_active: false })
-        .eq('session_token', sessionToken);
+        .eq('session_token', sanitizedToken);
 
       return res.status(401).json({ 
         valid: false, 
@@ -415,27 +559,22 @@ app.post('/api/verify-session', async (req, res) => {
     }
 
     // Verificar horário comercial para não-admin
-    if (!session.users.is_admin) {
-      const now = new Date();
-      const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-      const dayOfWeek = brasiliaTime.getDay();
-      const hour = brasiliaTime.getHours();
-      const isBusinessHours = dayOfWeek >= 1 && dayOfWeek <= 5 && hour >= 8 && hour < 18;
-
-      if (!isBusinessHours) {
-        return res.status(403).json({ 
-          valid: false, 
-          reason: 'outside_business_hours',
-          message: 'Este acesso é disponibilizado em conformidade com o horário comercial da empresa.'
-        });
-      }
+    if (!session.users.is_admin && !isBusinessHours()) {
+      return res.status(403).json({ 
+        valid: false, 
+        reason: 'outside_business_hours',
+        message: 'Este acesso é disponibilizado em conformidade com o horário comercial da empresa.'
+      });
     }
 
-    // Atualizar última atividade
+    // Atualizar última atividade e IP
     await supabase
       .from('active_sessions')
-      .update({ last_activity: new Date().toISOString() })
-      .eq('session_token', sessionToken);
+      .update({ 
+        last_activity: new Date().toISOString(),
+        ip_address: currentIP
+      })
+      .eq('session_token', sanitizedToken);
 
     res.json({ 
       valid: true,
@@ -458,31 +597,14 @@ app.post('/api/verify-session', async (req, res) => {
 });
 
 // ==========================================
-// ======== FUNÇÃO AUXILIAR - LOG ===========
-// ==========================================
-async function logLoginAttempt(username, success, reason, deviceToken, ip) {
-  try {
-    await supabase.from('login_attempts').insert({
-      username: username,
-      ip_address: ip,
-      device_token: deviceToken,
-      success: success,
-      failure_reason: reason,
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error('❌ Erro ao registrar log:', error);
-  }
-}
-
-// ==========================================
 // ======== HEALTH CHECK ====================
 // ==========================================
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    supabase: supabaseUrl ? 'configured' : 'not configured'
+    supabase: supabaseUrl ? 'configured' : 'not configured',
+    authorizedIPs: AUTHORIZED_IPS.length > 0 ? 'configured' : 'not configured'
   });
 });
 
@@ -494,6 +616,22 @@ app.use((req, res) => {
 });
 
 // ==========================================
+// ======== ERROR HANDLER ===================
+// ==========================================
+app.use((err, req, res, next) => {
+  console.error('❌ Erro não tratado:', err);
+  
+  // Não expor detalhes do erro em produção
+  const errorMessage = process.env.NODE_ENV === 'production' 
+    ? 'Erro interno do servidor' 
+    : err.message;
+  
+  res.status(500).json({ 
+    error: errorMessage 
+  });
+});
+
+// ==========================================
 // ======== INICIAR SERVIDOR ================
 // ==========================================
 app.listen(PORT, () => {
@@ -502,5 +640,8 @@ app.listen(PORT, () => {
   console.log(`💾 Supabase configurado: ${supabaseUrl ? 'Sim ✅' : 'Não ❌'}`);
   console.log(`🔒 IPs autorizados: ${AUTHORIZED_IPS.join(', ')}`);
   console.log('⏰ Horário comercial: Seg-Sex, 8h-18h (apenas não-admin)');
+  console.log(`🛡️ Rate limiting ativo: 5 tentativas/15min por IP`);
+  console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  console.log('✅ Melhorias: Tokens seguros, Rate limiting, Sanitização, Validação');
   console.log('='.repeat(50));
 });
