@@ -6,9 +6,7 @@
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
     <title>Portal</title>
     <style>
-        /* ============================================
-           VARIÁVEIS BASE (DARK THEME - PADRÃO)
-           ============================================ */
+        /* Seu CSS permanece o mesmo - copiando do documento 4 */
         :root {
             --primary: #ff5100;
             --primary-dark: #E67E00;
@@ -28,9 +26,6 @@
             --online-green: #22C55E;
         }
 
-        /* ============================================
-           LIGHT THEME (quando navegador está em light mode)
-           ============================================ */
         @media (prefers-color-scheme: light) {
             :root {
                 --bg-primary: #FFFFFF;
@@ -59,9 +54,6 @@
             overflow: hidden;
         }
 
-        /* ============================================
-           TELA DE LOGIN
-           ============================================ */
         .login-screen {
             width: 100%;
             min-height: 100vh;
@@ -230,9 +222,6 @@
             color: #15803D;
         }
 
-        /* ============================================
-           DASHBOARD LAYOUT
-           ============================================ */
         .dashboard-screen {
             display: none;
             height: 100vh;
@@ -685,7 +674,6 @@
     </style>
 </head>
 <body>
-    <!-- TELA DE LOGIN -->
     <div id="loginScreen" class="login-screen">
         <div class="login-content">
             <div class="logo-container">
@@ -735,7 +723,6 @@
         </div>
     </div>
 
-    <!-- DASHBOARD -->
     <div id="dashboardScreen" class="dashboard-screen">
         <div class="splash-welcome" id="splashWelcome">
             <h1 class="splash-greeting">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</h1>
@@ -775,96 +762,81 @@
     </div>
 
     <script>
-        // ==========================================
-        // ======== CONFIGURAÇÃO ====================
-        // ==========================================
         const API_URL = window.location.origin + '/api';
 
-      // ==========================================
-// PERMISSÕES HÍBRIDAS (SETOR + USERNAME) - CORRIGIDO
-// ==========================================
+        // PERMISSÕES POR SETOR
+        const SECTOR_PERMISSIONS = {
+            'Administrador': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'receber',
+                'pagamento',
+                'documentos'
+            ],
+            'Vendas': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'documentos'
+            ],
+            'Financeiro': [
+                'pregões', 
+                'transportadoras', 
+                'faturamento', 
+                'controle-frete', 
+                'receber', 
+                'pagamento', 
+                'documentos'
+            ],
+            'Almoxarifado': [
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'documentos'
+            ]
+        };
 
-// 1. PERMISSÕES POR SETOR (padrão para todos do setor)
-const SECTOR_PERMISSIONS = {
-    'Administrador': [
-        'pregões', 
-        'tabela-precos', 
-        'compra', 
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'vendas',
-        'receber',
-        'pagamento',
-        'documentos'
-    ],  // ← VÍRGULA ADICIONADA AQUI
-    
-    'Vendas': [
-        'pregões', 
-        'tabela-precos', 
-        'compra', 
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'documentos'
-    ],  // ← VÍRGULA ADICIONADA AQUI
-    
-    'Financeiro': [
-        'pregões', 
-        'transportadoras', 
-        'faturamento', 
-        'controle-frete', 
-        'receber', 
-        'pagamento', 
-        'documentos'
-    ],  // ← VÍRGULA ADICIONADA AQUI
-    
-    'Almoxarifado': [
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'documentos'
-    ]  
-};
+        // PERMISSÕES ESPECÍFICAS POR USERNAME
+        const USER_SPECIFIC_PERMISSIONS = {
+            'vendas2': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'vendas-miguel',
+                'documentos'
+            ],
+            'vendas': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'vendas-isaque',
+                'documentos'
+            ]
+        };
 
-// 2. PERMISSÕES ESPECÍFICAS POR USERNAME (sobrescreve o setor)
-const USER_SPECIFIC_PERMISSIONS = {
-    // Miguel Alves - vê apenas VENDAS-MIGUEL
-    'vendas2': [
-        'pregões', 
-        'tabela-precos', 
-        'compra', 
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'vendas-miguel',
-        'documentos'
-    ],
-    
-    // Isaque Gravino - vê apenas VENDAS-ISAQUE
-    'vendas': [
-        'pregões', 
-        'tabela-precos', 
-        'compra', 
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'vendas-isaque',
-        'documentos'
-    ]  // ← SEM VÍRGULA NO ÚLTIMO
-};
-
-        // Ícones SVG para TODOS os módulos
         const MODULE_ICONS = {
             'pregões': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 13-8.381 8.38a 1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>',
             'tabela-precos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 13H7"/><path d="M19 9h-4"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="15" y="5" width="4" height="12" rx="1"/><rect x="7" y="8" width="4" height="9" rx="1"/></svg>',
@@ -877,13 +849,10 @@ const USER_SPECIFIC_PERMISSIONS = {
             'receber': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="m16 19 3 3 3-3"/><path d="M18 12h.01"/><path d="M19 16v6"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
             'vendas-miguel': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
             'vendas-isaque': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
-            'vendas': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
-            'faturamento': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
             'pagamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="M18 12h.01"/><path d="M19 22v-6"/><path d="m22 19-3-3-3 3"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
             'documentos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>'
         };
 
-        // Módulos disponíveis (COM AS 4 APLICAÇÕES DE VENDAS)
         const MODULES = [
             { id: 'pregões', name: 'Pregões', url: '', available: false },
             { id: 'tabela-precos', name: 'Tabela de Preços', url: 'https://tabela-precos-udyp.onrender.com', available: true },
@@ -896,7 +865,6 @@ const USER_SPECIFIC_PERMISSIONS = {
             { id: 'receber', name: 'Contas a Receber', url: 'https://contas-receber-m1xw.onrender.com', available: true },
             { id: 'vendas-miguel', name: 'Vendas', url: 'https://vendas-6s2u.onrender.com', available: true },
             { id: 'vendas-isaque', name: 'Vendas', url: '', available: false },
-            { id: 'vendas', name: 'Vendas' url: '', available: false },
             { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com/', available: true },
             { id: 'documentos', name: 'Documentos', url: 'https://documentos-buzt.onrender.com', available: true }
         ];
@@ -908,33 +876,20 @@ const USER_SPECIFIC_PERMISSIONS = {
         let activeModuleId = null;
         let hoverTimeout = null;
 
-        // ==========================================
-        // ======== FUNÇÕES PRINCIPAIS ==============
-        // ==========================================
-        
-        // 3. FUNÇÃO PARA OBTER PERMISSÕES (usa username primeiro, depois setor)
         function getUserPermissions(sessionInfo) {
-            // Admin vê tudo (exceto se tiver permissões específicas)
             if (sessionInfo.isAdmin === true) {
                 const username = sessionInfo.username?.toLowerCase();
-                
-                // Se admin tem permissões específicas, usa elas
                 if (USER_SPECIFIC_PERMISSIONS[username]) {
                     return USER_SPECIFIC_PERMISSIONS[username];
                 }
-                
-                // Senão, vê todos os módulos
                 return MODULES.map(m => m.id);
             }
             
             const username = sessionInfo.username?.toLowerCase();
-            
-            // 1º: Verifica se usuário tem permissões específicas
             if (USER_SPECIFIC_PERMISSIONS[username]) {
                 return USER_SPECIFIC_PERMISSIONS[username];
             }
             
-            // 2º: Se não tem permissões específicas, usa as do setor
             const sector = sessionInfo.sector || '';
             return SECTOR_PERMISSIONS[sector] || [];
         }
@@ -1005,9 +960,6 @@ const USER_SPECIFIC_PERMISSIONS = {
             }
         }
 
-        // ==========================================
-        // ======== LOGIN ===========================
-        // ==========================================
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -1049,9 +1001,6 @@ const USER_SPECIFIC_PERMISSIONS = {
             }
         });
 
-        // ==========================================
-        // ======== DASHBOARD =======================
-        // ==========================================
         function showDashboard(sessionInfo) {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboardScreen').style.display = 'block';
@@ -1147,9 +1096,6 @@ const USER_SPECIFIC_PERMISSIONS = {
             activeModuleId = module.id;
         }
 
-        // ==========================================
-        // ======== SESSÃO ==========================
-        // ==========================================
         function startSessionCheck() {
             if (sessionCheckInterval) clearInterval(sessionCheckInterval);
 
@@ -1193,9 +1139,6 @@ const USER_SPECIFIC_PERMISSIONS = {
             }
         }
 
-        // ==========================================
-        // ======== LOGOUT ==========================
-        // ==========================================
         async function logout() {
             if (!confirm('Deseja realmente sair?')) return;
             
@@ -1236,9 +1179,6 @@ const USER_SPECIFIC_PERMISSIONS = {
             welcomeScreen.classList.remove('hidden-smooth');
         }
 
-        // ==========================================
-        // ======== INICIALIZAÇÃO ===================
-        // ==========================================
         async function init() {
             try {
                 deviceToken = getOrCreateDeviceToken();
