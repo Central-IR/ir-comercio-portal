@@ -780,87 +780,86 @@
         // ==========================================
         const API_URL = window.location.origin + '/api';
 
-        // ==========================================
-        // PERMISSÕES HÍBRIDAS (SETOR + USERNAME)
-        // ==========================================
+      // ==========================================
+// PERMISSÕES HÍBRIDAS (SETOR + USERNAME) - CORRIGIDO
+// ==========================================
 
-        // 1. PERMISSÕES POR SETOR (padrão para todos do setor)
-        const SECTOR_PERMISSIONS = {
-            'Administrador': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'vendas',
-                'receber',
-                'pagamento',
-                'faturamento',
-                'documentos'
-            ]
-            'Vendas': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'documentos'
-            ],
-            'Financeiro': [
-                'pregões', 
-                'transportadoras', 
-                'faturamento', 
-                'controle-frete', 
-                'receber', 
-                'pagamento', 
-                'documentos'
-            ],
-            'Almoxarifado': [
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'documentos'
-            ]
-        };
+// 1. PERMISSÕES POR SETOR (padrão para todos do setor)
+const SECTOR_PERMISSIONS = {
+    'Administrador': [
+        'pregões', 
+        'tabela-precos', 
+        'compra', 
+        'transportadoras', 
+        'cotacoes-frete', 
+        'faturamento', 
+        'estoque', 
+        'controle-frete', 
+        'vendas',
+        'receber',
+        'pagamento',
+        'documentos'
+    ],  // ← VÍRGULA ADICIONADA AQUI!
+    'Vendas': [
+        'pregões', 
+        'tabela-precos', 
+        'compra', 
+        'transportadoras', 
+        'cotacoes-frete', 
+        'faturamento', 
+        'estoque', 
+        'controle-frete', 
+        'documentos'
+    ],  // ← VÍRGULA ADICIONADA AQUI!
+    'Financeiro': [
+        'pregões', 
+        'transportadoras', 
+        'faturamento', 
+        'controle-frete', 
+        'receber', 
+        'pagamento', 
+        'documentos'
+    ],  // ← VÍRGULA ADICIONADA AQUI!
+    'Almoxarifado': [
+        'transportadoras', 
+        'cotacoes-frete', 
+        'faturamento', 
+        'estoque', 
+        'controle-frete', 
+        'documentos'
+    ]  // ← SEM VÍRGULA NO ÚLTIMO (ESTÁ CORRETO)
+};
 
-        // 2. PERMISSÕES ESPECÍFICAS POR USERNAME (sobrescreve o setor)
-        const USER_SPECIFIC_PERMISSIONS = {
-            // Miguel Alves - vê apenas VENDAS-MIGUEL
-            'vendas2': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'vendas-miguel',
-                'documentos'
-            ],
-            
-            // Isaque Gravino - vê apenas VENDAS-ISAQUE
-            'vendas': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'vendas-isaque',
-                'documentos'
-            ],
-        };
+// 2. PERMISSÕES ESPECÍFICAS POR USERNAME (sobrescreve o setor)
+const USER_SPECIFIC_PERMISSIONS = {
+    // Miguel Alves - vê apenas VENDAS-MIGUEL
+    'vendas2': [
+        'pregões', 
+        'tabela-precos', 
+        'compra', 
+        'transportadoras', 
+        'cotacoes-frete', 
+        'faturamento', 
+        'estoque', 
+        'controle-frete', 
+        'vendas-miguel',
+        'documentos'
+    ],
+    
+    // Isaque Gravino - vê apenas VENDAS-ISAQUE
+    'vendas': [
+        'pregões', 
+        'tabela-precos', 
+        'compra', 
+        'transportadoras', 
+        'cotacoes-frete', 
+        'faturamento', 
+        'estoque', 
+        'controle-frete', 
+        'vendas-isaque',
+        'documentos'
+    ]  // ← SEM VÍRGULA NO ÚLTIMO
+};
 
         // Ícones SVG para TODOS os módulos
         const MODULE_ICONS = {
