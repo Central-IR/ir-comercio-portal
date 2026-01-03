@@ -6,7 +6,9 @@
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
     <title>Portal</title>
     <style>
-        /* Seu CSS permanece o mesmo - copiando do documento 4 */
+        /* ============================================
+           VARIÁVEIS BASE (DARK THEME - PADRÃO)
+           ============================================ */
         :root {
             --primary: #ff5100;
             --primary-dark: #E67E00;
@@ -26,6 +28,9 @@
             --online-green: #22C55E;
         }
 
+        /* ============================================
+           LIGHT THEME (quando navegador está em light mode)
+           ============================================ */
         @media (prefers-color-scheme: light) {
             :root {
                 --bg-primary: #FFFFFF;
@@ -54,6 +59,9 @@
             overflow: hidden;
         }
 
+        /* ============================================
+           TELA DE LOGIN
+           ============================================ */
         .login-screen {
             width: 100%;
             min-height: 100vh;
@@ -222,6 +230,9 @@
             color: #15803D;
         }
 
+        /* ============================================
+           DASHBOARD LAYOUT
+           ============================================ */
         .dashboard-screen {
             display: none;
             height: 100vh;
@@ -674,6 +685,7 @@
     </style>
 </head>
 <body>
+    <!-- TELA DE LOGIN -->
     <div id="loginScreen" class="login-screen">
         <div class="login-content">
             <div class="logo-container">
@@ -723,6 +735,7 @@
         </div>
     </div>
 
+    <!-- DASHBOARD -->
     <div id="dashboardScreen" class="dashboard-screen">
         <div class="splash-welcome" id="splashWelcome">
             <h1 class="splash-greeting">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</h1>
@@ -761,463 +774,511 @@
         </div>
     </div>
 
-  <script>
-const API_URL = window.location.origin + '/api';
+    <script>
+        // ==========================================
+        // ======== CONFIGURAÇÃO ====================
+        // ==========================================
+        const API_URL = window.location.origin + '/api';
 
-// PERMISSÕES POR SETOR
-const SECTOR_PERMISSIONS = {
-    'Administrador': [
-        'pregões', 
-        'tabela-precos', 
-        'compra', 
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'receber',
-        'pagamento',
-        'documentos'
-    ], 
-    'Vendas': [
-        'pregões', 
-        'tabela-precos', 
-        'compra', 
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'documentos'
-    ], // ← VÍRGULA AQUI!
-    'Financeiro': [
-        'pregões', 
-        'transportadoras', 
-        'faturamento', 
-        'controle-frete', 
-        'receber', 
-        'pagamento', 
-        'documentos'
-    ], // ← VÍRGULA AQUI!
-    'Almoxarifado': [
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'documentos'
-    ] // ← SEM VÍRGULA NO ÚLTIMO
-};
+        // ==========================================
+        // PERMISSÕES HÍBRIDAS (SETOR + USERNAME)
+        // ==========================================
 
-// PERMISSÕES ESPECÍFICAS POR USERNAME
-const USER_SPECIFIC_PERMISSIONS = {
-    'vendas2': [
-        'pregões', 
-        'tabela-precos', 
-        'compra', 
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'vendas-miguel',
-        'documentos'
-    ], // ← VÍRGULA AQUI!
-    'vendas': [
-        'pregões', 
-        'tabela-precos', 
-        'compra', 
-        'transportadoras', 
-        'cotacoes-frete', 
-        'faturamento', 
-        'estoque', 
-        'controle-frete', 
-        'vendas-isaque',
-        'documentos'
-    ] // ← SEM VÍRGULA NO ÚLTIMO
-};
+        // 1. PERMISSÕES POR SETOR (padrão para todos do setor)
+        const SECTOR_PERMISSIONS = {
+            'Administrador': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'vendas',
+                'receber',
+                'pagamento',
+                'faturamento',
+                'documentos'
+            ]
+            'Vendas': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'documentos'
+            ],
+            'Financeiro': [
+                'pregões', 
+                'transportadoras', 
+                'faturamento', 
+                'controle-frete', 
+                'receber', 
+                'pagamento', 
+                'documentos'
+            ],
+            'Almoxarifado': [
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'documentos'
+            ]
+        };
 
-const MODULE_ICONS = {
-    'pregões': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 13-8.381 8.38a 1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>',
-    'tabela-precos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 13H7"/><path d="M19 9h-4"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="15" y="5" width="4" height="12" rx="1"/><rect x="7" y="8" width="4" height="9" rx="1"/></svg>',
-    'compra': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>',
-    'transportadoras': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>',
-    'cotacoes-frete': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="m7.5 4.27 9 5.15"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/><circle cx="18.5" cy="15.5" r="2.5"/><path d="M20.27 17.27 22 19"/></svg>',
-    'faturamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M2 15h10"/><path d="m9 18 3-3-3-3"/></svg>',
-    'estoque': '<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
-    'controle-frete': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>',
-    'receber': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="m16 19 3 3 3-3"/><path d="M18 12h.01"/><path d="M19 16v6"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
-    'vendas-miguel': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
-    'vendas-isaque': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
-    'pagamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="M18 12h.01"/><path d="M19 22v-6"/><path d="m22 19-3-3-3 3"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
-    'documentos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>'
-};
+        // 2. PERMISSÕES ESPECÍFICAS POR USERNAME (sobrescreve o setor)
+        const USER_SPECIFIC_PERMISSIONS = {
+            // Miguel Alves - vê apenas VENDAS-MIGUEL
+            'vendas2': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'vendas-miguel',
+                'documentos'
+            ],
+            
+            // Isaque Gravino - vê apenas VENDAS-ISAQUE
+            'vendas': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'vendas-isaque',
+                'documentos'
+            ],
+        };
 
-// ← ATENÇÃO: CADA LINHA DO ARRAY PRECISA TER VÍRGULA NO FINAL (EXCETO A ÚLTIMA)
-const MODULES = [
-    { id: 'pregões', name: 'Pregões', url: '', available: false },
-    { id: 'tabela-precos', name: 'Tabela de Preços', url: 'https://tabela-precos-udyp.onrender.com', available: true },
-    { id: 'compra', name: 'Ordens de Compra', url: 'https://ordem-compra.onrender.com', available: true },
-    { id: 'transportadoras', name: 'Transportadoras', url: 'https://transportadoras.onrender.com', available: true },
-    { id: 'cotacoes-frete', name: 'Cotações de Frete', url: 'https://cotacoes-frete-aikc.onrender.com', available: true },
-    { id: 'faturamento', name: 'Pedidos de Faturamento', url: 'https://pedido-faturamento.onrender.com', available: true },
-    { id: 'estoque', name: 'Estoque', url: 'https://controle-estoque-0eme.onrender.com', available: true },
-    { id: 'controle-frete', name: 'Controle de Frete', url: 'https://controle-frete.onrender.com', available: true },
-    { id: 'receber', name: 'Contas a Receber', url: 'https://contas-receber-m1xw.onrender.com', available: true },
-    { id: 'vendas-miguel', name: 'Vendas - Miguel', url: 'https://vendas-6s2u.onrender.com', available: true },
-    { id: 'vendas-isaque', name: 'Vendas - Isaque', url: '', available: false },
-    { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com', available: true },
-    { id: 'documentos', name: 'Documentos', url: 'https://documentos-buzt.onrender.com', available: true }
-]; // ← SEM VÍRGULA AQUI PORQUE É O FINAL
+        // Ícones SVG para TODOS os módulos
+        const MODULE_ICONS = {
+            'pregões': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 13-8.381 8.38a 1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>',
+            'tabela-precos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 13H7"/><path d="M19 9h-4"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="15" y="5" width="4" height="12" rx="1"/><rect x="7" y="8" width="4" height="9" rx="1"/></svg>',
+            'compra': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>',
+            'transportadoras': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>',
+            'cotacoes-frete': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="m7.5 4.27 9 5.15"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/><circle cx="18.5" cy="15.5" r="2.5"/><path d="M20.27 17.27 22 19"/></svg>',
+            'faturamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M2 15h10"/><path d="m9 18 3-3-3-3"/></svg>',
+            'estoque': '<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
+            'controle-frete': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>',
+            'receber': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="m16 19 3 3 3-3"/><path d="M18 12h.01"/><path d="M19 16v6"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
+            'vendas-miguel': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
+            'vendas-isaque': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
+            'vendas': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
+            'faturamento': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
+            'pagamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="M18 12h.01"/><path d="M19 22v-6"/><path d="m22 19-3-3-3 3"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
+            'documentos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>'
+        };
 
-let deviceToken = null;
-let publicIP = null;
-let sessionCheckInterval = null;
-let currentSessionInfo = null;
-let activeModuleId = null;
-let hoverTimeout = null;
+        // Módulos disponíveis (COM AS 4 APLICAÇÕES DE VENDAS)
+        const MODULES = [
+            { id: 'pregões', name: 'Pregões', url: '', available: false },
+            { id: 'tabela-precos', name: 'Tabela de Preços', url: 'https://tabela-precos-udyp.onrender.com', available: true },
+            { id: 'compra', name: 'Ordens de Compra', url: 'https://ordem-compra.onrender.com', available: true },
+            { id: 'transportadoras', name: 'Transportadoras', url: 'https://transportadoras.onrender.com', available: true },
+            { id: 'cotacoes-frete', name: 'Cotações de Frete', url: 'https://cotacoes-frete-aikc.onrender.com', available: true },
+            { id: 'faturamento', name: 'Pedidos de Faturamento', url: 'https://pedido-faturamento.onrender.com', available: true },
+            { id: 'estoque', name: 'Estoque', url: 'https://controle-estoque-0eme.onrender.com', available: true },
+            { id: 'controle-frete', name: 'Controle de Frete', url: 'https://controle-frete.onrender.com', available: true },
+            { id: 'receber', name: 'Contas a Receber', url: 'https://contas-receber-m1xw.onrender.com', available: true },
+            
+            // ===== APLICAÇÕES DE VENDAS (4 aplicações separadas) =====
+            { id: 'vendas-miguel', name: 'Vendas', url: 'https://vendas-6s2u.onrender.com', available: true },
+            { id: 'vendas-isaque', name: 'Vendas', url: '', available: false },
+            { id: 'vendas-roberto', name: 'Vendas', url: '', available: false },
+            { id: 'vendas-geral', name: 'Faturamento', url: '', available: false },
+            
+            { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com/', available: true },
+            { id: 'documentos', name: 'Documentos', url: 'https://documentos-buzt.onrender.com', available: true }
+        ];
 
-function getUserPermissions(sessionInfo) {
-    if (sessionInfo.isAdmin === true) {
-        const username = sessionInfo.username?.toLowerCase();
-        if (SECTOR_PERMISSIONS[username]) {
-            return SECTOR_PERMISSIONS[username];
-        }
-        return MODULES.map(m => m.id);
-    }
-    
-    const username = sessionInfo.username?.toLowerCase();
-    if (USER_SPECIFIC_PERMISSIONS[username]) {
-        return USER_SPECIFIC_PERMISSIONS[username];
-    }
-    
-    const sector = sessionInfo.sector || '';
-    return SECTOR_PERMISSIONS[sector] || [];
-}
+        let deviceToken = null;
+        let publicIP = null;
+        let sessionCheckInterval = null;
+        let currentSessionInfo = null;
+        let activeModuleId = null;
+        let hoverTimeout = null;
 
-function setupSidebarHover() {
-    const sidebar = document.getElementById('sidebar');
-    
-    sidebar.addEventListener('mouseenter', () => {
-        clearTimeout(hoverTimeout);
-        sidebar.classList.remove('collapsed');
-    });
-    
-    sidebar.addEventListener('mouseleave', () => {
-        hoverTimeout = setTimeout(() => {
-            sidebar.classList.add('collapsed');
-        }, 150);
-    });
-}
-
-function getGreeting() {
-    const brasiliaTime = new Date().toLocaleString('en-US', { 
-        timeZone: 'America/Sao_Paulo',
-        hour12: false 
-    });
-    const hour = new Date(brasiliaTime).getHours();
-    
-    if (hour >= 0 && hour < 12) return 'Bom dia';
-    else if (hour >= 12 && hour < 18) return 'Boa tarde';
-    else return 'Boa noite';
-}
-
-function getOrCreateDeviceToken() {
-    let token = localStorage.getItem('irDeviceToken');
-    if (!token) {
-        token = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('irDeviceToken', token);
-    }
-    return token;
-}
-
-async function getPublicIP() {
-    try {
-        const response = await fetch(`${API_URL}/ip`);
-        const data = await response.json();
-        return data.ip;
-    } catch (error) {
-        console.error('Erro ao obter IP:', error);
-        return null;
-    }
-}
-
-function showMessage(message, type = 'error') {
-    const messageBox = document.getElementById('messageBox');
-    messageBox.textContent = message;
-    messageBox.className = `message ${type} show`;
-    setTimeout(() => messageBox.classList.remove('show'), 5000);
-}
-
-function togglePassword() {
-    const input = document.getElementById('password');
-    const btn = document.querySelector('.toggle-password');
-    if (input.type === 'password') {
-        input.type = 'text';
-        btn.textContent = 'OCULTAR';
-    } else {
-        input.type = 'password';
-        btn.textContent = 'MOSTRAR';
-    }
-}
-
-document.getElementById('loginForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value.toLowerCase().trim();
-    const password = document.getElementById('password').value;
-    const loginBtn = document.getElementById('loginBtn');
-    
-    loginBtn.disabled = true;
-    loginBtn.textContent = 'Autenticando...';
-    
-    try {
-        const response = await fetch(`${API_URL}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password, deviceToken })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            showMessage(data.message || data.error || 'Erro ao fazer login', 'error');
-            return;
+        // ==========================================
+        // ======== FUNÇÕES PRINCIPAIS ==============
+        // ==========================================
+        
+        // 3. FUNÇÃO PARA OBTER PERMISSÕES (usa username primeiro, depois setor)
+        function getUserPermissions(sessionInfo) {
+            // Admin vê tudo (exceto se tiver permissões específicas)
+            if (sessionInfo.isAdmin === true) {
+                const username = sessionInfo.username?.toLowerCase();
+                
+                // Se admin tem permissões específicas, usa elas
+                if (USER_SPECIFIC_PERMISSIONS[username]) {
+                    return USER_SPECIFIC_PERMISSIONS[username];
+                }
+                
+                // Senão, vê todos os módulos
+                return MODULES.map(m => m.id);
+            }
+            
+            const username = sessionInfo.username?.toLowerCase();
+            
+            // 1º: Verifica se usuário tem permissões específicas
+            if (USER_SPECIFIC_PERMISSIONS[username]) {
+                return USER_SPECIFIC_PERMISSIONS[username];
+            }
+            
+            // 2º: Se não tem permissões específicas, usa as do setor
+            const sector = sessionInfo.sector || '';
+            return SECTOR_PERMISSIONS[sector] || [];
         }
 
-        if (data.success && data.session) {
-            sessionStorage.setItem('irUserSession', JSON.stringify(data.session));
-            currentSessionInfo = data.session;
-            showDashboard(data.session);
-            startSessionCheck();
-            showMessage('Login realizado com sucesso!', 'success');
-        }
-        
-    } catch (error) {
-        console.error('Erro no login:', error);
-        showMessage('Erro ao realizar login. Tente novamente.', 'error');
-    } finally {
-        loginBtn.disabled = false;
-        loginBtn.textContent = 'Entrar';
-    }
-});
-
-function showDashboard(sessionInfo) {
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('dashboardScreen').style.display = 'block';
-    
-    const greeting = getGreeting();
-    const userName = sessionInfo.name || sessionInfo.username;
-    const userSector = sessionInfo.sector || 'Usuário';
-    
-    document.getElementById('sidebarUserName').textContent = userName;
-    document.getElementById('sidebarUserSector').textContent = userSector;
-    document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
-    
-    loadSidebarModules(sessionInfo);
-    setupSidebarHover();
-    
-    const splash = document.getElementById('splashWelcome');
-    if (splash) {
-        splash.style.display = 'flex';
-        splash.style.animation = 'none';
-        void splash.offsetWidth;
-        splash.style.animation = 'fadeOut 0.5s ease 2.5s forwards';
-        setTimeout(() => { splash.style.display = 'none'; }, 3000);
-    }
-}
-
-function loadSidebarModules(sessionInfo) {
-    const sidebarModules = document.getElementById('sidebarModules');
-    sidebarModules.innerHTML = '';
-    
-    const userPermissions = getUserPermissions(sessionInfo);
-    
-    MODULES.forEach(module => {
-        if (!userPermissions.includes(module.id)) return;
-        
-        const moduleItem = document.createElement('div');
-        moduleItem.className = 'module-item';
-        
-        if (!module.available || !module.url) {
-            moduleItem.classList.add('disabled');
-            moduleItem.style.opacity = '0.5';
-            moduleItem.style.cursor = 'not-allowed';
-        } else {
-            moduleItem.id = `module-${module.id}`;
-            moduleItem.setAttribute('data-tooltip', module.name);
-            moduleItem.onclick = () => openModule(module);
-        }
-        
-        const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos'];
-        
-        moduleItem.innerHTML = `
-            <span class="module-icon">${icon}</span>
-            <span>${module.name}</span>
-        `;
-        
-        sidebarModules.appendChild(moduleItem);
-    });
-}
-
-function openModule(module) {
-    document.querySelectorAll('.module-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    const moduleItem = document.getElementById(`module-${module.id}`);
-    if (moduleItem) moduleItem.classList.add('active');
-    
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    welcomeScreen.classList.add('hidden-smooth');
-    
-    let iframeContainer = document.getElementById(`iframe-${module.id}`);
-    
-    if (!iframeContainer) {
-        const params = new URLSearchParams({
-            sessionToken: currentSessionInfo.sessionToken
-        });
-        
-        iframeContainer = document.createElement('div');
-        iframeContainer.className = 'iframe-container';
-        iframeContainer.id = `iframe-${module.id}`;
-        iframeContainer.innerHTML = `<iframe src="${module.url}?${params.toString()}" title="${module.name}"></iframe>`;
-        
-        document.getElementById('iframesContainer').appendChild(iframeContainer);
-    }
-    
-    document.querySelectorAll('.iframe-container').forEach(container => {
-        container.classList.remove('active');
-    });
-    
-    setTimeout(() => {
-        iframeContainer.classList.add('active');
-    }, 50);
-    
-    activeModuleId = module.id;
-}
-
-function startSessionCheck() {
-    if (sessionCheckInterval) clearInterval(sessionCheckInterval);
-
-    sessionCheckInterval = setInterval(async () => {
-        const sessionInfo = sessionStorage.getItem('irUserSession');
-        if (!sessionInfo) {
-            stopSessionCheck();
-            return;
-        }
-
-        const session = JSON.parse(sessionInfo);
-        const isValid = await verifySession(session.sessionToken);
-
-        if (!isValid) {
-            stopSessionCheck();
-            forceLogout('Sua sessão expirou ou foi invalidada');
-        }
-    }, 30000);
-}
-
-function stopSessionCheck() {
-    if (sessionCheckInterval) {
-        clearInterval(sessionCheckInterval);
-        sessionCheckInterval = null;
-    }
-}
-
-async function verifySession(sessionToken) {
-    try {
-        const response = await fetch(`${API_URL}/verify-session`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sessionToken })
-        });
-
-        const data = await response.json();
-        return data.valid === true;
-    } catch (error) {
-        console.error('Erro ao verificar sessão:', error);
-        return false;
-    }
-}
-
-async function logout() {
-    if (!confirm('Deseja realmente sair?')) return;
-    
-    try {
-        const sessionInfo = JSON.parse(sessionStorage.getItem('irUserSession'));
-        if (sessionInfo) {
-            await fetch(`${API_URL}/logout`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    sessionToken: sessionInfo.sessionToken,
-                    deviceToken: sessionInfo.deviceToken
-                })
+        function setupSidebarHover() {
+            const sidebar = document.getElementById('sidebar');
+            
+            sidebar.addEventListener('mouseenter', () => {
+                clearTimeout(hoverTimeout);
+                sidebar.classList.remove('collapsed');
+            });
+            
+            sidebar.addEventListener('mouseleave', () => {
+                hoverTimeout = setTimeout(() => {
+                    sidebar.classList.add('collapsed');
+                }, 150);
             });
         }
-    } catch (error) {
-        console.error('Erro no logout:', error);
-    }
-    
-    performLogout();
-}
 
-function forceLogout(message) {
-    showMessage(message || 'Sessão encerrada', 'warning');
-    performLogout();
-}
-
-function performLogout() {
-    stopSessionCheck();
-    sessionStorage.removeItem('irUserSession');
-    
-    document.getElementById('dashboardScreen').style.display = 'none';
-    document.getElementById('loginScreen').classList.remove('hidden');
-    document.getElementById('password').value = '';
-    document.getElementById('iframesContainer').innerHTML = '';
-    
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    welcomeScreen.classList.remove('hidden-smooth');
-}
-
-async function init() {
-    try {
-        deviceToken = getOrCreateDeviceToken();
-        publicIP = await getPublicIP();
-        
-        const sessionInfo = sessionStorage.getItem('irUserSession');
-        if (sessionInfo) {
-            const session = JSON.parse(sessionInfo);
-            const isValid = await verifySession(session.sessionToken);
+        function getGreeting() {
+            const brasiliaTime = new Date().toLocaleString('en-US', { 
+                timeZone: 'America/Sao_Paulo',
+                hour12: false 
+            });
+            const hour = new Date(brasiliaTime).getHours();
             
-            if (isValid) {
-                currentSessionInfo = session;
-                showDashboard(session);
-                startSessionCheck();
+            if (hour >= 0 && hour < 12) return 'Bom dia';
+            else if (hour >= 12 && hour < 18) return 'Boa tarde';
+            else return 'Boa noite';
+        }
+
+        function getOrCreateDeviceToken() {
+            let token = localStorage.getItem('irDeviceToken');
+            if (!token) {
+                token = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('irDeviceToken', token);
+            }
+            return token;
+        }
+
+        async function getPublicIP() {
+            try {
+                const response = await fetch(`${API_URL}/ip`);
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error('Erro ao obter IP:', error);
+                return null;
+            }
+        }
+
+        function showMessage(message, type = 'error') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = `message ${type} show`;
+            setTimeout(() => messageBox.classList.remove('show'), 5000);
+        }
+
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const btn = document.querySelector('.toggle-password');
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'OCULTAR';
             } else {
-                sessionStorage.removeItem('irUserSession');
+                input.type = 'password';
+                btn.textContent = 'MOSTRAR';
             }
         }
-    } catch (error) {
-        console.error('Erro na inicialização:', error);
-    }
-}
 
-window.addEventListener('DOMContentLoaded', init);
-
-document.addEventListener('visibilitychange', async () => {
-    if (!document.hidden) {
-        const sessionInfo = sessionStorage.getItem('irUserSession');
-        if (sessionInfo) {
-            const session = JSON.parse(sessionInfo);
-            const isValid = await verifySession(session.sessionToken);
+        // ==========================================
+        // ======== LOGIN ===========================
+        // ==========================================
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            if (!isValid) {
-                forceLogout('Sua sessão expirou');
+            const username = document.getElementById('username').value.toLowerCase().trim();
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Autenticando...';
+            
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, deviceToken })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showMessage(data.message || data.error || 'Erro ao fazer login', 'error');
+                    return;
+                }
+
+                if (data.success && data.session) {
+                    sessionStorage.setItem('irUserSession', JSON.stringify(data.session));
+                    currentSessionInfo = data.session;
+                    showDashboard(data.session);
+                    startSessionCheck();
+                    showMessage('Login realizado com sucesso!', 'success');
+                }
+                
+            } catch (error) {
+                console.error('Erro no login:', error);
+                showMessage('Erro ao realizar login. Tente novamente.', 'error');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Entrar';
+            }
+        });
+
+        // ==========================================
+        // ======== DASHBOARD =======================
+        // ==========================================
+        function showDashboard(sessionInfo) {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').style.display = 'block';
+            
+            const greeting = getGreeting();
+            const userName = sessionInfo.name || sessionInfo.username;
+            const userSector = sessionInfo.sector || 'Usuário';
+            
+            document.getElementById('sidebarUserName').textContent = userName;
+            document.getElementById('sidebarUserSector').textContent = userSector;
+            document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
+            
+            loadSidebarModules(sessionInfo);
+            setupSidebarHover();
+            
+            const splash = document.getElementById('splashWelcome');
+            if (splash) {
+                splash.style.display = 'flex';
+                splash.style.animation = 'none';
+                void splash.offsetWidth;
+                splash.style.animation = 'fadeOut 0.5s ease 2.5s forwards';
+                setTimeout(() => { splash.style.display = 'none'; }, 3000);
             }
         }
-    }
-});
-</script>
+
+        function loadSidebarModules(sessionInfo) {
+            const sidebarModules = document.getElementById('sidebarModules');
+            sidebarModules.innerHTML = '';
+            
+            const userPermissions = getUserPermissions(sessionInfo);
+            
+            MODULES.forEach(module => {
+                if (!userPermissions.includes(module.id)) return;
+                
+                const moduleItem = document.createElement('div');
+                moduleItem.className = 'module-item';
+                
+                if (!module.available || !module.url) {
+                    moduleItem.classList.add('disabled');
+                    moduleItem.style.opacity = '0.5';
+                    moduleItem.style.cursor = 'not-allowed';
+                } else {
+                    moduleItem.id = `module-${module.id}`;
+                    moduleItem.setAttribute('data-tooltip', module.name);
+                    moduleItem.onclick = () => openModule(module);
+                }
+                
+                const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos'];
+                
+                moduleItem.innerHTML = `
+                    <span class="module-icon">${icon}</span>
+                    <span>${module.name}</span>
+                `;
+                
+                sidebarModules.appendChild(moduleItem);
+            });
+        }
+
+        function openModule(module) {
+            document.querySelectorAll('.module-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const moduleItem = document.getElementById(`module-${module.id}`);
+            if (moduleItem) moduleItem.classList.add('active');
+            
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            welcomeScreen.classList.add('hidden-smooth');
+            
+            let iframeContainer = document.getElementById(`iframe-${module.id}`);
+            
+            if (!iframeContainer) {
+                const params = new URLSearchParams({
+                    sessionToken: currentSessionInfo.sessionToken
+                });
+                
+                iframeContainer = document.createElement('div');
+                iframeContainer.className = 'iframe-container';
+                iframeContainer.id = `iframe-${module.id}`;
+                iframeContainer.innerHTML = `<iframe src="${module.url}?${params.toString()}" title="${module.name}"></iframe>`;
+                
+                document.getElementById('iframesContainer').appendChild(iframeContainer);
+            }
+            
+            document.querySelectorAll('.iframe-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            setTimeout(() => {
+                iframeContainer.classList.add('active');
+            }, 50);
+            
+            activeModuleId = module.id;
+        }
+
+        // ==========================================
+        // ======== SESSÃO ==========================
+        // ==========================================
+        function startSessionCheck() {
+            if (sessionCheckInterval) clearInterval(sessionCheckInterval);
+
+            sessionCheckInterval = setInterval(async () => {
+                const sessionInfo = sessionStorage.getItem('irUserSession');
+                if (!sessionInfo) {
+                    stopSessionCheck();
+                    return;
+                }
+
+                const session = JSON.parse(sessionInfo);
+                const isValid = await verifySession(session.sessionToken);
+
+                if (!isValid) {
+                    stopSessionCheck();
+                    forceLogout('Sua sessão expirou ou foi invalidada');
+                }
+            }, 30000);
+        }
+
+        function stopSessionCheck() {
+            if (sessionCheckInterval) {
+                clearInterval(sessionCheckInterval);
+                sessionCheckInterval = null;
+            }
+        }
+
+        async function verifySession(sessionToken) {
+            try {
+                const response = await fetch(`${API_URL}/verify-session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken })
+                });
+
+                const data = await response.json();
+                return data.valid === true;
+            } catch (error) {
+                console.error('Erro ao verificar sessão:', error);
+                return false;
+            }
+        }
+
+        // ==========================================
+        // ======== LOGOUT ==========================
+        // ==========================================
+        async function logout() {
+            if (!confirm('Deseja realmente sair?')) return;
+            
+            try {
+                const sessionInfo = JSON.parse(sessionStorage.getItem('irUserSession'));
+                if (sessionInfo) {
+                    await fetch(`${API_URL}/logout`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            sessionToken: sessionInfo.sessionToken,
+                            deviceToken: sessionInfo.deviceToken
+                        })
+                    });
+                }
+            } catch (error) {
+                console.error('Erro no logout:', error);
+            }
+            
+            performLogout();
+        }
+
+        function forceLogout(message) {
+            showMessage(message || 'Sessão encerrada', 'warning');
+            performLogout();
+        }
+
+        function performLogout() {
+            stopSessionCheck();
+            sessionStorage.removeItem('irUserSession');
+            
+            document.getElementById('dashboardScreen').style.display = 'none';
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('password').value = '';
+            document.getElementById('iframesContainer').innerHTML = '';
+            
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            welcomeScreen.classList.remove('hidden-smooth');
+        }
+
+        // ==========================================
+        // ======== INICIALIZAÇÃO ===================
+        // ==========================================
+        async function init() {
+            try {
+                deviceToken = getOrCreateDeviceToken();
+                publicIP = await getPublicIP();
+                
+                const sessionInfo = sessionStorage.getItem('irUserSession');
+                if (sessionInfo) {
+                    const session = JSON.parse(sessionInfo);
+                    const isValid = await verifySession(session.sessionToken);
+                    
+                    if (isValid) {
+                        currentSessionInfo = session;
+                        showDashboard(session);
+                        startSessionCheck();
+                    } else {
+                        sessionStorage.removeItem('irUserSession');
+                    }
+                }
+            } catch (error) {
+                console.error('Erro na inicialização:', error);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+
+        document.addEventListener('visibilitychange', async () => {
+            if (!document.hidden) {
+                const sessionInfo = sessionStorage.getItem('irUserSession');
+                if (sessionInfo) {
+                    const session = JSON.parse(sessionInfo);
+                    const isValid = await verifySession(session.sessionToken);
+                    
+                    if (!isValid) {
+                        forceLogout('Sua sessão expirou');
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
