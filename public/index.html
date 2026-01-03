@@ -124,7 +124,7 @@
             .logo-dark {
                 display: none;
             }
-            
+
             .logo-light {
                 display: block;
             }
@@ -846,7 +846,7 @@
                 'vendas-miguel',
                 'documentos'
             ],
-            
+
             // Isaque Gravino - vê apenas VENDAS-ISAQUE
             'vendas': [
                 'pregões', 
@@ -860,6 +860,39 @@
                 'vendas-isaque',
                 'documentos'
             ],
+            
+            // Roberto Gravino - vê VENDAS-ROBERTO + VENDAS-GERAL
+            'roberto': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'receber',
+                'pagamento',
+                'vendas-roberto',
+                'faturamento',
+                'documentos'
+            ],
+            
+            // Rosemeire - vê TODAS as aplicações de vendas
+            'rosemeire': [
+                'pregões', 
+                'tabela-precos', 
+                'compra', 
+                'transportadoras', 
+                'cotacoes-frete', 
+                'faturamento', 
+                'estoque', 
+                'controle-frete', 
+                'receber',
+                'pagamento',
+                'faturamento',
+                'documentos'
+            ]
         };
 
         // Ícones SVG para TODOS os módulos
@@ -875,6 +908,7 @@
             'receber': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="m16 19 3 3 3-3"/><path d="M18 12h.01"/><path d="M19 16v6"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
             'vendas-miguel': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
             'vendas-isaque': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
+            'vendas-roberto': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
             'vendas': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
             'faturamento': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
             'pagamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="M18 12h.01"/><path d="M19 22v-6"/><path d="m22 19-3-3-3 3"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
@@ -892,13 +926,13 @@
             { id: 'estoque', name: 'Estoque', url: 'https://controle-estoque-0eme.onrender.com', available: true },
             { id: 'controle-frete', name: 'Controle de Frete', url: 'https://controle-frete.onrender.com', available: true },
             { id: 'receber', name: 'Contas a Receber', url: 'https://contas-receber-m1xw.onrender.com', available: true },
-            
+
             // ===== APLICAÇÕES DE VENDAS (4 aplicações separadas) =====
             { id: 'vendas-miguel', name: 'Vendas', url: 'https://vendas-6s2u.onrender.com', available: true },
             { id: 'vendas-isaque', name: 'Vendas', url: '', available: false },
             { id: 'vendas-roberto', name: 'Vendas', url: '', available: false },
             { id: 'vendas-geral', name: 'Faturamento', url: '', available: false },
-            
+
             { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com/', available: true },
             { id: 'documentos', name: 'Documentos', url: 'https://documentos-buzt.onrender.com', available: true }
         ];
@@ -913,29 +947,29 @@
         // ==========================================
         // ======== FUNÇÕES PRINCIPAIS ==============
         // ==========================================
-        
+
         // 3. FUNÇÃO PARA OBTER PERMISSÕES (usa username primeiro, depois setor)
         function getUserPermissions(sessionInfo) {
             // Admin vê tudo (exceto se tiver permissões específicas)
             if (sessionInfo.isAdmin === true) {
                 const username = sessionInfo.username?.toLowerCase();
-                
+
                 // Se admin tem permissões específicas, usa elas
                 if (USER_SPECIFIC_PERMISSIONS[username]) {
                     return USER_SPECIFIC_PERMISSIONS[username];
                 }
-                
+
                 // Senão, vê todos os módulos
                 return MODULES.map(m => m.id);
             }
-            
+
             const username = sessionInfo.username?.toLowerCase();
-            
+
             // 1º: Verifica se usuário tem permissões específicas
             if (USER_SPECIFIC_PERMISSIONS[username]) {
                 return USER_SPECIFIC_PERMISSIONS[username];
             }
-            
+
             // 2º: Se não tem permissões específicas, usa as do setor
             const sector = sessionInfo.sector || '';
             return SECTOR_PERMISSIONS[sector] || [];
@@ -943,12 +977,12 @@
 
         function setupSidebarHover() {
             const sidebar = document.getElementById('sidebar');
-            
+
             sidebar.addEventListener('mouseenter', () => {
                 clearTimeout(hoverTimeout);
                 sidebar.classList.remove('collapsed');
             });
-            
+
             sidebar.addEventListener('mouseleave', () => {
                 hoverTimeout = setTimeout(() => {
                     sidebar.classList.add('collapsed');
@@ -962,7 +996,7 @@
                 hour12: false 
             });
             const hour = new Date(brasiliaTime).getHours();
-            
+
             if (hour >= 0 && hour < 12) return 'Bom dia';
             else if (hour >= 12 && hour < 18) return 'Boa tarde';
             else return 'Boa noite';
@@ -1012,14 +1046,14 @@
         // ==========================================
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const username = document.getElementById('username').value.toLowerCase().trim();
             const password = document.getElementById('password').value;
             const loginBtn = document.getElementById('loginBtn');
-            
+
             loginBtn.disabled = true;
             loginBtn.textContent = 'Autenticando...';
-            
+
             try {
                 const response = await fetch(`${API_URL}/login`, {
                     method: 'POST',
@@ -1041,7 +1075,7 @@
                     startSessionCheck();
                     showMessage('Login realizado com sucesso!', 'success');
                 }
-                
+
             } catch (error) {
                 console.error('Erro no login:', error);
                 showMessage('Erro ao realizar login. Tente novamente.', 'error');
@@ -1057,18 +1091,18 @@
         function showDashboard(sessionInfo) {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('dashboardScreen').style.display = 'block';
-            
+
             const greeting = getGreeting();
             const userName = sessionInfo.name || sessionInfo.username;
             const userSector = sessionInfo.sector || 'Usuário';
-            
+
             document.getElementById('sidebarUserName').textContent = userName;
             document.getElementById('sidebarUserSector').textContent = userSector;
             document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
-            
+
             loadSidebarModules(sessionInfo);
             setupSidebarHover();
-            
+
             const splash = document.getElementById('splashWelcome');
             if (splash) {
                 splash.style.display = 'flex';
@@ -1082,15 +1116,15 @@
         function loadSidebarModules(sessionInfo) {
             const sidebarModules = document.getElementById('sidebarModules');
             sidebarModules.innerHTML = '';
-            
+
             const userPermissions = getUserPermissions(sessionInfo);
-            
+
             MODULES.forEach(module => {
                 if (!userPermissions.includes(module.id)) return;
-                
+
                 const moduleItem = document.createElement('div');
                 moduleItem.className = 'module-item';
-                
+
                 if (!module.available || !module.url) {
                     moduleItem.classList.add('disabled');
                     moduleItem.style.opacity = '0.5';
@@ -1100,14 +1134,14 @@
                     moduleItem.setAttribute('data-tooltip', module.name);
                     moduleItem.onclick = () => openModule(module);
                 }
-                
+
                 const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos'];
-                
+
                 moduleItem.innerHTML = `
                     <span class="module-icon">${icon}</span>
                     <span>${module.name}</span>
                 `;
-                
+
                 sidebarModules.appendChild(moduleItem);
             });
         }
@@ -1116,36 +1150,36 @@
             document.querySelectorAll('.module-item').forEach(item => {
                 item.classList.remove('active');
             });
-            
+
             const moduleItem = document.getElementById(`module-${module.id}`);
             if (moduleItem) moduleItem.classList.add('active');
-            
+
             const welcomeScreen = document.getElementById('welcomeScreen');
             welcomeScreen.classList.add('hidden-smooth');
-            
+
             let iframeContainer = document.getElementById(`iframe-${module.id}`);
-            
+
             if (!iframeContainer) {
                 const params = new URLSearchParams({
                     sessionToken: currentSessionInfo.sessionToken
                 });
-                
+
                 iframeContainer = document.createElement('div');
                 iframeContainer.className = 'iframe-container';
                 iframeContainer.id = `iframe-${module.id}`;
                 iframeContainer.innerHTML = `<iframe src="${module.url}?${params.toString()}" title="${module.name}"></iframe>`;
-                
+
                 document.getElementById('iframesContainer').appendChild(iframeContainer);
             }
-            
+
             document.querySelectorAll('.iframe-container').forEach(container => {
                 container.classList.remove('active');
             });
-            
+
             setTimeout(() => {
                 iframeContainer.classList.add('active');
             }, 50);
-            
+
             activeModuleId = module.id;
         }
 
@@ -1200,7 +1234,7 @@
         // ==========================================
         async function logout() {
             if (!confirm('Deseja realmente sair?')) return;
-            
+
             try {
                 const sessionInfo = JSON.parse(sessionStorage.getItem('irUserSession'));
                 if (sessionInfo) {
@@ -1216,7 +1250,7 @@
             } catch (error) {
                 console.error('Erro no logout:', error);
             }
-            
+
             performLogout();
         }
 
@@ -1228,12 +1262,12 @@
         function performLogout() {
             stopSessionCheck();
             sessionStorage.removeItem('irUserSession');
-            
+
             document.getElementById('dashboardScreen').style.display = 'none';
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('password').value = '';
             document.getElementById('iframesContainer').innerHTML = '';
-            
+
             const welcomeScreen = document.getElementById('welcomeScreen');
             welcomeScreen.classList.remove('hidden-smooth');
         }
@@ -1245,12 +1279,12 @@
             try {
                 deviceToken = getOrCreateDeviceToken();
                 publicIP = await getPublicIP();
-                
+
                 const sessionInfo = sessionStorage.getItem('irUserSession');
                 if (sessionInfo) {
                     const session = JSON.parse(sessionInfo);
                     const isValid = await verifySession(session.sessionToken);
-                    
+
                     if (isValid) {
                         currentSessionInfo = session;
                         showDashboard(session);
@@ -1272,7 +1306,7 @@
                 if (sessionInfo) {
                     const session = JSON.parse(sessionInfo);
                     const isValid = await verifySession(session.sessionToken);
-                    
+
                     if (!isValid) {
                         forceLogout('Sua sessão expirou');
                     }
