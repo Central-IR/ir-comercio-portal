@@ -309,7 +309,7 @@ app.post('/api/login', async (req, res) => {
 
     const sessionToken = generateSecureToken();
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 8);
+    expiresAt.setHours(expiresAt.getHours() + 24); // ← 24 HORAS (era 8)
 
     const { data: existingSession } = await supabase
       .from('active_sessions')
@@ -471,21 +471,11 @@ app.post('/api/verify-session', async (req, res) => {
       });
     }
 
+    // ==========================================
+    // REMOVIDO: Verificação de IP (causava logout)
+    // Agora apenas atualiza o IP atual
+    // ==========================================
     const currentIP = getClientIP(req);
-    if (!isIPAuthorized(currentIP)) {
-      console.log('❌ Tentativa de acesso de IP não autorizado:', currentIP);
-      
-      await supabase
-        .from('active_sessions')
-        .update({ is_active: false })
-        .eq('session_token', sanitizedToken);
-
-      return res.status(403).json({ 
-        valid: false, 
-        reason: 'ip_not_authorized',
-        message: 'Acesso negado. IP não autorizado.'
-      });
-    }
 
     if (!session.users.is_active) {
       await supabase
@@ -511,14 +501,12 @@ app.post('/api/verify-session', async (req, res) => {
       });
     }
 
-    if (!session.users.is_admin && !isBusinessHours()) {
-      return res.status(403).json({ 
-        valid: false, 
-        reason: 'outside_business_hours',
-        message: 'Este acesso é disponibilizado em conformidade com o horário comercial da empresa.'
-      });
-    }
+    // ==========================================
+    // REMOVIDO: Verificação de horário comercial
+    // Usuário pode continuar usando após fazer login
+    // ==========================================
 
+    // Atualiza última atividade e IP
     await supabase
       .from('active_sessions')
       .update({ 
@@ -589,9 +577,10 @@ app.listen(PORT, () => {
   console.log(`🚀 Portal Central rodando na porta ${PORT}`);
   console.log(`💾 Supabase configurado: ${supabaseUrl ? 'Sim ✅' : 'Não ❌'}`);
   console.log(`🔒 IPs autorizados: ${AUTHORIZED_IPS.join(', ')}`);
-  console.log('⏰ Horário comercial: Seg-Sex, 8h-18h (apenas não-admin)');
+  console.log('⏰ Horário comercial: Seg-Sex, 8h-18h (apenas LOGIN)');
   console.log(`🛡️ Rate limiting ativo: 5 tentativas/15min por IP`);
   console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
   console.log('✅ Melhorias: Tokens seguros, Rate limiting, Sanitização, Validação');
+  console.log('🔓 Sessão: 24 horas | Sem verificação de IP/horário após login');
   console.log('='.repeat(50));
 });
