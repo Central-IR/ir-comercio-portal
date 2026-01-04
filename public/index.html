@@ -6,7 +6,7 @@
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
     <title>Portal</title>
     <style>
-        /* Seu CSS permanece o mesmo - copiando do documento 4 */
+        /* TODO O CSS PERMANECE IGUAL */
         :root {
             --primary: #ff5100;
             --primary-dark: #E67E00;
@@ -764,7 +764,11 @@
     <script>
         const API_URL = window.location.origin + '/api';
 
-        // PERMISSÕES POR SETOR
+        // ==========================================
+        // PERMISSÕES CORRIGIDAS
+        // ==========================================
+        
+        // PERMISSÕES POR SETOR (Administrador NÃO vê vendas por padrão)
         const SECTOR_PERMISSIONS = {
             'Administrador': [
                 'pregões', 
@@ -778,6 +782,7 @@
                 'receber',
                 'pagamento',
                 'documentos'
+                // ← NÃO INCLUI vendas-miguel nem vendas-isaque
             ],
             'Vendas': [
                 'pregões', 
@@ -809,8 +814,9 @@
             ]
         };
 
-        // PERMISSÕES ESPECÍFICAS POR USERNAME
+        // PERMISSÕES ESPECÍFICAS POR USERNAME (sobrescreve o setor)
         const USER_SPECIFIC_PERMISSIONS = {
+            // Miguel Alves - vê VENDAS-MIGUEL
             'vendas2': [
                 'pregões', 
                 'tabela-precos', 
@@ -820,9 +826,10 @@
                 'faturamento', 
                 'estoque', 
                 'controle-frete', 
-                'vendas-miguel',
+                'vendas-miguel',  // ← Apenas este módulo de vendas
                 'documentos'
             ],
+            // Isaque Gravino - vê VENDAS-ISAQUE
             'vendas': [
                 'pregões', 
                 'tabela-precos', 
@@ -832,7 +839,7 @@
                 'faturamento', 
                 'estoque', 
                 'controle-frete', 
-                'vendas-isaque',
+                'vendas-isaque',  // ← Apenas este módulo de vendas
                 'documentos'
             ]
         };
@@ -863,35 +870,37 @@
             { id: 'estoque', name: 'Estoque', url: 'https://controle-estoque-0eme.onrender.com', available: true },
             { id: 'controle-frete', name: 'Controle de Frete', url: 'https://controle-frete.onrender.com', available: true },
             { id: 'receber', name: 'Contas a Receber', url: 'https://contas-receber-m1xw.onrender.com', available: true },
-            { id: 'vendas-miguel', name: 'Vendas', url: 'https://vendas-6s2u.onrender.com', available: true },
-            { id: 'vendas-isaque', name: 'Vendas', url: '', available: false },
-            { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com/', available: true },
+            { id: 'vendas-miguel', name: 'Vendas - Miguel', url: 'https://vendas-6s2u.onrender.com', available: true },
+            { id: 'vendas-isaque', name: 'Vendas - Isaque', url: '', available: false },
+            { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com', available: true },
             { id: 'documentos', name: 'Documentos', url: 'https://documentos-buzt.onrender.com', available: true }
         ];
 
         let deviceToken = null;
         let publicIP = null;
-        let sessionCheckInterval = null;
         let currentSessionInfo = null;
         let activeModuleId = null;
         let hoverTimeout = null;
 
+        // ==========================================
+        // FUNÇÃO CORRIGIDA - NÃO DÁ PERMISSÕES DE VENDAS PARA ADMIN
+        // ==========================================
         function getUserPermissions(sessionInfo) {
-            if (sessionInfo.isAdmin === true) {
-                const username = sessionInfo.username?.toLowerCase();
-                if (USER_SPECIFIC_PERMISSIONS[username]) {
-                    return USER_SPECIFIC_PERMISSIONS[username];
-                }
-                return MODULES.map(m => m.id);
-            }
-            
             const username = sessionInfo.username?.toLowerCase();
+            
+            // 1º: SEMPRE verifica permissões específicas do usuário PRIMEIRO
             if (USER_SPECIFIC_PERMISSIONS[username]) {
                 return USER_SPECIFIC_PERMISSIONS[username];
             }
             
+            // 2º: Se não tem permissões específicas, usa as do setor
             const sector = sessionInfo.sector || '';
-            return SECTOR_PERMISSIONS[sector] || [];
+            if (SECTOR_PERMISSIONS[sector]) {
+                return SECTOR_PERMISSIONS[sector];
+            }
+            
+            // 3º: Se não encontrou nada, retorna array vazio
+            return [];
         }
 
         function setupSidebarHover() {
@@ -988,7 +997,6 @@
                     sessionStorage.setItem('irUserSession', JSON.stringify(data.session));
                     currentSessionInfo = data.session;
                     showDashboard(data.session);
-                    startSessionCheck();
                     showMessage('Login realizado com sucesso!', 'success');
                 }
                 
@@ -1096,33 +1104,6 @@
             activeModuleId = module.id;
         }
 
-        function startSessionCheck() {
-            if (sessionCheckInterval) clearInterval(sessionCheckInterval);
-
-            sessionCheckInterval = setInterval(async () => {
-                const sessionInfo = sessionStorage.getItem('irUserSession');
-                if (!sessionInfo) {
-                    stopSessionCheck();
-                    return;
-                }
-
-                const session = JSON.parse(sessionInfo);
-                const isValid = await verifySession(session.sessionToken);
-
-                if (!isValid) {
-                    stopSessionCheck();
-                    forceLogout('Sua sessão expirou ou foi invalidada');
-                }
-            }, 30000);
-        }
-
-        function stopSessionCheck() {
-            if (sessionCheckInterval) {
-                clearInterval(sessionCheckInterval);
-                sessionCheckInterval = null;
-            }
-        }
-
         async function verifySession(sessionToken) {
             try {
                 const response = await fetch(`${API_URL}/verify-session`, {
@@ -1167,7 +1148,6 @@
         }
 
         function performLogout() {
-            stopSessionCheck();
             sessionStorage.removeItem('irUserSession');
             
             document.getElementById('dashboardScreen').style.display = 'none';
@@ -1192,7 +1172,6 @@
                     if (isValid) {
                         currentSessionInfo = session;
                         showDashboard(session);
-                        startSessionCheck();
                     } else {
                         sessionStorage.removeItem('irUserSession');
                     }
@@ -1204,19 +1183,11 @@
 
         window.addEventListener('DOMContentLoaded', init);
 
-        document.addEventListener('visibilitychange', async () => {
-            if (!document.hidden) {
-                const sessionInfo = sessionStorage.getItem('irUserSession');
-                if (sessionInfo) {
-                    const session = JSON.parse(sessionInfo);
-                    const isValid = await verifySession(session.sessionToken);
-                    
-                    if (!isValid) {
-                        forceLogout('Sua sessão expirou');
-                    }
-                }
-            }
-        });
+        // ==========================================
+        // REMOVIDO: Logout automático a cada 30 segundos
+        // REMOVIDO: Verificação ao mudar de aba
+        // Agora o usuário só faz logout quando clicar em "Sair"
+        // ==========================================
     </script>
 </body>
 </html>
