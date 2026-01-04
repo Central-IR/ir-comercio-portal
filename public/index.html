@@ -6,7 +6,6 @@
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
     <title>Portal</title>
     <style>
-        /* TODO O CSS PERMANECE IGUAL */
         :root {
             --primary: #ff5100;
             --primary-dark: #E67E00;
@@ -765,10 +764,8 @@
         const API_URL = window.location.origin + '/api';
 
         // ==========================================
-        // PERMISSÕES CORRIGIDAS
+        // PERMISSÕES POR SETOR
         // ==========================================
-        
-        // PERMISSÕES POR SETOR (Administrador NÃO vê vendas por padrão)
         const SECTOR_PERMISSIONS = {
             'Administrador': [
                 'pregões', 
@@ -781,9 +778,8 @@
                 'controle-frete', 
                 'receber',
                 'pagamento',
-                'documentos-comercial'
+                'documentos-comercial',
                 'documentos-financeiro'
-                // ← NÃO INCLUI vendas-miguel nem vendas-isaque
             ],
             'Vendas': [
                 'pregões', 
@@ -815,9 +811,10 @@
             ]
         };
 
-        // PERMISSÕES ESPECÍFICAS POR USERNAME (sobrescreve o setor)
+        // ==========================================
+        // PERMISSÕES ESPECÍFICAS POR USUÁRIO
+        // ==========================================
         const USER_SPECIFIC_PERMISSIONS = {
-
             'roberto': [
                 'pregões', 
                 'tabela-precos', 
@@ -828,11 +825,11 @@
                 'estoque', 
                 'controle-frete', 
                 'receber',
-                'vendas'
+                'vendas',
                 'pagamento',
                 'documentos-comercial'
-
-        'rosemeire': [
+            ],
+            'rosemeire': [
                 'pregões', 
                 'tabela-precos', 
                 'compra', 
@@ -842,11 +839,10 @@
                 'estoque', 
                 'controle-frete', 
                 'receber',
-                'vendas'
+                'vendas',
                 'pagamento',
                 'documentos-financeiro'
-            
-            // Miguel Alves - vê VENDAS-MIGUEL
+            ],
             'vendas2': [
                 'pregões', 
                 'tabela-precos', 
@@ -856,10 +852,9 @@
                 'faturamento', 
                 'estoque', 
                 'controle-frete', 
-                'vendas-miguel',  // ← Apenas este módulo de vendas
+                'vendas-miguel',
                 'documentos-comercial'
             ],
-            // Isaque Gravino - vê VENDAS-ISAQUE
             'vendas': [
                 'pregões', 
                 'tabela-precos', 
@@ -869,11 +864,14 @@
                 'faturamento', 
                 'estoque', 
                 'controle-frete', 
-                'vendas-isaque',  // ← Apenas este módulo de vendas
+                'vendas-isaque',
                 'documentos-comercial'
             ]
         };
 
+        // ==========================================
+        // ÍCONES DOS MÓDULOS
+        // ==========================================
         const MODULE_ICONS = {
             'pregões': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 13-8.381 8.38a 1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>',
             'tabela-precos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 13H7"/><path d="M19 9h-4"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="15" y="5" width="4" height="12" rx="1"/><rect x="7" y="8" width="4" height="9" rx="1"/></svg>',
@@ -888,10 +886,13 @@
             'vendas-miguel': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
             'vendas-isaque': '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
             'pagamento': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="M18 12h.01"/><path d="M19 22v-6"/><path d="m22 19-3-3-3 3"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
-            'documentos-comercial': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>'
+            'documentos-comercial': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>',
             'documentos-financeiro': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>'
         };
 
+        // ==========================================
+        // LISTA DE MÓDULOS
+        // ==========================================
         const MODULES = [
             { id: 'pregões', name: 'Pregões', url: '', available: false },
             { id: 'tabela-precos', name: 'Tabela de Preços', url: 'https://tabela-precos-udyp.onrender.com', available: true },
@@ -906,7 +907,7 @@
             { id: 'vendas-miguel', name: 'Vendas', url: 'https://vendas-6s2u.onrender.com', available: true },
             { id: 'vendas-isaque', name: 'Vendas', url: '', available: false },
             { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com', available: true },
-            { id: 'documentos-comercial', name: 'Documentos', url: 'https://documentos-buzt.onrender.com', available: true }
+            { id: 'documentos-comercial', name: 'Documentos', url: 'https://documentos-buzt.onrender.com', available: true },
             { id: 'documentos-financeiro', name: 'Documentos', url: '', available: false }
         ];
 
@@ -916,24 +917,18 @@
         let activeModuleId = null;
         let hoverTimeout = null;
 
-        // ==========================================
-        // FUNÇÃO CORRIGIDA - NÃO DÁ PERMISSÕES DE VENDAS PARA ADMIN
-        // ==========================================
         function getUserPermissions(sessionInfo) {
             const username = sessionInfo.username?.toLowerCase();
             
-            // 1º: SEMPRE verifica permissões específicas do usuário PRIMEIRO
             if (USER_SPECIFIC_PERMISSIONS[username]) {
                 return USER_SPECIFIC_PERMISSIONS[username];
             }
             
-            // 2º: Se não tem permissões específicas, usa as do setor
             const sector = sessionInfo.sector || '';
             if (SECTOR_PERMISSIONS[sector]) {
                 return SECTOR_PERMISSIONS[sector];
             }
             
-            // 3º: Se não encontrou nada, retorna array vazio
             return [];
         }
 
@@ -1090,7 +1085,7 @@
                     moduleItem.onclick = () => openModule(module);
                 }
                 
-                const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos'];
+                const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos-comercial'];
                 
                 moduleItem.innerHTML = `
                     <span class="module-icon">${icon}</span>
@@ -1216,12 +1211,6 @@
         }
 
         window.addEventListener('DOMContentLoaded', init);
-
-        // ==========================================
-        // REMOVIDO: Logout automático a cada 30 segundos
-        // REMOVIDO: Verificação ao mudar de aba
-        // Agora o usuário só faz logout quando clicar em "Sair"
-        // ==========================================
     </script>
 </body>
 </html>
