@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -53,6 +54,7 @@
             overflow: hidden;
         }
 
+        /* ==================== TELA DE LOGIN MELHORADA ==================== */
         .login-screen {
             width: 100%;
             min-height: 100vh;
@@ -61,6 +63,8 @@
             justify-content: center;
             padding: 2rem;
             background: var(--bg-secondary);
+            position: relative;
+            overflow: hidden;
         }
 
         .login-screen::before {
@@ -71,36 +75,109 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 81, 0, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 81, 0, 0.02) 0%, transparent 50%);
+                radial-gradient(circle at 20% 30%, rgba(255, 81, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 81, 0, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 81, 0, 0.03) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
+            animation: pulseGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .login-screen::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 81, 0, 0.015) 2px,
+                    rgba(255, 81, 0, 0.015) 4px
+                );
+            pointer-events: none;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
 
         .login-content {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             position: relative;
             z-index: 1;
+            background: var(--bg-card);
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 81, 0, 0.1) inset;
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .logo-container {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(255, 81, 0, 0.1) 0%, transparent 70%);
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
         .logo-img {
             width: auto;
-            height: 200px;
+            height: 180px;
             max-width: 100%;
             object-fit: contain;
             object-position: center;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 4px 12px rgba(255, 81, 0, 0.15));
-            transition: opacity 0.3s ease;
+            filter: drop-shadow(0 8px 24px rgba(255, 81, 0, 0.25));
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 12px 32px rgba(255, 81, 0, 0.35));
         }
 
         .logo-dark {
@@ -122,7 +199,7 @@
         }
 
         .form-group {
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.5rem;
         }
 
         label {
@@ -130,24 +207,27 @@
             margin-bottom: 0.6rem;
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
         }
 
         input {
             width: 100%;
-            padding: 18px 20px;
+            padding: 16px 18px;
             border: 2px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 12px;
             background-color: var(--input-bg);
             color: var(--text-primary);
-            font-size: 1.05rem;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         input:focus {
             outline: none;
             border-color: var(--primary);
             background-color: var(--bg-card);
+            box-shadow: 0 0 0 4px rgba(255, 81, 0, 0.1);
+            transform: translateY(-2px);
         }
 
         .password-container {
@@ -156,39 +236,66 @@
 
         .toggle-password {
             position: absolute;
-            right: 18px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
             font-weight: 600;
             text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
         }
 
         .toggle-password:hover {
             color: var(--primary);
+            background: rgba(255, 81, 0, 0.1);
         }
 
         .btn-login {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            border-radius: 14px;
-            font-size: 1.1rem;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-login:hover::before {
+            left: 100%;
         }
 
         .btn-login:hover:not(:disabled) {
             transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(255, 81, 0, 0.5);
+            box-shadow: 0 12px 32px rgba(255, 81, 0, 0.4);
+        }
+
+        .btn-login:active:not(:disabled) {
+            transform: translateY(-1px);
         }
 
         .btn-login:disabled {
@@ -198,11 +305,23 @@
 
         .message {
             padding: 14px 18px;
-            border-radius: 12px;
-            margin-bottom: 1.8rem;
-            font-size: 0.95rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
             display: none;
             font-weight: 500;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message.show {
@@ -221,6 +340,7 @@
             color: #15803D;
         }
 
+        /* ==================== INTRODUÇÃO CINEMATOGRÁFICA ==================== */
         .dashboard-screen {
             display: none;
             height: 100vh;
@@ -233,39 +353,88 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-primary);
+            background: linear-gradient(135deg, #000000 0%, #1a0a00 50%, #000000 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 99999;
-            animation: fadeOut 0.5s ease 2.5s forwards;
+            overflow: hidden;
+        }
+
+        .splash-welcome::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(255, 81, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(255, 81, 0, 0.1) 0%, transparent 50%);
+            animation: splashGlow 3s ease-in-out;
+        }
+
+        @keyframes splashGlow {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.2); }
         }
 
         .splash-greeting {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            font-weight: 800;
             color: var(--text-primary);
-            letter-spacing: -0.5px;
+            letter-spacing: 2px;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
             opacity: 0;
-            animation: smoothFadeIn 1.5s ease-out 0.3s forwards;
+            transform: scale(0.9);
+            animation: cinematicEntry 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            text-shadow: 0 0 40px rgba(255, 81, 0, 0.5);
         }
 
-        @keyframes smoothFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes cinematicEntry {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+                filter: blur(10px);
+            }
+            40% {
+                opacity: 1;
+                transform: scale(1.05) translateY(0);
+                filter: blur(0);
+            }
+            60% {
+                transform: scale(1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
+            }
         }
 
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
+        .splash-welcome {
+            animation: splashFadeOut 0.8s ease 2.2s forwards;
         }
 
+        @keyframes splashFadeOut {
+            to { 
+                opacity: 0; 
+                visibility: hidden;
+                transform: scale(1.1);
+            }
+        }
+
+        /* ==================== DASHBOARD ==================== */
         .dashboard-container {
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
+        /* ==================== SIDEBAR MELHORADA ==================== */
         .sidebar {
             width: 280px;
             background: var(--bg-sidebar);
@@ -289,82 +458,41 @@
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
         }
 
+        /* ==================== CABEÇALHO DA SIDEBAR COM BORDA ==================== */
         .sidebar-header {
-            padding: 1rem;
+            padding: 1.5rem 1rem;
             display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
             flex-shrink: 0;
             opacity: 1;
             transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 90px;
+            min-height: 100px;
         }
 
         .sidebar.collapsed .sidebar-header {
             opacity: 0;
             transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 90px;
         }
 
-        .menu-toggle-sidebar {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            width: 32px;
-            height: 32px;
+        .user-info-box {
+            width: 100%;
+            padding: 1rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            background: rgba(255, 81, 0, 0.03);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            position: relative;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        .menu-toggle-sidebar:hover {
-            background: rgba(255, 81, 0, 0.1);
-        }
-
-        .hamburger-line {
-            width: 20px;
-            height: 2px;
-            background: currentColor;
-            border-radius: 2px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: block;
-        }
-
-        .sidebar:not(.collapsed) .hamburger-line:nth-child(1) {
-            transform: translateY(7px) rotate(45deg);
-        }
-
-        .sidebar:not(.collapsed) .hamburger-line:nth-child(2) {
-            opacity: 0;
-        }
-
-        .sidebar:not(.collapsed) .hamburger-line:nth-child(3) {
-            transform: translateY(-7px) rotate(-45deg);
-        }
-
-        .sidebar-title {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            flex: 1;
-            min-width: 0;
+            gap: 0.4rem;
             opacity: 1;
             transform: translateX(0);
             transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
                         transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .sidebar.collapsed .sidebar-title {
+        .sidebar.collapsed .user-info-box {
             opacity: 0;
             transform: translateX(-10px);
             transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
@@ -372,36 +500,21 @@
         }
 
         .user-name-sidebar {
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--text-primary);
             line-height: 1.3;
+            text-align: center;
         }
 
         .user-sector-sidebar {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
             line-height: 1.2;
+            text-align: center;
         }
 
-        .logout-btn-sidebar {
-            padding: 0;
-            margin: 0;
-            margin-top: 0.25rem;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-        }
-
-        .logout-btn-sidebar:hover {
-            color: var(--error);
-        }
-
+        /* ==================== MÓDULOS DA SIDEBAR ==================== */
         .sidebar-modules {
             flex: 1;
             overflow-y: auto;
@@ -436,15 +549,6 @@
 
         .sidebar:not(.collapsed) .sidebar-modules:hover::-webkit-scrollbar-thumb:hover {
             background: rgba(85, 85, 85, 0.7);
-        }
-
-        .sidebar-footer {
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            min-height: 50px;
         }
 
         .module-item {
@@ -550,6 +654,117 @@
             stroke-linejoin: round;
         }
 
+        /* ==================== BOTÃO DE LOGOUT NO FOOTER ==================== */
+        .sidebar-footer {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-height: 70px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logout-btn-sidebar {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            white-space: nowrap;
+            border-radius: 8px;
+        }
+
+        .logout-btn-sidebar:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            transform: translateX(3px);
+        }
+
+        .sidebar.collapsed .logout-btn-sidebar {
+            justify-content: center;
+            padding: 0.75rem;
+        }
+
+        .sidebar.collapsed .logout-btn-sidebar:hover {
+            transform: translateX(0) scale(1.05);
+        }
+
+        .logout-btn-sidebar span:not(.logout-icon) {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.collapsed .logout-btn-sidebar span:not(.logout-icon) {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+        }
+
+        .sidebar.collapsed .logout-btn-sidebar::before {
+            content: 'Sair';
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%) translateX(-5px);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            z-index: 1000;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .sidebar.collapsed .logout-btn-sidebar:hover::before {
+            opacity: 1;
+            transform: translateY(-50%) translateX(5px);
+        }
+
+        .logout-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .logout-btn-sidebar:hover .logout-icon {
+            transform: scale(1.1);
+        }
+
+        .logout-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ==================== CONTEÚDO PRINCIPAL ==================== */
         .main-content {
             flex: 1;
             display: flex;
@@ -643,6 +858,7 @@
             display: none !important;
         }
 
+        /* ==================== RESPONSIVO ==================== */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -658,7 +874,7 @@
             }
 
             .splash-greeting {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
                 padding: 0 2rem;
             }
 
@@ -668,6 +884,10 @@
 
             .logo-img {
                 height: 150px;
+            }
+
+            .login-content {
+                padding: 2rem 1.5rem;
             }
         }
     </style>
@@ -679,10 +899,6 @@
                 <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png" 
                      alt="Logo I.R. Comércio" 
                      class="logo-img logo-dark"
-                     onerror="this.style.display='none'">
-                <img src="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS.png" 
-                     alt="Logo I.R. Comércio" 
-                     class="logo-img logo-light"
                      onerror="this.style.display='none'">
             </div>
 
@@ -730,21 +946,26 @@
         <div class="dashboard-container">
             <div id="sidebar" class="sidebar collapsed">
                 <div class="sidebar-header">
-                    <button class="menu-toggle-sidebar">
-                        <span class="hamburger-line"></span>
-                        <span class="hamburger-line"></span>
-                        <span class="hamburger-line"></span>
-                    </button>
-                    <div class="sidebar-title">
+                    <div class="user-info-box">
                         <div class="user-name-sidebar" id="sidebarUserName"></div>
                         <div class="user-sector-sidebar" id="sidebarUserSector"></div>
-                        <button class="logout-btn-sidebar" onclick="logout()">Sair</button>
                     </div>
                 </div>
 
                 <div class="sidebar-modules" id="sidebarModules"></div>
 
-                <div class="sidebar-footer"></div>
+                <div class="sidebar-footer">
+                    <button class="logout-btn-sidebar" onclick="logout()">
+                        <span class="logout-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </span>
+                        <span>Sair</span>
+                    </button>
+                </div>
             </div>
 
             <div class="main-content">
@@ -763,9 +984,6 @@
     <script>
         const API_URL = window.location.origin + '/api';
 
-        // ==========================================
-        // PERMISSÕES POR SETOR
-        // ==========================================
         const SECTOR_PERMISSIONS = {
             'Administrador': [
                 'pregões', 
@@ -811,9 +1029,6 @@
             ]
         };
 
-        // ==========================================
-        // PERMISSÕES ESPECÍFICAS POR USUÁRIO
-        // ==========================================
         const USER_SPECIFIC_PERMISSIONS = {
             'roberto': [
                 'pregões', 
@@ -869,9 +1084,6 @@
             ]
         };
 
-        // ==========================================
-        // ÍCONES DOS MÓDULOS
-        // ==========================================
         const MODULE_ICONS = {
             'pregões': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 13-8.381 8.38a 1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>',
             'tabela-precos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 13H7"/><path d="M19 9h-4"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="15" y="5" width="4" height="12" rx="1"/><rect x="7" y="8" width="4" height="9" rx="1"/></svg>',
@@ -889,9 +1101,6 @@
             'documentos-financeiro': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>'
         };
 
-        // ==========================================
-        // LISTA DE MÓDULOS
-        // ==========================================
         const MODULES = [
             { id: 'pregões', name: 'Pregões 🚧', url: 'https://pregoes.onrender.com', available: true },
             { id: 'tabela-precos', name: 'Tabela de Preços', url: 'https://tabela-precos-udyp.onrender.com', available: true },
@@ -1054,9 +1263,6 @@
             const splash = document.getElementById('splashWelcome');
             if (splash) {
                 splash.style.display = 'flex';
-                splash.style.animation = 'none';
-                void splash.offsetWidth;
-                splash.style.animation = 'fadeOut 0.5s ease 2.5s forwards';
                 setTimeout(() => { splash.style.display = 'none'; }, 3000);
             }
         }
