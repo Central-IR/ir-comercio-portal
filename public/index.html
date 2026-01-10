@@ -6,52 +6,66 @@
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
     <title>Portal</title>
     <style>
-        :root {
-            --primary: #ff5100;
-            --primary-dark: #E67E00;
-            --primary-light: #FF6A1A;
-            --bg-primary: #000000;
-            --bg-secondary: #0A0A0A;
-            --bg-sidebar: #0F0F0F;
-            --bg-card: #1A1A1A;
-            --text-primary: #FFFFFF;
-            --text-secondary: #A0A0A0;
-            --border-color: rgba(255, 81, 0, 0.15);
-            --input-bg: #2A2A2A;
-            --error: #EF4444;
-            --success: #22C55E;
-            --warning: #F59E0B;
-            --shadow: rgba(0, 0, 0, 0.5);
-            --online-green: #22C55E;
-        }
+        /* VARIÁVEIS BASE */
+:root {
+    --primary: #CC7000;
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-card: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #6B7280;
+    --border-color: #E5E7EB;
+    --input-bg: #F9FAFB;
+    --success-color: #22C55E;
+    --warning-color: #F59E0B;
+    --info-color: #3B82F6;
+    --table-stripe: #FAFAFA;
+    --table-hover: rgba(0, 0, 0, 0.02);
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --th-bg: #6B7280;
+    --th-color: #FFFFFF;
+    --th-border: #E5E7EB;
+    --shadow: rgba(0, 0, 0, 0.08);
+    --btn-register: #3B82F6;
+    --btn-delete: #EF4444;
+    --btn-edit: #6B7280;
+    --btn-view: #F59E0B;
+    --btn-save: #22C55E;
+    --alert-color: #EF4444;
+}
 
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-primary: #FFFFFF;
-                --bg-secondary: #F5F5F5;
-                --bg-sidebar: #FAFAFA;
-                --bg-card: #FFFFFF;
-                --text-primary: #1E1E1E;
-                --text-secondary: #666666;
-                --border-color: #E5E5E5;
-                --input-bg: #FFFFFF;
-                --shadow: rgba(0, 0, 0, 0.08);
-            }
-        }
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #000000;
+        --bg-secondary: #000000c7;
+        --bg-card: #1A1A1A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #A0A0A0;
+        --border-color: rgba(204, 112, 0, 0.08);
+        --input-bg: #2A2A2A;
+        --table-stripe: #1F1F1F;
+        --card-shadow: none;
+        --th-bg: #4A4A4A;
+        --th-color: #FFFFFF;
+        --th-border: #5A5A5A;
+        --shadow: rgba(0, 0, 0, 0.3);
+        --table-hover: rgba(128, 128, 128, 0.15);
+    }
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            height: 100vh;
-            overflow: hidden;
-        }
+body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-y: scroll;
+}
 
         .login-screen {
             width: 100%;
