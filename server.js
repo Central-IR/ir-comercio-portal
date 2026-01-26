@@ -32,12 +32,12 @@ function checkRateLimit(ip) {
   const attempt = loginAttempts.get(ip);
   
   if (!attempt) {
-    loginAttempts.set(ip, { count: 1, resetTime: now + 15 * 60 * 1000 });
+    loginAttempts.set(ip, { count: 1, resetTime: now + 5 * 60 * 1000 });
     return true;
   }
   
   if (now > attempt.resetTime) {
-    loginAttempts.set(ip, { count: 1, resetTime: now + 15 * 60 * 1000 });
+    loginAttempts.set(ip, { count: 1, resetTime: now + 5 * 60 * 1000 });
     return true;
   }
   
@@ -199,7 +199,7 @@ app.post('/api/login', async (req, res) => {
       console.log('❌ Rate limit excedido:', cleanIP);
       return res.status(429).json({ 
         error: 'Muitas tentativas de login',
-        message: 'Tente novamente em 15 minutos.' 
+        message: 'Tente novamente em 5 minutos.' 
       });
     }
 
