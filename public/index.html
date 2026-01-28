@@ -311,17 +311,7 @@ input:focus {
     align-items: center;
     gap: 0.75rem;
     flex-shrink: 0;
-    opacity: 1;
-    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    height: auto;
-    min-height: 70px;
-}
-
-.sidebar.collapsed .sidebar-header {
-    opacity: 1;
-    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    height: auto;
-    min-height: 70px;
+    height: 70px;
 }
 
 .user-initial-circle {
@@ -329,6 +319,8 @@ input:focus {
     color: white;
     width: 40px;
     height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -391,17 +383,12 @@ input:focus {
     gap: 0.25rem;
     flex: 1;
     min-width: 0;
-    opacity: 1;
-    transform: translateX(0);
-    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
 }
 
 .sidebar.collapsed .sidebar-title {
+    width: 0;
     opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .user-name-sidebar {
