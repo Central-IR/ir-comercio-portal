@@ -6,8 +6,7 @@
     <link rel="icon" type="png" href="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png">
     <title>Portal</title>
     <style>
-        /* VARIÁVEIS BASE */
-/* VARIÁVEIS BASE - TEMA CLARO COM FUNDO BRANCO PURO */
+        /* VARIÁVEIS BASE - TEMA CLARO COM FUNDO BRANCO PURO */
 :root {
     --primary: #ff521d;
     --bg-primary: #FFFFFF;
@@ -23,7 +22,7 @@
     --table-stripe: #FAFAFA;
     --table-hover: rgb(25, 25, 25);
     --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    --th-bg: #002045
+    --th-bg: #002045;
     --th-color: #FFFFFF;
     --th-border: #E5E7EB;
     --shadow: rgba(25, 25, 25);
@@ -35,7 +34,6 @@
     --alert-color: #EF4444;
     --bg-sidebar: #FFFFFF;
 }
-
 
 @media (prefers-color-scheme: dark) {
     :root {
@@ -71,124 +69,124 @@ body {
     overflow-y: scroll;
 }
 
-        .login-screen {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            background: var(--bg-secondary);
-        }
+.login-screen {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--bg-secondary);
+}
 
-        .login-screen::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 81, 0, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 81, 0, 0.02) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
+.login-screen::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 81, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 81, 0, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
 
-        .login-content {
-            width: 100%;
-            max-width: 500px;
-            position: relative;
-            z-index: 1;
-        }
+.login-content {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    z-index: 1;
+}
 
-        .logo-container {
-            text-align: center;
-            margin-bottom: 3rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+.logo-container {
+    text-align: center;
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        .logo-img {
-            width: auto;
-            height: 200px;
-            max-width: 100%;
-            object-fit: contain;
-            object-position: center;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 4px 12px rgba(255, 81, 0, 0.15));
-            transition: opacity 0.3s ease;
-        }
+.logo-img {
+    width: auto;
+    height: 200px;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 12px rgba(255, 81, 0, 0.15));
+    transition: opacity 0.3s ease;
+}
 
-        .logo-dark {
-            display: block;
-        }
+.logo-dark {
+    display: block;
+}
 
-        .logo-light {
-            display: none;
-        }
+.logo-light {
+    display: none;
+}
 
-        @media (prefers-color-scheme: light) {
-            .logo-dark {
-                display: none;
-            }
-            
-            .logo-light {
-                display: block;
-            }
-        }
+@media (prefers-color-scheme: light) {
+    .logo-dark {
+        display: none;
+    }
+    
+    .logo-light {
+        display: block;
+    }
+}
 
-        .form-group {
-            margin-bottom: 1.8rem;
-        }
+.form-group {
+    margin-bottom: 1.8rem;
+}
 
-        label {
-            display: block;
-            margin-bottom: 0.6rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 1rem;
-        }
+label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
 
-        input {
-            width: 100%;
-            padding: 18px 20px;
-            border: 2px solid var(--border-color);
-            border-radius: 14px;
-            background-color: var(--input-bg);
-            color: var(--text-primary);
-            font-size: 1.05rem;
-            transition: all 0.3s ease;
-        }
+input {
+    width: 100%;
+    padding: 18px 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 14px;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+}
 
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background-color: var(--bg-card);
-        }
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: var(--bg-card);
+}
 
-        .password-container {
-            position: relative;
-        }
+.password-container {
+    position: relative;
+}
 
-        .toggle-password {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-            text-transform: uppercase;
-        }
+.toggle-password {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+}
 
-        .toggle-password:hover {
-            color: var(--primary);
-        }
+.toggle-password:hover {
+    color: var(--primary);
+}
 
 .btn-login {
     width: 100%;
@@ -204,490 +202,642 @@ body {
     text-transform: uppercase;
 }
 
-        .btn-login:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(255, 81, 0, 0.5);
-        }
-
-        .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .message {
-            padding: 14px 18px;
-            border-radius: 12px;
-            margin-bottom: 1.8rem;
-            font-size: 0.95rem;
-            display: none;
-            font-weight: 500;
-        }
-
-        .message.show {
-            display: block;
-        }
-
-        .message.error {
-            background: rgba(239, 68, 68, 0.15);
-            border-left: 4px solid var(--error);
-            color: #DC2626;
-        }
-
-        .message.success {
-            background: rgba(34, 197, 94, 0.15);
-            border-left: 4px solid var(--success);
-            color: #15803D;
-        }
-
-        .dashboard-screen {
-            display: none;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .splash-welcome {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            animation: fadeOut 0.5s ease 2.5s forwards;
-        }
-
-        .splash-greeting {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
-            opacity: 0;
-            animation: smoothFadeIn 1.5s ease-out 0.3s forwards;
-        }
-
-        @keyframes smoothFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
-        }
-
-        .dashboard-container {
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
-                        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            z-index: 100;
-            flex-shrink: 0;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .sidebar.collapsed {
-            width: 70px;
-        }
-
-        .sidebar:not(.collapsed) {
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar-header {
-            padding: 1rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            flex-shrink: 0;
-            opacity: 1;
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 90px;
-        }
-
-        .sidebar.collapsed .sidebar-header {
-            opacity: 0;
-            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 90px;
-        }
-
-        .menu-toggle-sidebar {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            position: relative;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        .menu-toggle-sidebar:hover {
-            background: rgba(255, 81, 0, 0.1);
-        }
-
-        .hamburger-line {
-            width: 20px;
-            height: 2px;
-            background: currentColor;
-            border-radius: 2px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: block;
-        }
-
-        .sidebar:not(.collapsed) .hamburger-line:nth-child(1) {
-            transform: translateY(7px) rotate(45deg);
-        }
-
-        .sidebar:not(.collapsed) .hamburger-line:nth-child(2) {
-            opacity: 0;
-        }
-
-        .sidebar:not(.collapsed) .hamburger-line:nth-child(3) {
-            transform: translateY(-7px) rotate(-45deg);
-        }
-
-        .sidebar-title {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            flex: 1;
-            min-width: 0;
-            opacity: 1;
-            transform: translateX(0);
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .sidebar.collapsed .sidebar-title {
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .user-name-sidebar {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.3;
-        }
-
-        .user-sector-sidebar {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.2;
-        }
-
-        .logout-btn-sidebar {
-            padding: 0;
-            margin: 0;
-            margin-top: 0.25rem;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-        }
-
-        .logout-btn-sidebar:hover {
-            color: var(--error);
-        }
-
-        .sidebar-modules {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 0.5rem 0;
-            scrollbar-width: thin;
-            scrollbar-color: transparent transparent;
-            transition: scrollbar-color 0.3s ease;
-        }
-
-        .sidebar:not(.collapsed) .sidebar-modules:hover {
-            scrollbar-color: rgba(136, 136, 136, 0.5) transparent;
-        }
-
-        .sidebar-modules::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .sidebar-modules::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .sidebar-modules::-webkit-scrollbar-thumb {
-            background: transparent;
-            border-radius: 4px;
-            transition: background 0.3s ease;
-        }
-
-        .sidebar:not(.collapsed) .sidebar-modules:hover::-webkit-scrollbar-thumb {
-            background: rgba(136, 136, 136, 0.5);
-        }
-
-        .sidebar:not(.collapsed) .sidebar-modules:hover::-webkit-scrollbar-thumb:hover {
-            background: rgba(85, 85, 85, 0.7);
-        }
-
-        .sidebar-footer {
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            min-height: 50px;
-        }
-
-        .module-item {
-            padding: 0.75rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 3px solid transparent;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 500;
-            position: relative;
-            white-space: nowrap;
-        }
-
-        .module-item span:not(.module-icon) {
-            opacity: 1;
-            transform: translateX(0);
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .sidebar.collapsed .module-item span:not(.module-icon) {
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            position: absolute;
-        }
-
-        .sidebar.collapsed .module-item::before {
-            content: attr(data-tooltip);
-            position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%) translateX(-5px);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            padding: 0.5rem 0.9rem;
-            border-radius: 8px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border: 1px solid var(--border-color);
-            z-index: 1000;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .sidebar.collapsed .module-item:hover::before {
-            opacity: 1;
-            transform: translateY(-50%) translateX(5px);
-        }
-
-        .sidebar.collapsed .module-item {
-            justify-content: center;
-            padding: 0.75rem;
-        }
-
-        .module-item:hover {
-            background: rgba(255, 81, 0, 0.1);
-            color: var(--text-primary);
-            transform: translateX(3px);
-        }
-
-        .sidebar.collapsed .module-item:hover {
-            transform: translateX(0) scale(1.05);
-        }
-
-        .module-item.active {
-            background: rgba(255, 81, 0, 0.15);
-            color: var(--primary);
-            border-left-color: var(--primary);
-            font-weight: 600;
-        }
-
-        .module-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .module-item:hover .module-icon {
-            transform: scale(1.1);
-        }
-
-        .module-icon svg {
-            width: 100%;
-            height: 100%;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .content-area {
-            flex: 1;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-            position: relative;
-        }
-
-        .welcome-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
-            text-align: center;
-            padding: 2rem;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            gap: 1rem;
-            opacity: 1;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                        visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .welcome-screen.hidden-smooth {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .welcome-greeting {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .welcome-instruction {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-        }
-
-        #iframesContainer {
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .iframe-container {
-            display: block;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.98);
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                        visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .iframe-container.active {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1);
-        }
-
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: 0;
-                height: 100vh;
-                z-index: 1000;
-            }
-
-            .sidebar.collapsed {
-                margin-left: -280px;
-                width: 280px;
-            }
-
-            .splash-greeting {
-                font-size: 1.5rem;
-                padding: 0 2rem;
-            }
-
-            .welcome-instruction {
-                font-size: 1.1rem;
-            }
-
-            .logo-img {
-                height: 150px;
-            }
-        }
+.btn-login:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(255, 81, 0, 0.5);
+}
+
+.btn-login:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.message {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 1.8rem;
+    font-size: 0.95rem;
+    display: none;
+    font-weight: 500;
+}
+
+.message.show {
+    display: block;
+}
+
+.message.error {
+    background: rgba(239, 68, 68, 0.15);
+    border-left: 4px solid var(--error);
+    color: #DC2626;
+}
+
+.message.success {
+    background: rgba(34, 197, 94, 0.15);
+    border-left: 4px solid var(--success);
+    color: #15803D;
+}
+
+.dashboard-screen {
+    display: none;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.splash-welcome {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: fadeOut 0.5s ease 2.5s forwards;
+}
+
+.splash-greeting {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    opacity: 0;
+    animation: smoothFadeIn 1.5s ease-out 0.3s forwards;
+}
+
+@keyframes smoothFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; visibility: hidden; }
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 280px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 100;
+    flex-shrink: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.sidebar:not(.collapsed) {
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-header {
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    opacity: 1;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 90px;
+}
+
+.sidebar.collapsed .sidebar-header {
+    opacity: 0;
+    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 90px;
+}
+
+.menu-toggle-sidebar {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    position: relative;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.menu-toggle-sidebar:hover {
+    background: rgba(255, 81, 0, 0.1);
+}
+
+.hamburger-line {
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+}
+
+.sidebar:not(.collapsed) .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.sidebar:not(.collapsed) .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.sidebar:not(.collapsed) .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.sidebar-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 0;
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar.collapsed .sidebar-title {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-name-sidebar {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.user-sector-sidebar {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.2;
+}
+
+.sidebar-modules {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.5rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.3s ease;
+}
+
+.sidebar:not(.collapsed) .sidebar-modules:hover {
+    scrollbar-color: rgba(136, 136, 136, 0.5) transparent;
+}
+
+.sidebar-modules::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar-modules::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-modules::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.sidebar:not(.collapsed) .sidebar-modules:hover::-webkit-scrollbar-thumb {
+    background: rgba(136, 136, 136, 0.5);
+}
+
+.sidebar:not(.collapsed) .sidebar-modules:hover::-webkit-scrollbar-thumb:hover {
+    background: rgba(85, 85, 85, 0.7);
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-height: 60px;
+    border-top: 1px solid var(--border-color);
+}
+
+.logout-btn-footer {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    background: transparent;
+    color: var(--btn-delete);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+.logout-btn-footer:hover {
+    background: rgba(239, 68, 68, 0.1);
+    transform: translateY(-1px);
+}
+
+.logout-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.logout-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.sidebar.collapsed .logout-btn-footer span:not(.logout-icon) {
+    display: none;
+}
+
+.sidebar.collapsed .logout-btn-footer {
+    justify-content: center;
+    padding: 0.75rem;
+}
+
+.module-item {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 3px solid transparent;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    position: relative;
+    white-space: nowrap;
+}
+
+.module-item span:not(.module-icon) {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar.collapsed .module-item span:not(.module-icon) {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    position: absolute;
+}
+
+.sidebar.collapsed .module-item::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-5px);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    z-index: 1000;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.sidebar.collapsed .module-item:hover::before {
+    opacity: 1;
+    transform: translateY(-50%) translateX(5px);
+}
+
+.sidebar.collapsed .module-item {
+    justify-content: center;
+    padding: 0.75rem;
+}
+
+.module-item:hover {
+    background: rgba(255, 81, 0, 0.1);
+    color: var(--text-primary);
+    transform: translateX(3px);
+}
+
+.sidebar.collapsed .module-item:hover {
+    transform: translateX(0) scale(1.05);
+}
+
+.module-item.active {
+    background: rgba(255, 81, 0, 0.15);
+    color: var(--primary);
+    border-left-color: var(--primary);
+    font-weight: 600;
+}
+
+.module-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.module-item:hover .module-icon {
+    transform: scale(1.1);
+}
+
+.module-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.content-area {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    padding: 2rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    gap: 1rem;
+    opacity: 1;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.welcome-screen.hidden-smooth {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.welcome-greeting {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.welcome-instruction {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+#iframesContainer {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.iframe-container {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.98);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.iframe-container.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* MODAL LOGOUT - IDÊNTICO AOS MODALS DE EXCLUSÃO */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    opacity: 0;
+    animation: modalFadeIn 0.2s ease forwards;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+@keyframes modalFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 2.5rem 2rem 2rem 2rem;
+    max-width: 500px;
+    width: 95%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    transform: scale(0.9);
+    animation: scaleIn 0.2s ease forwards;
+    position: relative;
+}
+
+@keyframes scaleIn {
+    to {
+        transform: scale(1);
+    }
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent !important;
+    border: none !important;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.close-modal:hover {
+    color: var(--text-primary);
+}
+
+.modal-message-logout {
+    margin: 2rem 0 2.5rem 0;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    line-height: 1.6;
+    text-align: center;
+    font-weight: 500;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.modal-actions button {
+    margin: 0;
+    min-width: 120px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.modal-actions button.danger {
+    background: var(--btn-delete);
+    color: white;
+}
+
+.modal-actions button.danger:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.modal-actions button.secondary {
+    background: #6B7280;
+    color: white;
+}
+
+.modal-actions button.secondary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+    }
+
+    .sidebar.collapsed {
+        margin-left: -280px;
+        width: 280px;
+    }
+
+    .splash-greeting {
+        font-size: 1.5rem;
+        padding: 0 2rem;
+    }
+
+    .welcome-instruction {
+        font-size: 1.1rem;
+    }
+
+    .logo-img {
+        height: 150px;
+    }
+}
     </style>
 </head>
 <body>
@@ -756,13 +906,23 @@ body {
                     <div class="sidebar-title">
                         <div class="user-name-sidebar" id="sidebarUserName"></div>
                         <div class="user-sector-sidebar" id="sidebarUserSector"></div>
-                        <button class="logout-btn-sidebar" onclick="logout()">Sair</button>
                     </div>
                 </div>
 
                 <div class="sidebar-modules" id="sidebarModules"></div>
 
-                <div class="sidebar-footer"></div>
+                <div class="sidebar-footer">
+                    <button class="logout-btn-footer" onclick="showLogoutModal()">
+                        <span class="logout-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </span>
+                        <span>Sair</span>
+                    </button>
+                </div>
             </div>
 
             <div class="main-content">
@@ -778,119 +938,37 @@ body {
         </div>
     </div>
 
+    <!-- MODAL DE LOGOUT -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeLogoutModal()">✕</button>
+            <div class="modal-message-logout">
+                Deseja realmente sair?
+            </div>
+            <div class="modal-actions">
+                <button type="button" onclick="confirmLogout()" class="danger">Sim</button>
+                <button type="button" onclick="closeLogoutModal()" class="secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_URL = window.location.origin + '/api';
 
-        // ==========================================
-        // PERMISSÕES POR SETOR
-        // ==========================================
         const SECTOR_PERMISSIONS = {
-            'Administrador': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'receber',
-                'vendas',
-                'pagamento',
-                'documentos-comercial',
-                'documentos-financeiro'
-            ],
-            'Vendas': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'documentos-comercial'
-            ],
-            'Financeiro': [
-                'pregões', 
-                'transportadoras', 
-                'faturamento', 
-                'controle-frete', 
-                'receber', 
-                'pagamento', 
-                'documentos-financeiro'
-            ],
-            'Almoxarifado': [
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'documentos-comercial'
-            ]
+            'Administrador': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos-comercial', 'documentos-financeiro'],
+            'Vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'documentos-comercial'],
+            'Financeiro': ['pregões', 'transportadoras', 'faturamento', 'controle-frete', 'receber', 'pagamento', 'documentos-financeiro'],
+            'Almoxarifado': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'documentos-comercial']
         };
 
-        // ==========================================
-        // PERMISSÕES ESPECÍFICAS POR USUÁRIO
-        // ==========================================
         const USER_SPECIFIC_PERMISSIONS = {
-            'roberto': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'receber',
-                'vendas',
-                'pagamento',
-                'documentos-comercial'
-            ],
-            'rosemeire': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'receber',
-                'vendas',
-                'pagamento',
-                'documentos-financeiro'
-            ],
-            'vendas2': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'vendas-miguel',
-                'documentos-comercial'
-            ],
-            'vendas': [
-                'pregões', 
-                'tabela-precos', 
-                'compra', 
-                'transportadoras', 
-                'cotacoes-frete', 
-                'faturamento', 
-                'estoque', 
-                'controle-frete', 
-                'vendas-isaque',
-                'documentos-comercial'
-            ]
+            'roberto': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos-comercial'],
+            'rosemeire': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos-financeiro'],
+            'vendas2': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-miguel', 'documentos-comercial'],
+            'vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-isaque', 'documentos-comercial']
         };
 
-        // ==========================================
-        // ÍCONES DOS MÓDULOS
-        // ==========================================
         const MODULE_ICONS = {
             'pregões': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 13-8.381 8.38a 1 1 0 0 1-3.001-3l8.384-8.381"/><path d="m16 16 6-6"/><path d="m21.5 10.5-8-8"/><path d="m8 8 6-6"/><path d="m8.5 7.5 8 8"/></svg>',
             'tabela-precos': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 13H7"/><path d="M19 9h-4"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="15" y="5" width="4" height="12" rx="1"/><rect x="7" y="8" width="4" height="9" rx="1"/></svg>',
@@ -909,9 +987,6 @@ body {
             'documentos-financeiro': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>'
         };
 
-        // ==========================================
-        // LISTA DE MÓDULOS
-        // ==========================================
         const MODULES = [
             { id: 'pregões', name: 'Pregões 🚧', url: 'https://pregoes.onrender.com', available: true },
             { id: 'tabela-precos', name: 'Tabela de Preços', url: 'https://tabela-precos-udyp.onrender.com', available: true },
@@ -938,27 +1013,18 @@ body {
 
         function getUserPermissions(sessionInfo) {
             const username = sessionInfo.username?.toLowerCase();
-            
-            if (USER_SPECIFIC_PERMISSIONS[username]) {
-                return USER_SPECIFIC_PERMISSIONS[username];
-            }
-            
+            if (USER_SPECIFIC_PERMISSIONS[username]) return USER_SPECIFIC_PERMISSIONS[username];
             const sector = sessionInfo.sector || '';
-            if (SECTOR_PERMISSIONS[sector]) {
-                return SECTOR_PERMISSIONS[sector];
-            }
-            
+            if (SECTOR_PERMISSIONS[sector]) return SECTOR_PERMISSIONS[sector];
             return [];
         }
 
         function setupSidebarHover() {
             const sidebar = document.getElementById('sidebar');
-            
             sidebar.addEventListener('mouseenter', () => {
                 clearTimeout(hoverTimeout);
                 sidebar.classList.remove('collapsed');
             });
-            
             sidebar.addEventListener('mouseleave', () => {
                 hoverTimeout = setTimeout(() => {
                     sidebar.classList.add('collapsed');
@@ -967,12 +1033,8 @@ body {
         }
 
         function getGreeting() {
-            const brasiliaTime = new Date().toLocaleString('en-US', { 
-                timeZone: 'America/Sao_Paulo',
-                hour12: false 
-            });
+            const brasiliaTime = new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo', hour12: false });
             const hour = new Date(brasiliaTime).getHours();
-            
             if (hour >= 0 && hour < 12) return 'Bom dia';
             else if (hour >= 12 && hour < 18) return 'Boa tarde';
             else return 'Boa noite';
@@ -1017,160 +1079,18 @@ body {
             }
         }
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value.toLowerCase().trim();
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            
-            loginBtn.disabled = true;
-            loginBtn.textContent = 'Autenticando...';
-            
-            try {
-                const response = await fetch(`${API_URL}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password, deviceToken })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    showMessage(data.message || data.error || 'Erro ao fazer login', 'error');
-                    return;
-                }
-
-                if (data.success && data.session) {
-                    sessionStorage.setItem('irUserSession', JSON.stringify(data.session));
-                    currentSessionInfo = data.session;
-                    showDashboard(data.session);
-                    showMessage('Login realizado com sucesso!', 'success');
-                }
-                
-            } catch (error) {
-                console.error('Erro no login:', error);
-                showMessage('Erro ao realizar login. Tente novamente.', 'error');
-            } finally {
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Entrar';
-            }
-        });
-
-        function showDashboard(sessionInfo) {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('dashboardScreen').style.display = 'block';
-            
-            const greeting = getGreeting();
-            const userName = sessionInfo.name || sessionInfo.username;
-            const userSector = sessionInfo.sector || 'Usuário';
-            
-            document.getElementById('sidebarUserName').textContent = userName;
-            document.getElementById('sidebarUserSector').textContent = userSector;
-            document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
-            
-            loadSidebarModules(sessionInfo);
-            setupSidebarHover();
-            
-            const splash = document.getElementById('splashWelcome');
-            if (splash) {
-                splash.style.display = 'flex';
-                splash.style.animation = 'none';
-                void splash.offsetWidth;
-                splash.style.animation = 'fadeOut 0.5s ease 2.5s forwards';
-                setTimeout(() => { splash.style.display = 'none'; }, 3000);
-            }
+        function showLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.add('show');
         }
 
-        function loadSidebarModules(sessionInfo) {
-            const sidebarModules = document.getElementById('sidebarModules');
-            sidebarModules.innerHTML = '';
-            
-            const userPermissions = getUserPermissions(sessionInfo);
-            
-            MODULES.forEach(module => {
-                if (!userPermissions.includes(module.id)) return;
-                
-                const moduleItem = document.createElement('div');
-                moduleItem.className = 'module-item';
-                
-                if (!module.available || !module.url) {
-                    moduleItem.classList.add('disabled');
-                    moduleItem.style.opacity = '0.5';
-                    moduleItem.style.cursor = 'not-allowed';
-                } else {
-                    moduleItem.id = `module-${module.id}`;
-                    moduleItem.setAttribute('data-tooltip', module.name);
-                    moduleItem.onclick = () => openModule(module);
-                }
-                
-                const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos-comercial'];
-                
-                moduleItem.innerHTML = `
-                    <span class="module-icon">${icon}</span>
-                    <span>${module.name}</span>
-                `;
-                
-                sidebarModules.appendChild(moduleItem);
-            });
+        function closeLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.classList.remove('show');
         }
 
-        function openModule(module) {
-            document.querySelectorAll('.module-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            const moduleItem = document.getElementById(`module-${module.id}`);
-            if (moduleItem) moduleItem.classList.add('active');
-            
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            welcomeScreen.classList.add('hidden-smooth');
-            
-            let iframeContainer = document.getElementById(`iframe-${module.id}`);
-            
-            if (!iframeContainer) {
-                const params = new URLSearchParams({
-                    sessionToken: currentSessionInfo.sessionToken
-                });
-                
-                iframeContainer = document.createElement('div');
-                iframeContainer.className = 'iframe-container';
-                iframeContainer.id = `iframe-${module.id}`;
-                iframeContainer.innerHTML = `<iframe src="${module.url}?${params.toString()}" title="${module.name}"></iframe>`;
-                
-                document.getElementById('iframesContainer').appendChild(iframeContainer);
-            }
-            
-            document.querySelectorAll('.iframe-container').forEach(container => {
-                container.classList.remove('active');
-            });
-            
-            setTimeout(() => {
-                iframeContainer.classList.add('active');
-            }, 50);
-            
-            activeModuleId = module.id;
-        }
-
-        async function verifySession(sessionToken) {
-            try {
-                const response = await fetch(`${API_URL}/verify-session`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sessionToken })
-                });
-
-                const data = await response.json();
-                return data.valid === true;
-            } catch (error) {
-                console.error('Erro ao verificar sessão:', error);
-                return false;
-            }
-        }
-
-        async function logout() {
-            if (!confirm('Deseja realmente sair?')) return;
-            
+        async function confirmLogout() {
+            closeLogoutModal();
             try {
                 const sessionInfo = JSON.parse(sessionStorage.getItem('irUserSession'));
                 if (sessionInfo) {
@@ -1186,8 +1106,125 @@ body {
             } catch (error) {
                 console.error('Erro no logout:', error);
             }
-            
             performLogout();
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.toLowerCase().trim();
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Autenticando...';
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, deviceToken })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    showMessage(data.message || data.error || 'Erro ao fazer login', 'error');
+                    return;
+                }
+                if (data.success && data.session) {
+                    sessionStorage.setItem('irUserSession', JSON.stringify(data.session));
+                    currentSessionInfo = data.session;
+                    showDashboard(data.session);
+                    showMessage('Login realizado com sucesso!', 'success');
+                }
+            } catch (error) {
+                console.error('Erro no login:', error);
+                showMessage('Erro ao realizar login. Tente novamente.', 'error');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Entrar';
+            }
+        });
+
+        function showDashboard(sessionInfo) {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboardScreen').style.display = 'block';
+            const greeting = getGreeting();
+            const userName = sessionInfo.name || sessionInfo.username;
+            const userSector = sessionInfo.sector || 'Usuário';
+            document.getElementById('sidebarUserName').textContent = userName;
+            document.getElementById('sidebarUserSector').textContent = userSector;
+            document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
+            loadSidebarModules(sessionInfo);
+            setupSidebarHover();
+            const splash = document.getElementById('splashWelcome');
+            if (splash) {
+                splash.style.display = 'flex';
+                splash.style.animation = 'none';
+                void splash.offsetWidth;
+                splash.style.animation = 'fadeOut 0.5s ease 2.5s forwards';
+                setTimeout(() => { splash.style.display = 'none'; }, 3000);
+            }
+        }
+
+        function loadSidebarModules(sessionInfo) {
+            const sidebarModules = document.getElementById('sidebarModules');
+            sidebarModules.innerHTML = '';
+            const userPermissions = getUserPermissions(sessionInfo);
+            MODULES.forEach(module => {
+                if (!userPermissions.includes(module.id)) return;
+                const moduleItem = document.createElement('div');
+                moduleItem.className = 'module-item';
+                if (!module.available || !module.url) {
+                    moduleItem.classList.add('disabled');
+                    moduleItem.style.opacity = '0.5';
+                    moduleItem.style.cursor = 'not-allowed';
+                } else {
+                    moduleItem.id = `module-${module.id}`;
+                    moduleItem.setAttribute('data-tooltip', module.name);
+                    moduleItem.onclick = () => openModule(module);
+                }
+                const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos-comercial'];
+                moduleItem.innerHTML = `<span class="module-icon">${icon}</span><span>${module.name}</span>`;
+                sidebarModules.appendChild(moduleItem);
+            });
+        }
+
+        function openModule(module) {
+            document.querySelectorAll('.module-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const moduleItem = document.getElementById(`module-${module.id}`);
+            if (moduleItem) moduleItem.classList.add('active');
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            welcomeScreen.classList.add('hidden-smooth');
+            let iframeContainer = document.getElementById(`iframe-${module.id}`);
+            if (!iframeContainer) {
+                const params = new URLSearchParams({ sessionToken: currentSessionInfo.sessionToken });
+                iframeContainer = document.createElement('div');
+                iframeContainer.className = 'iframe-container';
+                iframeContainer.id = `iframe-${module.id}`;
+                iframeContainer.innerHTML = `<iframe src="${module.url}?${params.toString()}" title="${module.name}"></iframe>`;
+                document.getElementById('iframesContainer').appendChild(iframeContainer);
+            }
+            document.querySelectorAll('.iframe-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            setTimeout(() => {
+                iframeContainer.classList.add('active');
+            }, 50);
+            activeModuleId = module.id;
+        }
+
+        async function verifySession(sessionToken) {
+            try {
+                const response = await fetch(`${API_URL}/verify-session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken })
+                });
+                const data = await response.json();
+                return data.valid === true;
+            } catch (error) {
+                console.error('Erro ao verificar sessão:', error);
+                return false;
+            }
         }
 
         function forceLogout(message) {
@@ -1197,12 +1234,10 @@ body {
 
         function performLogout() {
             sessionStorage.removeItem('irUserSession');
-            
             document.getElementById('dashboardScreen').style.display = 'none';
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('password').value = '';
             document.getElementById('iframesContainer').innerHTML = '';
-            
             const welcomeScreen = document.getElementById('welcomeScreen');
             welcomeScreen.classList.remove('hidden-smooth');
         }
@@ -1211,12 +1246,10 @@ body {
             try {
                 deviceToken = getOrCreateDeviceToken();
                 publicIP = await getPublicIP();
-                
                 const sessionInfo = sessionStorage.getItem('irUserSession');
                 if (sessionInfo) {
                     const session = JSON.parse(sessionInfo);
                     const isValid = await verifySession(session.sessionToken);
-                    
                     if (isValid) {
                         currentSessionInfo = session;
                         showDashboard(session);
