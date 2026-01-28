@@ -308,18 +308,35 @@ input:focus {
 .sidebar-header {
     padding: 1rem;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.75rem;
     flex-shrink: 0;
     opacity: 1;
     transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 90px;
+    height: auto;
+    min-height: 70px;
 }
 
 .sidebar.collapsed .sidebar-header {
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 90px;
+    height: auto;
+    min-height: 70px;
+}
+
+.user-initial-circle {
+    background: #6B7280;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    text-transform: uppercase;
 }
 
 .menu-toggle-sidebar {
@@ -333,7 +350,7 @@ input:focus {
     flex-shrink: 0;
     width: 32px;
     height: 32px;
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -388,14 +405,14 @@ input:focus {
 }
 
 .user-name-sidebar {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1.3;
 }
 
 .user-sector-sidebar {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
     line-height: 1.2;
 }
@@ -898,11 +915,7 @@ input:focus {
         <div class="dashboard-container">
             <div id="sidebar" class="sidebar collapsed">
                 <div class="sidebar-header">
-                    <button class="menu-toggle-sidebar">
-                        <span class="hamburger-line"></span>
-                        <span class="hamburger-line"></span>
-                        <span class="hamburger-line"></span>
-                    </button>
+                    <div class="user-initial-circle" id="userInitial"></div>
                     <div class="sidebar-title">
                         <div class="user-name-sidebar" id="sidebarUserName"></div>
                         <div class="user-sector-sidebar" id="sidebarUserSector"></div>
@@ -956,17 +969,17 @@ input:focus {
         const API_URL = window.location.origin + '/api';
 
         const SECTOR_PERMISSIONS = {
-            'Administrador': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos-comercial', 'documentos-financeiro'],
-            'Vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'documentos-comercial'],
-            'Financeiro': ['pregões', 'transportadoras', 'faturamento', 'controle-frete', 'receber', 'pagamento', 'documentos-financeiro'],
-            'Almoxarifado': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'documentos-comercial']
+            'Administrador': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento'],
+            'Vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete'],
+            'Financeiro': ['pregões', 'transportadoras', 'faturamento', 'controle-frete', 'receber', 'pagamento'],
+            'Almoxarifado': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete']
         };
 
         const USER_SPECIFIC_PERMISSIONS = {
-            'roberto': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos-comercial'],
-            'rosemeire': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos-financeiro'],
-            'vendas2': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-miguel', 'documentos-comercial'],
-            'vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-isaque', 'documentos-comercial']
+            'roberto': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento'],
+            'rosemeire': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento'],
+            'vendas2': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-miguel'],
+            'vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-isaque']
         };
 
         const MODULE_ICONS = {
@@ -1000,9 +1013,7 @@ input:focus {
             { id: 'vendas', name: 'Vendas', url: 'https://vendas-qdpf.onrender.com', available: true },
             { id: 'vendas-miguel', name: 'Vendas', url: 'https://vendas-miguel.onrender.com', available: true },
             { id: 'vendas-isaque', name: 'Vendas', url: 'https://vendas-isaque.onrender.com', available: true },
-            { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com', available: true },
-            { id: 'documentos-comercial', name: 'Documentos 🚧', url: 'https://documentos-comercial.onrender.com', available: true },
-            { id: 'documentos-financeiro', name: 'Documentos 🚧', url: '', available: false }
+            { id: 'pagamento', name: 'Contas a Pagar', url: 'https://contas-a-pagar-ytr6.onrender.com', available: true }
         ];
 
         let deviceToken = null;
@@ -1148,6 +1159,11 @@ input:focus {
             const greeting = getGreeting();
             const userName = sessionInfo.name || sessionInfo.username;
             const userSector = sessionInfo.sector || 'Usuário';
+            
+            // Pegar a primeira letra do nome de usuário
+            const userInitial = userName.charAt(0).toUpperCase();
+            
+            document.getElementById('userInitial').textContent = userInitial;
             document.getElementById('sidebarUserName').textContent = userName;
             document.getElementById('sidebarUserSector').textContent = userSector;
             document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
