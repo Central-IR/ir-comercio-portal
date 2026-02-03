@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 // ==========================================
 const AUTHORIZED_IPS = process.env.AUTHORIZED_IPS 
   ? process.env.AUTHORIZED_IPS.split(',').map(ip => ip.trim())
-  : ['187.36.172.217', '179.181.224.12', '187.36.170.127'];
+  : ['187.36.172.217', '179.181.224.12', '187.36.170.127', '187.59.231.212'];
 
 // ==========================================
 // ======== CONFIGURAÇÃO DO SUPABASE ========
