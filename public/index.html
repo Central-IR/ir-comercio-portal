@@ -923,17 +923,17 @@ input:focus {
         const API_URL = window.location.origin + '/api';
 
         const SECTOR_PERMISSIONS = {
-            'Administrador': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos-comercial'],
-            'Vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete'],
-            'Financeiro': ['pregões', 'transportadoras', 'faturamento', 'controle-frete', 'receber', 'pagamento'],
-            'Almoxarifado': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete']
+            'Administrador': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'comercial'],
+            'Vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete','comercial'],
+            'Financeiro': ['pregões', 'transportadoras', 'faturamento', 'controle-frete', 'receber', 'pagamento','comercial'],
+            'Almoxarifado': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete','comercial']
         };
 
         const USER_SPECIFIC_PERMISSIONS = {
-            'roberto': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos-comercial'],
-            'rosemeire': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'documentos-comercial'],
-            'vendas2': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-miguel'],
-            'vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-isaque']
+            'roberto': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'comercial''],
+            'rosemeire': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'comercial'],
+            'vendas2': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-miguel', 'comercial'],
+            'vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-isaque', 'comercial']
         };
 
         const MODULE_ICONS = {
