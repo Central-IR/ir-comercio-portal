@@ -1157,13 +1157,18 @@ input:focus {
                 loader.innerHTML = '<div class="app-loader-spinner"></div>';
                 iframeContainer.appendChild(loader);
 
-                // Iframe — esconde o loader ao carregar
+                // Iframe — o evento load dispara cedo demais (HTML recebido mas app ainda renderizando).
+                // Aguarda o load + tempo extra para a app terminar de montar a interface.
                 const iframe = document.createElement('iframe');
                 iframe.src = `${module.url}?${params}`;
                 iframe.title = module.name;
                 iframe.addEventListener('load', () => {
-                    loader.classList.add('done');
-                    setTimeout(() => loader.remove(), 400);
+                    // As aplicações têm splash próprio (~2.5s) + tempo de renderização.
+                    // O loader só some após a interface da app estar completamente visível.
+                    setTimeout(() => {
+                        loader.classList.add('done');
+                        setTimeout(() => loader.remove(), 500);
+                    }, 3000);
                 });
                 iframeContainer.appendChild(iframe);
 
