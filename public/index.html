@@ -1216,7 +1216,7 @@ input:focus {
                     card.onclick = () => openModule(module);
                 }
                 const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos-comercial'];
-                card.innerHTML = `<span class="module-icon">${icon}</span><span>${module.name}</span>`;
+                card.innerHTML = `<span class="card-icon">${icon}</span><span>${module.name}</span>`;
                 grid.appendChild(card);
             });
         }
