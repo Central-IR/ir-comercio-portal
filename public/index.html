@@ -931,11 +931,11 @@ input:focus {
         const VENDAS_PERMS      = ['pregões','tabela-precos','compra','transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','comercial'];
 
         const USER_SPECIFIC_PERMISSIONS = {
-            'rosemeire':  [...new Set([...FINANCEIRO1_PERMS, ...VENDAS_PERMS, 'vendas'])],
+            'rosemeire':  ['pregões','tabela-precos','compra','transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','receber','vendas','pagamento','comercial'],
+            'roberto':    ['pregões','tabela-precos','compra','transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','receber','vendas','pagamento','comercial'],
             'financeiro1': FINANCEIRO1_PERMS,
             'vendas2':    [...VENDAS_PERMS, 'vendas-miguel'],
             'vendas':     [...VENDAS_PERMS, 'vendas-isaque'],
-            'roberto':    [...VENDAS_PERMS, 'vendas'],
             'almox':      ['transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','comercial'],
             'suporte':    ['pregões','tabela-precos','compra','transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','receber','vendas','pagamento','comercial']
         };
