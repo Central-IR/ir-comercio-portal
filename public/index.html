@@ -212,21 +212,21 @@ input:focus {
     width: 100%; height: 100%;
     background: var(--bg-primary);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 99999;
-    animation: fadeOut 0.5s ease 2.5s forwards;
 }
-.splash-greeting {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.5px;
-    opacity: 0;
-    animation: smoothFadeIn 1.5s ease-out 0.3s forwards;
+
+/* Spinner estilo Tabela de Preços */
+.splash-spinner {
+    width: 52px;
+    height: 52px;
+    border: 4px solid rgba(255, 82, 29, 0.15);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: splashSpin 0.8s linear infinite;
 }
-@keyframes smoothFadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes splashSpin { to { transform: rotate(360deg); } }
 @keyframes fadeOut { to { opacity:0; visibility:hidden; } }
 
 /* ─── LAYOUT PRINCIPAL ─── */
@@ -516,12 +516,24 @@ input:focus {
     pointer-events: none;
 }
 
-.welcome-title {
-    font-size: 1.5rem;
+.welcome-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    text-align: center;
+}
+.welcome-greeting-text {
+    font-size: 2rem;
     font-weight: 700;
     color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+.welcome-title {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-secondary);
     text-align: center;
-    letter-spacing: -0.3px;
 }
 .welcome-subtitle {
     font-size: 1rem;
@@ -642,38 +654,6 @@ input:focus {
     stroke-linejoin: round;
 }
 
-
-/* ─── LOADING SPINNER ─── */
-.iframe-loading {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    background: var(--bg-secondary);
-    z-index: 5;
-    transition: opacity 0.3s ease;
-}
-.iframe-loading.done {
-    opacity: 0;
-    pointer-events: none;
-}
-.spinner {
-    width: 36px;
-    height: 36px;
-    border: 3px solid var(--border-color);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-label {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
 
 /* ─── IFRAMES ─── */
 #iframesContainer {
@@ -836,9 +816,9 @@ input:focus {
     <!-- ── DASHBOARD ── -->
     <div id="dashboardScreen" class="dashboard-screen">
 
-        <!-- Splash -->
+        <!-- Splash: apenas spinner de carregamento -->
         <div class="splash-welcome" id="splashWelcome">
-            <h1 class="splash-greeting" id="splashGreeting"></h1>
+            <div class="splash-spinner"></div>
         </div>
 
         <!-- Botão sair flutuante (visível apenas na tela inicial, canto superior direito) -->
@@ -883,9 +863,10 @@ input:focus {
             <div class="main-content">
                 <div class="content-area">
 
-                    <!-- Tela inicial: cards dos módulos -->
+                    <!-- Tela inicial: saudação + cards dos módulos -->
                     <div id="welcomeScreen" class="welcome-screen">
-                        <div>
+                        <div class="welcome-header">
+                            <div class="welcome-greeting-text" id="welcomeGreeting"></div>
                             <div class="welcome-title">Selecione um módulo para começar</div>
                         </div>
                         <div id="welcomeModulesGrid" class="welcome-modules-grid"></div>
@@ -1056,6 +1037,8 @@ input:focus {
             sidebar.classList.remove('visible', 'expanded');
             document.getElementById('welcomeScreen').classList.remove('hidden-smooth');
             document.getElementById('logoutFloatingBtn').classList.remove('hidden-smooth');
+            const wg = document.getElementById('welcomeGreeting');
+            if (wg) wg.textContent = '';
         }
 
         /* ── SETUP SIDEBAR HOVER ── */
@@ -1135,29 +1118,14 @@ input:focus {
             // Esconder tela de boas-vindas
             document.getElementById('welcomeScreen').classList.add('hidden-smooth');
 
-            // Criar iframe sob demanda (sem pré-carregamento para não sobrecarregar o banco)
+            // Criar iframe sob demanda
             let iframeContainer = document.getElementById(`iframe-${module.id}`);
             if (!iframeContainer) {
                 const params = new URLSearchParams({ sessionToken: currentSessionInfo.sessionToken });
                 iframeContainer = document.createElement('div');
                 iframeContainer.className = 'iframe-container';
                 iframeContainer.id = `iframe-${module.id}`;
-
-                // Spinner de loading
-                const loadingEl = document.createElement('div');
-                loadingEl.className = 'iframe-loading';
-                loadingEl.innerHTML = `
-                    <div class="spinner"></div>
-                    <span class="loading-label">Carregando ${module.name}…</span>`;
-                iframeContainer.appendChild(loadingEl);
-
-                // Iframe
-                const iframe = document.createElement('iframe');
-                iframe.src = `${module.url}?${params}`;
-                iframe.title = module.name;
-                iframe.addEventListener('load', () => loadingEl.classList.add('done'));
-                iframeContainer.appendChild(iframe);
-
+                iframeContainer.innerHTML = `<iframe src="${module.url}?${params}" title="${module.name}"></iframe>`;
                 document.getElementById('iframesContainer').appendChild(iframeContainer);
             }
 
@@ -1180,9 +1148,9 @@ input:focus {
             document.getElementById('sidebarUserName').textContent   = userName;
             document.getElementById('sidebarUserSector').textContent = userSector;
 
-            // Splash
-            const splashEl = document.getElementById('splashGreeting');
-            if (splashEl) splashEl.textContent = `${greeting}, ${userName}!`;
+            // Saudação na tela inicial
+            const welcomeGreetingEl = document.getElementById('welcomeGreeting');
+            if (welcomeGreetingEl) welcomeGreetingEl.textContent = `${greeting}, ${userName}!`;
 
             loadSidebarModules(sessionInfo);
             loadWelcomeModules(sessionInfo);
