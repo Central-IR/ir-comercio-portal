@@ -612,15 +612,62 @@ input:focus {
     visibility: hidden;
 }
 
-.welcome-greeting {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
 .welcome-instruction {
     font-size: 1.2rem;
     color: var(--text-secondary);
+}
+
+.welcome-modules-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+}
+
+.welcome-module-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.welcome-module-card:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255, 81, 0, 0.15);
+}
+
+.welcome-module-card .card-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcome-module-card .card-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 #iframesContainer {
@@ -863,7 +910,7 @@ input:focus {
 
     <div id="dashboardScreen" class="dashboard-screen">
         <div class="splash-welcome" id="splashWelcome">
-            <h1 class="splash-greeting">I.R. COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</h1>
+            <h1 class="splash-greeting" id="splashGreeting"></h1>
         </div>
 
         <div class="dashboard-container">
@@ -895,8 +942,8 @@ input:focus {
             <div class="main-content">
                 <div class="content-area">
                     <div id="welcomeScreen" class="welcome-screen">
-                        <div class="welcome-greeting" id="welcomeGreeting"></div>
-                        <div class="welcome-instruction">Selecione um módulo no painel ao lado para começar</div>
+                        <div class="welcome-instruction" style="font-size:1.4rem;font-weight:600;color:var(--text-primary);margin-bottom:1.5rem;">Selecione um módulo para começar</div>
+                        <div id="welcomeModulesGrid" class="welcome-modules-grid"></div>
                     </div>
 
                     <div id="iframesContainer"></div>
@@ -924,16 +971,32 @@ input:focus {
 
         const SECTOR_PERMISSIONS = {
             'Administrador': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'comercial'],
-            'Vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete','comercial'],
-            'Financeiro': ['pregões', 'transportadoras', 'faturamento', 'controle-frete', 'receber', 'pagamento','comercial'],
-            'Almoxarifado': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete','comercial']
+            'Vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'comercial'],
+            'Financeiro': ['pregões', 'transportadoras', 'faturamento', 'controle-frete', 'receber', 'pagamento', 'comercial'],
+            'Almoxarifado': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'comercial'],
+            'Suporte': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'comercial']
         };
 
+        // Permissões do financeiro1 (setor Financeiro)
+        const FINANCEIRO1_PERMS = ['pregões', 'transportadoras', 'faturamento', 'controle-frete', 'receber', 'pagamento', 'comercial'];
+        // Permissões de vendas (setor Vendas)
+        const VENDAS_PERMS = ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'comercial'];
+
         const USER_SPECIFIC_PERMISSIONS = {
-            'roberto': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'comercial'],
-            'rosemeire': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'comercial'],
-            'vendas2': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-miguel', 'comercial'],
-            'vendas': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'vendas-isaque', 'comercial']
+            // Rosemeire: módulos de financeiro1 + módulos de vendas (união dos dois)
+            'rosemeire': [...new Set([...FINANCEIRO1_PERMS, ...VENDAS_PERMS, 'vendas'])],
+            // financeiro1: todos os módulos do setor Financeiro
+            'financeiro1': FINANCEIRO1_PERMS,
+            // vendas2: módulos de vendas + vendas-miguel
+            'vendas2': [...VENDAS_PERMS, 'vendas-miguel'],
+            // vendas: módulos de vendas + vendas-isaque
+            'vendas': [...VENDAS_PERMS, 'vendas-isaque'],
+            // roberto: módulos de vendas + vendas (geral)
+            'roberto': [...VENDAS_PERMS, 'vendas'],
+            // almox: módulos do Almoxarifado
+            'almox': ['transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'comercial'],
+            // suporte: todos os módulos
+            'suporte': ['pregões', 'tabela-precos', 'compra', 'transportadoras', 'cotacoes-frete', 'faturamento', 'estoque', 'controle-frete', 'receber', 'vendas', 'pagamento', 'comercial']
         };
 
         const MODULE_ICONS = {
@@ -1121,8 +1184,13 @@ input:focus {
             document.getElementById('userInitial').textContent = userInitial;
             document.getElementById('sidebarUserName').textContent = userName;
             document.getElementById('sidebarUserSector').textContent = userSector;
-            document.getElementById('welcomeGreeting').textContent = `${greeting}, ${userName}`;
+
+            // Saudação no splash
+            const splashGreeting = document.getElementById('splashGreeting');
+            if (splashGreeting) splashGreeting.textContent = `${greeting}, ${userName}!`;
+
             loadSidebarModules(sessionInfo);
+            loadWelcomeModules(sessionInfo);
             setupSidebarHover();
             const splash = document.getElementById('splashWelcome');
             if (splash) {
@@ -1132,6 +1200,25 @@ input:focus {
                 splash.style.animation = 'fadeOut 0.5s ease 2.5s forwards';
                 setTimeout(() => { splash.style.display = 'none'; }, 3000);
             }
+        }
+
+        function loadWelcomeModules(sessionInfo) {
+            const grid = document.getElementById('welcomeModulesGrid');
+            grid.innerHTML = '';
+            const userPermissions = getUserPermissions(sessionInfo);
+            MODULES.forEach(module => {
+                if (!userPermissions.includes(module.id)) return;
+                const card = document.createElement('div');
+                card.className = 'welcome-module-card';
+                if (!module.available || !module.url) {
+                    card.classList.add('disabled');
+                } else {
+                    card.onclick = () => openModule(module);
+                }
+                const icon = MODULE_ICONS[module.id] || MODULE_ICONS['documentos-comercial'];
+                card.innerHTML = `<span class="module-icon">${icon}</span><span>${module.name}</span>`;
+                grid.appendChild(card);
+            });
         }
 
         function loadSidebarModules(sessionInfo) {
