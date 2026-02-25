@@ -66,137 +66,255 @@ body {
 }
 
 /* ─── LOGIN ─── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap');
+
 .login-screen {
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* Painel esquerdo — visual */
+.login-panel-left {
+    flex: 1;
+    background: #0f0f0f;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 3rem;
+}
+
+/* Glow laranja de fundo */
+.login-panel-left::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,82,29,0.22) 0%, transparent 65%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* Linhas geométricas decorativas */
+.login-panel-left::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,82,29,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,82,29,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+}
+
+.login-left-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    animation: loginLeftFadeIn 0.9s ease forwards;
+}
+
+@keyframes loginLeftFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-logo-wrap {
+    width: 200px; height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
-    background: var(--bg-secondary);
-    overflow-y: auto;
 }
 
-.login-screen::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: 
-        radial-gradient(circle at 20% 50%, rgba(255,81,0,0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255,81,0,0.02) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
+.login-logo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0) invert(1) drop-shadow(0 0 30px rgba(255,82,29,0.4));
+}
+
+.login-tagline {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+}
+
+.login-accent-line {
+    width: 48px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 2px;
+}
+
+/* Painel direito — formulário */
+.login-panel-right {
+    width: 460px;
+    flex-shrink: 0;
+    background: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 3.5rem;
+    position: relative;
+    box-shadow: -20px 0 60px rgba(0,0,0,0.12);
+    animation: loginRightFadeIn 0.7s ease 0.15s both;
+}
+
+@keyframes loginRightFadeIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.login-form-header {
+    width: 100%;
+    margin-bottom: 2.5rem;
+}
+
+.login-form-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 0.4rem;
+}
+
+.login-form-sub {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 400;
 }
 
 .login-content {
     width: 100%;
-    max-width: 500px;
     position: relative;
-    z-index: 1;
 }
 
-.logo-container {
-    text-align: center;
-    margin-bottom: 3rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.logo-img {
-    width: auto;
-    height: 200px;
-    max-width: 100%;
-    object-fit: contain;
-    object-position: center;
-    margin-bottom: 1rem;
-    filter: drop-shadow(0 4px 12px rgba(255,81,0,0.15));
-    transition: opacity 0.3s ease;
-}
-
-.logo-dark  { display: block; }
-.logo-light { display: none; }
-
-@media (prefers-color-scheme: light) {
-    .logo-dark  { display: none; }
-    .logo-light { display: block; }
-}
-
-.form-group { margin-bottom: 1.8rem; }
+.form-group { margin-bottom: 1.4rem; }
 
 label {
     display: block;
-    margin-bottom: 0.6rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 input {
     width: 100%;
-    padding: 18px 20px;
-    border: 2px solid var(--border-color);
-    border-radius: 14px;
+    padding: 14px 18px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
     background-color: var(--input-bg);
     color: var(--text-primary);
-    font-size: 1.05rem;
-    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.25s ease;
 }
 
 input:focus {
     outline: none;
     border-color: var(--primary);
     background-color: var(--bg-card);
+    box-shadow: 0 0 0 3px rgba(255,82,29,0.1);
 }
 
 .password-container { position: relative; }
 
 .toggle-password {
     position: absolute;
-    right: 18px;
+    right: 14px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
     font-weight: 600;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif;
+    padding: 4px 6px;
 }
 .toggle-password:hover { color: var(--primary); }
 
 .btn-login {
     width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, #ff521d 0%, #ff521d 100%);
+    padding: 15px;
+    background: var(--primary);
     color: white;
     border: none;
-    border-radius: 14px;
-    font-size: 1.1rem;
-    font-weight: 700;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+.btn-login::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+    pointer-events: none;
 }
 .btn-login:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(255,81,0,0.5);
+    background: #e8451a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255,82,29,0.4);
 }
-.btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-login:active:not(:disabled) { transform: translateY(0); }
+.btn-login:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .message {
-    padding: 14px 18px;
-    border-radius: 12px;
-    margin-bottom: 1.8rem;
-    font-size: 0.95rem;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 1.4rem;
+    font-size: 0.88rem;
     display: none;
     font-weight: 500;
 }
 .message.show { display: block; }
-.message.error  { background: rgba(239,68,68,0.15); border-left: 4px solid #EF4444; color: #DC2626; }
-.message.success { background: rgba(34,197,94,0.15); border-left: 4px solid #22C55E; color: #15803D; }
+.message.error  { background: rgba(239,68,68,0.1); border-left: 3px solid #EF4444; color: #DC2626; }
+.message.success { background: rgba(34,197,94,0.1); border-left: 3px solid #22C55E; color: #15803D; }
+
+/* Dark mode no painel direito */
+@media (prefers-color-scheme: dark) {
+    .login-panel-right {
+        box-shadow: -20px 0 60px rgba(0,0,0,0.5);
+    }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .login-screen { flex-direction: column; height: auto; min-height: 100vh; }
+    .login-panel-left { min-height: 220px; flex: none; padding: 2rem; }
+    .login-logo-wrap { width: 120px; height: 120px; }
+    .login-panel-right { width: 100%; padding: 2.5rem 1.5rem; box-shadow: none; }
+    .login-tagline { display: none; }
+}
 
 /* ─── DASHBOARD ─── */
 .dashboard-screen {
@@ -805,36 +923,47 @@ input:focus {
 
     <!-- ── LOGIN ── -->
     <div id="loginScreen" class="login-screen">
-        <div class="login-content">
-            <div class="logo-container">
-                <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png"
-                     alt="Logo I.R. Comércio"
-                     class="logo-img logo-dark"
-                     onerror="this.style.display='none'">
-                <img src="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS.png"
-                     alt="Logo I.R. Comércio"
-                     class="logo-img logo-light"
-                     onerror="this.style.display='none'">
+
+        <!-- Painel esquerdo: visual / logo -->
+        <div class="login-panel-left">
+            <div class="login-left-content">
+                <div class="login-logo-wrap">
+                    <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png"
+                         alt="Logo I.R. Comércio"
+                         onerror="this.style.display='none'">
+                </div>
+                <div class="login-accent-line"></div>
+                <span class="login-tagline">Portal Interno</span>
+            </div>
+        </div>
+
+        <!-- Painel direito: formulário -->
+        <div class="login-panel-right">
+            <div class="login-form-header">
+                <div class="login-form-title">Bem-vindo</div>
+                <div class="login-form-sub">Faça login para acessar o portal</div>
             </div>
 
-            <div id="messageBox" class="message"></div>
+            <div class="login-content">
+                <div id="messageBox" class="message"></div>
 
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Usuário</label>
-                    <input type="text" id="username" name="username" required autofocus
-                           placeholder="Digite seu usuário" autocomplete="username">
-                </div>
-                <div class="form-group">
-                    <label for="password">Senha</label>
-                    <div class="password-container">
-                        <input type="password" id="password" name="password" required
-                               placeholder="Digite sua senha" autocomplete="current-password">
-                        <button type="button" class="toggle-password" onclick="togglePassword()">MOSTRAR</button>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Usuário</label>
+                        <input type="text" id="username" name="username" required autofocus
+                               placeholder="Digite seu usuário" autocomplete="username">
                     </div>
-                </div>
-                <button type="submit" class="btn-login" id="loginBtn">Entrar</button>
-            </form>
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <div class="password-container">
+                            <input type="password" id="password" name="password" required
+                                   placeholder="Digite sua senha" autocomplete="current-password">
+                            <button type="button" class="toggle-password" onclick="togglePassword()">MOSTRAR</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-login" id="loginBtn">Entrar</button>
+                </form>
+            </div>
         </div>
     </div>
 
