@@ -95,52 +95,44 @@ body {
     pointer-events: none;
 }
 .login-line-h {
-    left: 0;
+    left: -100%;
     width: 100%;
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,82,29,0.18) 30%, rgba(255,82,29,0.25) 50%, rgba(255,82,29,0.18) 70%, transparent 100%);
-    animation: lineSlideH 12s ease-in-out infinite;
-    opacity: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,82,29,0.18) 30%, rgba(255,82,29,0.3) 50%, rgba(255,82,29,0.18) 70%, transparent 100%);
+    animation: lineSlideH 8s linear infinite;
 }
 .login-line-v {
-    top: 0;
+    top: -100%;
     height: 100%;
     width: 1px;
-    background: linear-gradient(180deg, transparent 0%, rgba(255,82,29,0.18) 30%, rgba(255,82,29,0.25) 50%, rgba(255,82,29,0.18) 70%, transparent 100%);
-    animation: lineSlideV 14s ease-in-out infinite;
-    opacity: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(255,82,29,0.18) 30%, rgba(255,82,29,0.3) 50%, rgba(255,82,29,0.18) 70%, transparent 100%);
+    animation: lineSlideV 10s linear infinite;
 }
 
-.login-line-h:nth-child(1) { top: 22%;  animation-delay: 0s;    animation-duration: 13s; }
-.login-line-h:nth-child(2) { top: 48%;  animation-delay: 3.5s;  animation-duration: 11s; }
-.login-line-h:nth-child(3) { top: 74%;  animation-delay: 7s;    animation-duration: 15s; }
+.login-line-h:nth-child(1) { top: 18%;  animation-delay: 0s;   animation-duration: 9s; }
+.login-line-h:nth-child(2) { top: 50%;  animation-delay: -3s;  animation-duration: 11s; }
+.login-line-h:nth-child(3) { top: 78%;  animation-delay: -6s;  animation-duration: 8s; }
 
-.login-line-v:nth-child(4) { left: 20%; animation-delay: 1.5s;  animation-duration: 14s; }
-.login-line-v:nth-child(5) { left: 50%; animation-delay: 5s;    animation-duration: 12s; }
-.login-line-v:nth-child(6) { left: 78%; animation-delay: 9s;    animation-duration: 16s; }
+.login-line-v:nth-child(4) { left: 18%; animation-delay: -1s;  animation-duration: 10s; }
+.login-line-v:nth-child(5) { left: 52%; animation-delay: -5s;  animation-duration: 13s; }
+.login-line-v:nth-child(6) { left: 80%; animation-delay: -8s;  animation-duration: 9s; }
 
 @keyframes lineSlideH {
-    0%   { opacity: 0; transform: translateX(-8%); }
-    15%  { opacity: 1; }
-    50%  { opacity: 0.6; transform: translateX(0%); }
-    85%  { opacity: 1; }
-    100% { opacity: 0; transform: translateX(8%); }
+    from { transform: translateX(0); }
+    to   { transform: translateX(200%); }
 }
 @keyframes lineSlideV {
-    0%   { opacity: 0; transform: translateY(-8%); }
-    15%  { opacity: 1; }
-    50%  { opacity: 0.6; transform: translateY(0%); }
-    85%  { opacity: 1; }
-    100% { opacity: 0; transform: translateY(8%); }
+    from { transform: translateY(0); }
+    to   { transform: translateY(200%); }
 }
 
 /* Tema claro: linhas ainda mais discretas */
 @media (prefers-color-scheme: light) {
     .login-line-h {
-        background: linear-gradient(90deg, transparent 0%, rgba(255,82,29,0.1) 30%, rgba(255,82,29,0.16) 50%, rgba(255,82,29,0.1) 70%, transparent 100%);
+        background: linear-gradient(90deg, transparent 0%, rgba(255,82,29,0.12) 30%, rgba(255,82,29,0.2) 50%, rgba(255,82,29,0.12) 70%, transparent 100%);
     }
     .login-line-v {
-        background: linear-gradient(180deg, transparent 0%, rgba(255,82,29,0.1) 30%, rgba(255,82,29,0.16) 50%, rgba(255,82,29,0.1) 70%, transparent 100%);
+        background: linear-gradient(180deg, transparent 0%, rgba(255,82,29,0.12) 30%, rgba(255,82,29,0.2) 50%, rgba(255,82,29,0.12) 70%, transparent 100%);
     }
 }
 
@@ -1052,13 +1044,13 @@ input:focus {
         <!-- Card central -->
         <div class="login-card">
             <div class="login-logo-wrap">
-                <!-- Tema escuro: logo clara -->
+                <!-- Tema escuro -->
                 <img src="I.R.-COMERCIO-MATERIAIS-ELETRICOS-LTDA.png"
                      alt="Logo I.R. Comércio"
                      class="logo-dark"
                      onerror="this.style.display='none'">
-                <!-- Tema claro: logo preta -->
-                <img src="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS-PRETO.png"
+                <!-- Tema claro -->
+                <img src="I.R.-COMERCIO-E-MATERIAIS-ELETRICOS.png"
                      alt="Logo I.R. Comércio"
                      class="logo-light"
                      onerror="this.style.display='none'">
