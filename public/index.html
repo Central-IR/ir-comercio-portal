@@ -80,16 +80,68 @@ body {
     font-family: 'DM Sans', sans-serif;
 }
 
-/* Grade de fundo */
+/* Linhas sutis animadas */
 .login-screen::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-image:
-        linear-gradient(rgba(255,82,29,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,82,29,0.05) 1px, transparent 1px);
-    background-size: 80px 80px;
     pointer-events: none;
+    overflow: hidden;
+}
+
+/* Linhas horizontais */
+.login-line {
+    position: absolute;
+    pointer-events: none;
+}
+.login-line-h {
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,82,29,0.18) 30%, rgba(255,82,29,0.25) 50%, rgba(255,82,29,0.18) 70%, transparent 100%);
+    animation: lineSlideH 12s ease-in-out infinite;
+    opacity: 0;
+}
+.login-line-v {
+    top: 0;
+    height: 100%;
+    width: 1px;
+    background: linear-gradient(180deg, transparent 0%, rgba(255,82,29,0.18) 30%, rgba(255,82,29,0.25) 50%, rgba(255,82,29,0.18) 70%, transparent 100%);
+    animation: lineSlideV 14s ease-in-out infinite;
+    opacity: 0;
+}
+
+.login-line-h:nth-child(1) { top: 22%;  animation-delay: 0s;    animation-duration: 13s; }
+.login-line-h:nth-child(2) { top: 48%;  animation-delay: 3.5s;  animation-duration: 11s; }
+.login-line-h:nth-child(3) { top: 74%;  animation-delay: 7s;    animation-duration: 15s; }
+
+.login-line-v:nth-child(4) { left: 20%; animation-delay: 1.5s;  animation-duration: 14s; }
+.login-line-v:nth-child(5) { left: 50%; animation-delay: 5s;    animation-duration: 12s; }
+.login-line-v:nth-child(6) { left: 78%; animation-delay: 9s;    animation-duration: 16s; }
+
+@keyframes lineSlideH {
+    0%   { opacity: 0; transform: translateX(-8%); }
+    15%  { opacity: 1; }
+    50%  { opacity: 0.6; transform: translateX(0%); }
+    85%  { opacity: 1; }
+    100% { opacity: 0; transform: translateX(8%); }
+}
+@keyframes lineSlideV {
+    0%   { opacity: 0; transform: translateY(-8%); }
+    15%  { opacity: 1; }
+    50%  { opacity: 0.6; transform: translateY(0%); }
+    85%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(8%); }
+}
+
+/* Tema claro: linhas ainda mais discretas */
+@media (prefers-color-scheme: light) {
+    .login-line-h {
+        background: linear-gradient(90deg, transparent 0%, rgba(255,82,29,0.1) 30%, rgba(255,82,29,0.16) 50%, rgba(255,82,29,0.1) 70%, transparent 100%);
+    }
+    .login-line-v {
+        background: linear-gradient(180deg, transparent 0%, rgba(255,82,29,0.1) 30%, rgba(255,82,29,0.16) 50%, rgba(255,82,29,0.1) 70%, transparent 100%);
+    }
 }
 
 /* Glow central pulsante */
@@ -311,13 +363,6 @@ input:focus {
 @media (prefers-color-scheme: light) {
     .login-screen {
         background: #f5f3f0;
-    }
-
-    /* Grade mais discreta no claro */
-    .login-screen::before {
-        background-image:
-            linear-gradient(rgba(255,82,29,0.07) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,82,29,0.07) 1px, transparent 1px);
     }
 
     /* Glow mais suave */
@@ -991,6 +1036,14 @@ input:focus {
     <!-- ── LOGIN ── -->
     <!-- ── LOGIN ── -->
     <div id="loginScreen" class="login-screen">
+        <!-- Linhas sutis animadas -->
+        <div class="login-line login-line-h"></div>
+        <div class="login-line login-line-h"></div>
+        <div class="login-line login-line-h"></div>
+        <div class="login-line login-line-v"></div>
+        <div class="login-line login-line-v"></div>
+        <div class="login-line login-line-v"></div>
+
         <!-- Orbs decorativos -->
         <div class="login-orb login-orb-1"></div>
         <div class="login-orb login-orb-2"></div>
