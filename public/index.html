@@ -690,9 +690,9 @@ input:focus {
 .welcome-modules-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 1rem;
+    gap: 0.6rem;
     width: 100%;
-    max-width: 900px;
+    max-width: 1100px;
 }
 
 .welcome-module-card {
@@ -900,7 +900,8 @@ input:focus {
                 <img src="I.R.BRANCO.png" alt="IR Comércio e Materiais Elétricos" class="login-logo-dark">
             </div>
 
-            <div class="login-portal-headline">Identifique-se para continuar</div>
+            <div class="login-portal-sub">IR<span style="color: rgba(255, 140, 60, 0.55);">2</span> COMÉRCIO E MATERIAIS ELÉTRICOS LTDA</div>
+            <div class="login-portal-headline">Faça login para acessar o portal</div>
 
             <div class="login-fields">
                 <form id="loginForm">
@@ -925,7 +926,7 @@ input:focus {
                             <button type="button" class="toggle-password" onclick="togglePassword()">MOSTRAR</button>
                         </div>
                     </div>
-                    <button type="submit" class="btn-login" id="loginBtn">Entrar</button>
+                    <button type="submit" class="btn-login" id="loginBtn">Acessar Sistema</button>
 
                 </form>
             </div>
@@ -934,7 +935,7 @@ input:focus {
         </div><!-- /.login-card -->
 
         <!-- Rodapé versão -->
-        <div class="login-version-footer">VERSÃO 3.0.0 &nbsp;·&nbsp; © 2026 IR<span style="color: rgba(255, 140, 60, 0.55);">2</span> COMÉRCIO E MATERIAIS ELÉTRICOS LTDA &nbsp;·&nbsp; USO INTERNO</div>
+        <div class="login-version-footer">Versão 1.0.0 &nbsp;·&nbsp; © 2026 IR<span style="color: rgba(255, 140, 60, 0.55);">2</span> COMÉRCIO E MATERIAIS ELÉTRICOS LTDA &nbsp;·&nbsp; Uso interno</div>
     </div>
 
     <!-- ── DASHBOARD ── -->
@@ -1024,8 +1025,8 @@ input:focus {
         const VENDAS_PERMS      = ['pregões','tabela-precos','compra','transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','comercial'];
 
         const USER_SPECIFIC_PERMISSIONS = {
-            'rosemeire':  ['pregões','tabela-precos','compra','transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','receber','vendas','pagamento','comercial'],
-            'roberto':    ['pregões','tabela-precos','compra','transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','receber','vendas','pagamento','comercial'],
+            'rosemeire':  ['pregões','tabela-precos','compra','transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','receber','vendas','pagamento','lucro-real','comercial'],
+            'roberto':    ['pregões','tabela-precos','compra','transportadoras','cotacoes-frete','faturamento','estoque','controle-frete','receber','vendas','pagamento','lucro-real','comercial'],
             'financeiro1': FINANCEIRO1_PERMS,
             'vendas2':    [...VENDAS_PERMS, 'vendas-miguel'],
             'vendas':     [...VENDAS_PERMS, 'vendas-isaque'],
@@ -1048,6 +1049,7 @@ input:focus {
             'vendas-miguel':    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
             'vendas-isaque':    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
             'pagamento':        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5"/><path d="M18 12h.01"/><path d="M19 22v-6"/><path d="m22 19-3-3-3 3"/><path d="M6 12h.01"/><circle cx="12" cy="12" r="2"/></svg>',
+            'lucro-real':       '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
             'comercial':        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>'
         };
 
@@ -1066,6 +1068,7 @@ input:focus {
             { id: 'vendas-miguel',  name: 'Vendas',                url: 'https://vendas-miguel.onrender.com',        available: true  },
             { id: 'vendas-isaque',  name: 'Vendas',                url: 'https://vendas-isaque.onrender.com',        available: true  },
             { id: 'pagamento',      name: 'Contas a Pagar',        url: 'https://contas-a-pagar-ytr6.onrender.com',  available: true  },
+            { id: 'lucro-real',     name: 'Lucro Real',            url: '',                                          available: false },
             { id: 'comercial',      name: 'Documentos',            url: '',                                          available: false }
         ];
 
