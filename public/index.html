@@ -265,7 +265,7 @@ input:focus {
 .btn-login:active:not(:disabled) { transform: translateY(0); }
 .btn-login:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* Mensagens — agora abaixo do botão */
+/* Mensagens */
 .message {
     position: absolute;
     top: -3.8rem;
@@ -285,7 +285,7 @@ input:focus {
     transform: translateY(0);
     pointer-events: auto;
 }
-.message.error   { background: #EF4444; border: none; color: #ffffff; font-weight: 700; }
+.message.error { background: #EF4444; border: none; color: #ffffff; font-weight: 700; }
 
 .login-version-footer {
     position: absolute;
@@ -299,7 +299,6 @@ input:focus {
     pointer-events: none;
     z-index: 20;
 }
-
 
 /* ── CARD CORPORATIVO ── */
 .login-card {
@@ -315,9 +314,7 @@ input:focus {
 }
 
 /* ── INPUT COM ÍCONE ── */
-.input-icon-wrapper {
-    position: relative;
-}
+.input-icon-wrapper { position: relative; }
 .input-icon {
     position: absolute;
     left: 12px;
@@ -335,9 +332,7 @@ input:focus {
     stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
 .input-icon-wrapper input:focus ~ .input-icon,
-.input-icon-wrapper:focus-within .input-icon {
-    color: #F97316;
-}
+.input-icon-wrapper:focus-within .input-icon { color: #F97316; }
 
 /* ── SPINNER NO BOTÃO ── */
 .btn-spinner {
@@ -354,10 +349,10 @@ input:focus {
 /* ── TEMA ESCURO ── */
 @media (prefers-color-scheme: dark) {
     .login-screen    { background: linear-gradient(160deg, #0c0c0e 0%, #111114 100%); }
-    .login-card       { background: #1a1a1a; box-shadow: 0 4px 6px rgba(0,0,0,0.2), 0 12px 40px rgba(0,0,0,0.4); }
-    .input-icon       { color: rgba(255,255,255,0.25); }
+    .login-card      { background: #1a1a1a; box-shadow: 0 4px 6px rgba(0,0,0,0.2), 0 12px 40px rgba(0,0,0,0.4); }
+    .input-icon      { color: rgba(255,255,255,0.25); }
     .login-version-footer { color: rgba(255,255,255,0.18); }
-    .login-portal-sub   { color: rgba(255,255,255,0.3); }
+    .login-portal-sub    { color: rgba(255,255,255,0.3); }
     .login-portal-headline { color: rgba(255,255,255,0.7); }
     label { color: rgba(255,255,255,0.4); }
     input {
@@ -388,28 +383,20 @@ input:focus {
 }
 
 /* ─── DASHBOARD ─── */
-.dashboard-screen {
-    display: none;
-    height: 100vh;
-    overflow: hidden;
-}
+.dashboard-screen { display: none; height: 100vh; overflow: hidden; }
 
 /* SPLASH */
 .splash-welcome {
-    position: fixed;
-    top: 0; left: 0;
+    position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
     background: var(--bg-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     z-index: 99999;
 }
 
 /* Spinner */
 .splash-spinner {
-    width: 52px;
-    height: 52px;
+    width: 52px; height: 52px;
     border: 4px solid rgba(255, 82, 29, 0.15);
     border-top-color: var(--primary);
     border-radius: 50%;
@@ -419,11 +406,7 @@ input:focus {
 @keyframes fadeOut { to { opacity:0; visibility:hidden; } }
 
 /* ─── LAYOUT PRINCIPAL ─── */
-.dashboard-container {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-}
+.dashboard-container { display: flex; height: 100vh; overflow: hidden; }
 
 /* ─── SIDEBAR ─── */
 .sidebar {
@@ -443,15 +426,8 @@ input:focus {
                 box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
 }
-.sidebar.visible {
-    width: 70px;
-    opacity: 1;
-    pointer-events: all;
-}
-.sidebar.visible.expanded {
-    width: 280px;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.1);
-}
+.sidebar.visible { width: 70px; opacity: 1; pointer-events: all; }
+.sidebar.visible.expanded { width: 280px; box-shadow: 4px 0 20px rgba(0,0,0,0.1); }
 
 .sidebar-header {
     padding: 1rem;
@@ -459,9 +435,7 @@ input:focus {
     align-items: center;
     gap: 0.75rem;
     flex-shrink: 0;
-    height: 70px;
-    min-height: 70px;
-    max-height: 70px;
+    height: 70px; min-height: 70px; max-height: 70px;
     overflow: hidden;
 }
 
@@ -472,39 +446,20 @@ input:focus {
     min-width: 40px; min-height: 40px;
     max-width: 40px; max-height: 40px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    font-weight: 700;
-    flex-shrink: 0;
-    text-transform: uppercase;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 700;
+    flex-shrink: 0; text-transform: uppercase;
 }
 
 .sidebar-title {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+    display: flex; flex-direction: column; gap: 0.25rem;
+    flex: 1; min-width: 0; overflow: hidden; white-space: nowrap;
+    opacity: 0; transition: opacity 0.2s ease;
 }
 .sidebar.visible.expanded .sidebar-title { opacity: 1; }
 
-.user-name-sidebar {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.3;
-}
-.user-sector-sidebar {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    line-height: 1.2;
-}
+.user-name-sidebar { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+.user-sector-sidebar { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.2; }
 
 .sidebar-modules {
     flex: 1;
@@ -515,45 +470,36 @@ input:focus {
     scrollbar-color: transparent transparent;
     transition: scrollbar-color 0.3s ease;
 }
-.sidebar.visible.expanded .sidebar-modules:hover {
-    scrollbar-color: rgba(136,136,136,0.5) transparent;
-}
+.sidebar.visible.expanded .sidebar-modules:hover { scrollbar-color: rgba(136,136,136,0.5) transparent; }
 .sidebar-modules::-webkit-scrollbar { width: 8px; }
 .sidebar-modules::-webkit-scrollbar-track { background: transparent; }
 .sidebar-modules::-webkit-scrollbar-thumb { background: transparent; border-radius: 4px; }
 .sidebar.visible.expanded .sidebar-modules:hover::-webkit-scrollbar-thumb { background: rgba(136,136,136,0.5); }
 
-.sidebar-footer {
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    min-height: 60px;
-    border-top: 1px solid var(--border-color);
-}
-
-.logout-btn-footer {
+/* ── BOTÃO SAIR — integrado ao final da lista ── */
+.sidebar-logout-item {
     width: 100%;
     padding: 0.75rem 1rem;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
     gap: 0.75rem;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
     border: none;
+    border-left: 3px solid transparent;
+    border-top: 1px solid var(--border-color);
     background: transparent;
     color: var(--btn-delete);
     font-size: 0.9rem;
     font-weight: 600;
-    border-radius: 8px;
-    overflow: hidden;
+    margin-top: 0.25rem;
     white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
 }
-.logout-btn-footer:hover { background: rgba(239,68,68,0.1); transform: translateY(-1px); }
-.logout-btn-footer .logout-label { opacity: 0; transition: opacity 0.2s ease; }
-.sidebar.visible.expanded .logout-btn-footer .logout-label { opacity: 1; }
+.sidebar-logout-item:hover { background: rgba(239,68,68,0.1); }
+.sidebar-logout-item .logout-label { opacity: 0; transition: opacity 0.2s ease; }
+.sidebar.visible.expanded .sidebar-logout-item .logout-label { opacity: 1; }
 
 .logout-icon {
     width: 20px; height: 20px;
@@ -569,40 +515,28 @@ input:focus {
 /* ─── MODULE ITEMS ─── */
 .module-item {
     padding: 0.75rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    display: flex; align-items: center; gap: 0.75rem;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
     border-left: 3px solid transparent;
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    font-weight: 500;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
+    font-size: 0.9rem; font-weight: 500;
+    position: relative; white-space: nowrap; overflow: hidden;
 }
 .module-item .module-label { opacity: 0; transition: opacity 0.2s ease; }
 .sidebar.visible.expanded .module-item .module-label { opacity: 1; }
 
 .sidebar.visible:not(.expanded) .module-item::before {
     content: attr(data-tooltip);
-    position: absolute;
-    left: 100%; top: 50%;
+    position: absolute; left: 100%; top: 50%;
     transform: translateY(-50%) translateX(-5px);
-    background: var(--bg-card);
-    color: var(--text-primary);
-    padding: 0.5rem 0.9rem;
-    border-radius: 8px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
+    background: var(--bg-card); color: var(--text-primary);
+    padding: 0.5rem 0.9rem; border-radius: 8px;
+    white-space: nowrap; opacity: 0; pointer-events: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     border: 1px solid var(--border-color);
-    z-index: 1000;
-    font-size: 0.85rem;
-    font-weight: 500;
+    z-index: 1000; font-size: 0.85rem; font-weight: 500;
 }
 .sidebar.visible:not(.expanded) .module-item:hover::before {
     opacity: 1; transform: translateY(-50%) translateX(5px);
@@ -619,8 +553,7 @@ input:focus {
 .module-icon {
     width: 20px; height: 20px;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
+    flex-shrink: 0; transition: transform 0.2s ease;
 }
 .module-item:hover .module-icon { transform: scale(1.1); }
 .module-icon svg {
@@ -630,232 +563,123 @@ input:focus {
 }
 
 /* ─── MAIN CONTENT ─── */
-.main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-}
+.main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 
 .content-area {
-    flex: 1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    position: relative;
+    flex: 1; overflow: hidden; display: flex; flex-direction: column;
+    height: 100%; width: 100%; position: relative;
 }
 
 /* ─── TELA DE BOAS-VINDAS ─── */
 .welcome-screen {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    gap: 2rem;
-    opacity: 1;
-    visibility: visible;
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 2rem; gap: 2rem; opacity: 1; visibility: visible;
     transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), visibility 0.5s cubic-bezier(0.4,0,0.2,1);
-    overflow-y: auto;
-    z-index: 10;
+    overflow-y: auto; z-index: 10;
 }
 .welcome-screen.hidden-smooth { opacity: 0; visibility: hidden; pointer-events: none; }
 
-.welcome-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
-    text-align: center;
-}
-.welcome-greeting-text {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.5px;
-}
-.welcome-title {
-    font-size: 1rem;
-    font-weight: 400;
-    color: var(--text-secondary);
-    text-align: center;
-}
+.welcome-header { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-align: center; }
+.welcome-greeting-text { font-size: 2rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
+.welcome-title { font-size: 1rem; font-weight: 400; color: var(--text-secondary); text-align: center; }
 
 /* GRID DE CARDS */
 .welcome-modules-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 1rem;
-    width: 100%;
-    max-width: 900px;
+    gap: 1rem; width: 100%; max-width: 900px;
 }
 
 .welcome-module-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.85rem;
-    padding: 2rem 1.5rem;
-    background: var(--bg-card);
-    border: 1.5px solid var(--border-color);
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-align: center;
-    user-select: none;
-    position: relative;
-    overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.85rem; padding: 2rem 1.5rem;
+    background: var(--bg-card); border: 1.5px solid var(--border-color); border-radius: 16px;
+    cursor: pointer; transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+    color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;
+    text-align: center; user-select: none; position: relative; overflow: hidden;
 }
 .welcome-module-card::before {
-    content: '';
-    position: absolute; inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: linear-gradient(135deg, rgba(255,81,0,0.04) 0%, transparent 70%);
     opacity: 0; transition: opacity 0.22s ease;
 }
 .welcome-module-card:hover::before { opacity: 1; }
 .welcome-module-card:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(255,81,0,0.15);
+    border-color: var(--primary); color: var(--primary);
+    transform: translateY(-4px); box-shadow: 0 8px 24px rgba(255,81,0,0.15);
 }
 .welcome-module-card:active { transform: translateY(-1px); }
 .welcome-module-card.unavailable { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
-.card-icon {
-    width: 36px; height: 36px;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.22s ease;
-}
+.card-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: transform 0.22s ease; }
 .welcome-module-card:hover .card-icon { transform: scale(1.15); }
-.card-icon svg {
-    width: 100%; height: 100%;
-    stroke: currentColor; fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-}
+.card-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ─── BOTÃO SAIR FLUTUANTE ─── */
 .logout-btn-floating {
-    position: fixed;
-    top: 1.25rem; right: 1.25rem;
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    position: fixed; top: 1.25rem; right: 1.25rem; z-index: 200;
+    display: flex; align-items: center; gap: 0.5rem;
     padding: 0.55rem 1rem 0.55rem 0.75rem;
-    border: 1.5px solid var(--border-color);
-    border-radius: 10px;
-    background: var(--bg-card);
-    color: var(--btn-delete);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
+    border: 1.5px solid var(--border-color); border-radius: 10px;
+    background: var(--bg-card); color: var(--btn-delete);
+    font-size: 0.85rem; font-weight: 600; cursor: pointer;
     opacity: 1; visibility: visible;
-    transition: opacity 0.4s ease, visibility 0.4s ease,
-                background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: opacity 0.4s ease, visibility 0.4s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.logout-btn-floating:hover {
-    background: rgba(239,68,68,0.07);
-    border-color: var(--btn-delete);
-    box-shadow: 0 4px 14px rgba(239,68,68,0.15);
-}
+.logout-btn-floating:hover { background: rgba(239,68,68,0.07); border-color: var(--btn-delete); box-shadow: 0 4px 14px rgba(239,68,68,0.15); }
 .logout-btn-floating.hidden-smooth { opacity: 0; visibility: hidden; pointer-events: none; }
-.logout-btn-floating svg {
-    width: 18px; height: 18px; flex-shrink: 0;
-    stroke: currentColor; fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-}
+.logout-btn-floating svg { width: 18px; height: 18px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ─── APP LOADER ─── */
 .app-loader {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--bg-primary);
-    z-index: 5; opacity: 1;
-    transition: opacity 0.35s ease;
-    pointer-events: none;
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: var(--bg-primary); z-index: 5; opacity: 1;
+    transition: opacity 0.35s ease; pointer-events: none;
 }
 .app-loader.done { opacity: 0; }
-.app-loader-spinner {
-    width: 52px; height: 52px;
-    border: 4px solid rgba(255, 82, 29, 0.15);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: splashSpin 0.8s linear infinite;
-}
+.app-loader-spinner { width: 52px; height: 52px; border: 4px solid rgba(255, 82, 29, 0.15); border-top-color: var(--primary); border-radius: 50%; animation: splashSpin 0.8s linear infinite; }
 
 /* ─── IFRAMES ─── */
 #iframesContainer { flex: 1; width: 100%; height: 100%; position: relative; }
 .iframe-container {
-    display: block; width: 100%; height: 100%;
-    position: absolute; inset: 0;
+    display: block; width: 100%; height: 100%; position: absolute; inset: 0;
     opacity: 0; visibility: hidden; transform: scale(0.98);
-    transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1),
-                visibility 0.35s cubic-bezier(0.4,0,0.2,1),
-                transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1), visibility 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1);
 }
 .iframe-container.active { opacity: 1; visibility: visible; transform: scale(1); }
 .iframe-container iframe { width: 100%; height: 100%; border: none; }
 
 /* ─── MODAL LOGOUT ─── */
 .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(4px);
-    align-items: center; justify-content: center;
-    z-index: 100000; opacity: 0;
-    animation: modalFadeIn 0.2s ease forwards;
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px); align-items: center; justify-content: center;
+    z-index: 100000; opacity: 0; animation: modalFadeIn 0.2s ease forwards;
 }
 .modal-overlay.show { display: flex; }
 @keyframes modalFadeIn { to { opacity:1; } }
 
 .modal-content {
-    background: var(--bg-card);
-    border-radius: 16px;
-    padding: 2.5rem 2rem 2rem;
-    max-width: 500px; width: 95%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    border: 1px solid var(--border-color);
-    transform: scale(0.9);
-    animation: scaleIn 0.2s ease forwards;
-    position: relative;
+    background: var(--bg-card); border-radius: 16px; padding: 2.5rem 2rem 2rem;
+    max-width: 500px; width: 95%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color); transform: scale(0.9);
+    animation: scaleIn 0.2s ease forwards; position: relative;
 }
 @keyframes scaleIn { to { transform:scale(1); } }
 
 .close-modal {
     position: absolute; top: 1rem; right: 1rem;
     background: transparent !important; border: none !important;
-    font-size: 1.5rem; color: var(--text-secondary);
-    cursor: pointer; padding: 0 !important;
-    width: 32px; height: 32px;
-    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; padding: 0 !important;
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
     transition: color 0.2s ease;
 }
 .close-modal:hover { color: var(--text-primary); }
 
-.modal-message-logout {
-    margin: 2rem 0 2.5rem;
-    color: var(--text-primary);
-    font-size: 1.25rem; line-height: 1.6;
-    text-align: center; font-weight: 500;
-}
+.modal-message-logout { margin: 2rem 0 2.5rem; color: var(--text-primary); font-size: 1.25rem; line-height: 1.6; text-align: center; font-weight: 500; }
 
 .modal-actions { display: flex; gap: 0.75rem; justify-content: center; }
-.modal-actions button {
-    min-width: 120px; padding: 12px 24px;
-    border-radius: 8px; cursor: pointer;
-    font-size: 0.95rem; font-weight: 600;
-    border: none; transition: all 0.3s ease;
-}
+.modal-actions button { min-width: 120px; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 600; border: none; transition: all 0.3s ease; }
 .modal-actions button.danger { background: var(--btn-delete); color: white; }
 .modal-actions button.danger:hover { opacity: 0.9; transform: translateY(-1px); }
 .modal-actions button.secondary { background: #6B7280; color: white; }
@@ -867,10 +691,7 @@ input:focus {
 @media (max-width: 768px) {
     .welcome-modules-grid { grid-template-columns: repeat(3, 1fr); }
     .welcome-module-card { padding: 1.5rem 1rem; }
-    .sidebar.visible.expanded {
-        position: fixed; left: 0; top: 0;
-        height: 100vh; z-index: 1000;
-    }
+    .sidebar.visible.expanded { position: fixed; left: 0; top: 0; height: 100vh; z-index: 1000; }
 }
     </style>
 </head>
@@ -879,7 +700,6 @@ input:focus {
     <!-- ── LOGIN ── -->
     <div id="loginScreen" class="login-screen">
 
-        <!-- Linhas animadas (toda a tela, passam por trás do formulário) -->
         <div class="login-line login-line-h"></div>
         <div class="login-line login-line-h"></div>
         <div class="login-line login-line-h"></div>
@@ -887,14 +707,11 @@ input:focus {
         <div class="login-line login-line-v"></div>
         <div class="login-line login-line-v"></div>
 
-        <!-- Card corporativo -->
         <div class="login-card">
         <div class="login-form-area">
 
-            <!-- Aviso flutuante acima da logo -->
             <div id="messageBox" class="message"></div>
 
-            <!-- Logo: tema claro = I.R.PRETO.png (logo escura sobre fundo branco) | tema escuro = I.R.BRANCO.png (logo clara sobre fundo escuro) -->
             <div class="login-logo-wrapper">
                 <img src="I.R.PRETO.png"  alt="IR Comércio e Materiais Elétricos" class="login-logo-light">
                 <img src="I.R.BRANCO.png" alt="IR Comércio e Materiais Elétricos" class="login-logo-dark">
@@ -925,15 +742,12 @@ input:focus {
                         </div>
                     </div>
                     <button type="submit" class="btn-login" id="loginBtn">ENTRAR</button>
-
                 </form>
             </div>
         </div>
-
         </div><!-- /.login-card -->
 
-        <!-- Rodapé versão -->
-        <div class="login-version-footer">Versão 1.0.0 &nbsp;·&nbsp; © 2026 IR<span style="color: rgba(255, 140, 60, 0.55);">2</span> COMÉRCIO E MATERIAIS ELÉTRICOS LTDA &nbsp;·&nbsp; Uso interno</div>
+        <div class="login-version-footer">© 2026 IR<span style="color: rgba(255, 140, 60, 0.55);">2</span> COMÉRCIO E MATERIAIS ELÉTRICOS LTDA &nbsp;·&nbsp; USO INTERNO</div>
     </div>
 
     <!-- ── DASHBOARD ── -->
@@ -963,20 +777,8 @@ input:focus {
                     </div>
                 </div>
 
+                <!-- Módulos + botão Sair renderizados via JS, todos scrolláveis -->
                 <div class="sidebar-modules" id="sidebarModules"></div>
-
-                <div class="sidebar-footer">
-                    <button class="logout-btn-footer" onclick="showLogoutModal()">
-                        <span class="logout-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                                <polyline points="16 17 21 12 16 7"/>
-                                <line x1="21" y1="12" x2="9" y2="12"/>
-                            </svg>
-                        </span>
-                        <span class="logout-label">Sair</span>
-                    </button>
-                </div>
             </div>
 
             <div class="main-content">
@@ -1189,6 +991,21 @@ input:focus {
                 item.innerHTML = `<span class="module-icon">${icon}</span><span class="module-label">${module.name}</span>`;
                 sidebarModules.appendChild(item);
             });
+
+            // Botão Sair sempre ao final da lista scrollável
+            const logoutBtn = document.createElement('button');
+            logoutBtn.className = 'sidebar-logout-item';
+            logoutBtn.onclick = showLogoutModal;
+            logoutBtn.innerHTML = `
+                <span class="logout-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </span>
+                <span class="logout-label">Sair</span>`;
+            sidebarModules.appendChild(logoutBtn);
         }
 
         /* ── CARREGAR CARDS NA TELA INICIAL ── */
