@@ -476,28 +476,31 @@ input:focus {
 .sidebar-modules::-webkit-scrollbar-thumb { background: transparent; border-radius: 4px; }
 .sidebar.visible.expanded .sidebar-modules:hover::-webkit-scrollbar-thumb { background: rgba(136,136,136,0.5); }
 
-/* ── BOTÃO SAIR — integrado ao final da lista ── */
-.sidebar-logout-item {
+.sidebar-footer {
+    padding: 0.25rem 0;
+    flex-shrink: 0;
+}
+.logout-btn-footer {
     width: 100%;
     padding: 0.75rem 1rem;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 0.75rem;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
     border: none;
-    border-left: 3px solid transparent;
     background: transparent;
     color: var(--btn-delete);
     font-size: 0.9rem;
     font-weight: 600;
-    white-space: nowrap;
+    border-radius: 8px;
     overflow: hidden;
-    text-align: left;
+    white-space: nowrap;
 }
-.sidebar-logout-item:hover { background: rgba(239,68,68,0.1); }
-.sidebar-logout-item .logout-label { opacity: 0; transition: opacity 0.2s ease; }
-.sidebar.visible.expanded .sidebar-logout-item .logout-label { opacity: 1; }
+.logout-btn-footer:hover { background: rgba(239,68,68,0.1); transform: translateY(-1px); }
+.logout-btn-footer .logout-label { opacity: 0; transition: opacity 0.2s ease; }
+.sidebar.visible.expanded .logout-btn-footer .logout-label { opacity: 1; }
 
 .logout-icon {
     width: 20px; height: 20px;
@@ -745,7 +748,7 @@ input:focus {
         </div>
         </div><!-- /.login-card -->
 
-        <div class="login-version-footer">Versão 1.0.0 &nbsp;·&nbsp; © 2026 IR<span style="color: rgba(255, 140, 60, 0.55);">2</span> COMÉRCIO E MATERIAIS ELÉTRICOS LTDA &nbsp;·&nbsp; Uso interno</div>
+        <div class="login-version-footer">© 2026 IR<span style="color: rgba(255, 140, 60, 0.55);">2</span> COMÉRCIO E MATERIAIS ELÉTRICOS LTDA &nbsp;·&nbsp; USO INTERNO</div>
     </div>
 
     <!-- ── DASHBOARD ── -->
@@ -775,8 +778,20 @@ input:focus {
                     </div>
                 </div>
 
-                <!-- Módulos + botão Sair renderizados via JS, todos scrolláveis -->
                 <div class="sidebar-modules" id="sidebarModules"></div>
+
+                <div class="sidebar-footer">
+                    <button class="logout-btn-footer" onclick="showLogoutModal()">
+                        <span class="logout-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </span>
+                        <span class="logout-label">Sair</span>
+                    </button>
+                </div>
             </div>
 
             <div class="main-content">
@@ -990,20 +1005,6 @@ input:focus {
                 sidebarModules.appendChild(item);
             });
 
-            // Botão Sair sempre ao final da lista scrollável
-            const logoutBtn = document.createElement('button');
-            logoutBtn.className = 'sidebar-logout-item';
-            logoutBtn.onclick = showLogoutModal;
-            logoutBtn.innerHTML = `
-                <span class="logout-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                </span>
-                <span class="logout-label">Sair</span>`;
-            sidebarModules.appendChild(logoutBtn);
         }
 
         /* ── CARREGAR CARDS NA TELA INICIAL ── */
