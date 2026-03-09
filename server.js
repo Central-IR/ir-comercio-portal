@@ -231,17 +231,26 @@ app.post('/api/login', async (req, res) => {
     // ==========================================
     // VERIFICAÇÃO DE IP POR USUÁRIO (COM FALLBACK)
     // ==========================================
-    const userIps = userData.authorized_ips || []; // array de IPs do usuário
-    // Fallback: se o usuário não tem IPs cadastrados, usa a lista global (agora apenas 187.36.172.217)
-    const allowedIps = userIps.length > 0 ? userIps : AUTHORIZED_IPS;
+    // Lista de usuários com acesso irrestrito (ignoram verificação de IP)
+    const unrestrictedUsers = ['roberto', 'rosemeire']; // usernames em minúsculas
 
-    if (!allowedIps.includes(cleanIP)) {
-      console.log(`❌ IP ${cleanIP} não autorizado para o usuário ${sanitizedUsername}`);
-      await logLoginAttempt(sanitizedUsername, false, 'IP não autorizado', sanitizedDeviceToken, cleanIP);
-      return res.status(403).json({ 
-        error: 'Acesso negado',
-        message: 'Seu IP não está autorizado para este usuário.' 
-      });
+    const isUnrestricted = unrestrictedUsers.includes(userData.username.toLowerCase());
+
+    if (!isUnrestricted) {
+      const userIps = userData.authorized_ips || []; // array de IPs do usuário
+      // Fallback: se o usuário não tem IPs cadastrados, usa a lista global
+      const allowedIps = userIps.length > 0 ? userIps : AUTHORIZED_IPS;
+
+      if (!allowedIps.includes(cleanIP)) {
+        console.log(`❌ IP ${cleanIP} não autorizado para o usuário ${sanitizedUsername}`);
+        await logLoginAttempt(sanitizedUsername, false, 'IP não autorizado', sanitizedDeviceToken, cleanIP);
+        return res.status(403).json({ 
+          error: 'Acesso negado',
+          message: 'Seu IP não está autorizado para este usuário.' 
+        });
+      }
+    } else {
+      console.log(`🔓 Usuário irrestrito ${sanitizedUsername} acessando de IP ${cleanIP} (permitido)`);
     }
 
     if (!userData.is_admin && !isBusinessHours()) {
@@ -551,5 +560,6 @@ app.listen(PORT, () => {
   console.log('✅ Melhorias: Tokens seguros, Rate limiting, Sanitização, Validação');
   console.log('🔓 Sessão: 24 horas | Sem verificação de IP/horário após login');
   console.log('👤 Verificação de IP: por usuário (com fallback global)');
+  console.log('🌟 Usuários com acesso irrestrito: Roberto, Rosemeire');
   console.log('='.repeat(50));
 });
