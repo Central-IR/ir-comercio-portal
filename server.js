@@ -246,7 +246,7 @@ app.post('/api/login', async (req, res) => {
         await logLoginAttempt(sanitizedUsername, false, 'IP não autorizado', sanitizedDeviceToken, cleanIP);
         return res.status(403).json({ 
           error: 'Acesso negado',
-          message: 'Seu IP não está autorizado para este usuário.' 
+          message: 'Acesso não autorizado! Tentativa de login registrada.' 
         });
       }
     } else {
