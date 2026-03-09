@@ -11,9 +11,11 @@ const PORT = process.env.PORT || 3000;
 // ==========================================
 // ======== CONFIGURAÇÃO - IPS AUTORIZADOS ==
 // ==========================================
+// Lista global de IPs autorizados (usada apenas como fallback)
+// Agora contém apenas o IP 187.36.172.217
 const AUTHORIZED_IPS = process.env.AUTHORIZED_IPS 
   ? process.env.AUTHORIZED_IPS.split(',').map(ip => ip.trim())
-  : ['187.36.172.217', '187.59.239.143', '187.36.170.127', '177.17.23.244'];
+  : ['187.36.172.217'];  // <-- APENAS ESSE IP POR PADRÃO
 
 // ==========================================
 // ======== CONFIGURAÇÃO DO SUPABASE ========
@@ -68,14 +70,6 @@ function getClientIP(req) {
     : req.socket.remoteAddress;
   
   return clientIP.replace('::ffff:', '');
-}
-
-function isIPAuthorized(ip) {
-  if (AUTHORIZED_IPS.length === 0) {
-    console.warn('⚠️ Nenhum IP autorizado configurado!');
-    return false;
-  }
-  return AUTHORIZED_IPS.includes(ip);
 }
 
 function isBusinessHours() {
@@ -149,14 +143,11 @@ app.get('/api/ip', (req, res) => {
 // ==========================================
 app.get('/api/check-ip-access', (req, res) => {
   const cleanIP = getClientIP(req);
-  const authorized = isIPAuthorized(cleanIP);
-
-  console.log(`🔒 Verificação de IP: ${cleanIP} | Autorizado: ${authorized ? '✅' : '❌'}`);
-
+  const authorized = AUTHORIZED_IPS.includes(cleanIP);
   res.json({ 
     authorized: authorized,
     ip: cleanIP,
-    message: authorized ? 'IP autorizado' : 'IP não autorizado'
+    message: authorized ? 'IP na lista global' : 'IP não está na lista global (pode ser permitido por usuário)'
   });
 });
 
@@ -185,8 +176,6 @@ app.post('/api/login', async (req, res) => {
   try {
     const { username, password, deviceToken } = req.body;
 
-    console.log('📥 Requisição de login recebida:', { username, hasPassword: !!password, hasDeviceToken: !!deviceToken });
-
     if (!username || !password || !deviceToken) {
       return res.status(400).json({ 
         error: 'Campos obrigatórios ausentes' 
@@ -196,7 +185,6 @@ app.post('/api/login', async (req, res) => {
     const cleanIP = getClientIP(req);
 
     if (!checkRateLimit(cleanIP)) {
-      console.log('❌ Rate limit excedido:', cleanIP);
       return res.status(429).json({ 
         error: 'Muitas tentativas de login',
         message: 'Tente novamente em 5 minutos.' 
@@ -218,44 +206,45 @@ app.post('/api/login', async (req, res) => {
       });
     }
 
-    if (!isIPAuthorized(cleanIP)) {
-      console.log('❌ IP não autorizado tentando fazer login:', cleanIP);
-      await logLoginAttempt(sanitizedUsername, false, 'IP não autorizado', sanitizedDeviceToken, cleanIP);
-      return res.status(403).json({ 
-        error: 'Acesso negado',
-        message: 'Este acesso não está autorizado fora do ambiente de trabalho.' 
-      });
-    }
-
     const usernameSearch = sanitizedUsername.toLowerCase();
-    console.log('🔍 Buscando usuário:', usernameSearch);
 
     const { data: userData, error: userError } = await supabase
       .from('users')
-      .select('id, username, password, name, is_admin, is_active, sector')
+      .select('id, username, password, name, is_admin, is_active, sector, authorized_ips')
       .ilike('username', usernameSearch)
       .single();
 
     if (userError || !userData) {
-      console.log('❌ Usuário não encontrado:', usernameSearch);
       await logLoginAttempt(sanitizedUsername, false, 'Usuário não encontrado', sanitizedDeviceToken, cleanIP);
       return res.status(401).json({ 
         error: 'Usuário ou senha incorretos' 
       });
     }
 
-    console.log('✅ Usuário encontrado:', userData.username, '| Setor:', userData.sector);
-
     if (userData.is_active === false) {
-      console.log('❌ Usuário inativo:', sanitizedUsername);
       await logLoginAttempt(sanitizedUsername, false, 'Usuário inativo', sanitizedDeviceToken, cleanIP);
       return res.status(401).json({ 
         error: 'Usuário inativo' 
       });
     }
 
+    // ==========================================
+    // VERIFICAÇÃO DE IP POR USUÁRIO (COM FALLBACK)
+    // ==========================================
+    const userIps = userData.authorized_ips || []; // array de IPs do usuário
+    // Fallback: se o usuário não tem IPs cadastrados, usa a lista global (agora apenas 187.36.172.217)
+    const allowedIps = userIps.length > 0 ? userIps : AUTHORIZED_IPS;
+
+    if (!allowedIps.includes(cleanIP)) {
+      console.log(`❌ IP ${cleanIP} não autorizado para o usuário ${sanitizedUsername}`);
+      await logLoginAttempt(sanitizedUsername, false, 'IP não autorizado', sanitizedDeviceToken, cleanIP);
+      return res.status(403).json({ 
+        error: 'Acesso negado',
+        message: 'Seu IP não está autorizado para este usuário.' 
+      });
+    }
+
     if (!userData.is_admin && !isBusinessHours()) {
-      console.log('❌ Tentativa de login fora do horário comercial:', sanitizedUsername);
       await logLoginAttempt(sanitizedUsername, false, 'Fora do horário comercial', sanitizedDeviceToken, cleanIP);
       return res.status(403).json({ 
         error: 'Fora do horário comercial',
@@ -264,15 +253,13 @@ app.post('/api/login', async (req, res) => {
     }
 
     if (password !== userData.password) {
-      console.log('❌ Senha incorreta para usuário:', sanitizedUsername);
       await logLoginAttempt(sanitizedUsername, false, 'Senha incorreta', sanitizedDeviceToken, cleanIP);
       return res.status(401).json({ 
         error: 'Usuário ou senha incorretos' 
       });
     }
 
-    console.log('✅ Senha correta');
-
+    // Registro de dispositivo
     const deviceFingerprint = crypto.createHash('sha256')
       .update(sanitizedDeviceToken + cleanIP)
       .digest('hex');
@@ -280,8 +267,6 @@ app.post('/api/login', async (req, res) => {
     const userAgent = req.headers['user-agent'] || 'Unknown';
     const truncatedUserAgent = sanitizeString(userAgent.substring(0, 95));
     const truncatedDeviceName = sanitizeString(userAgent.substring(0, 95));
-
-    console.log('ℹ️ Registrando/atualizando dispositivo');
 
     const { error: deviceError } = await supabase
       .from('authorized_devices')
@@ -305,11 +290,10 @@ app.post('/api/login', async (req, res) => {
         error: 'Erro ao registrar dispositivo'
       });
     }
-    console.log('✅ Dispositivo registrado/atualizado');
 
     const sessionToken = generateSecureToken();
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 24); // ← 24 HORAS (era 8)
+    expiresAt.setHours(expiresAt.getHours() + 24); // 24 horas
 
     const { data: existingSession } = await supabase
       .from('active_sessions')
@@ -320,8 +304,6 @@ app.post('/api/login', async (req, res) => {
       .maybeSingle();
 
     if (existingSession) {
-      console.log('Sessão ativa encontrada - atualizando');
-
       const { error: sessionError } = await supabase
         .from('active_sessions')
         .update({
@@ -338,11 +320,7 @@ app.post('/api/login', async (req, res) => {
           error: 'Erro ao atualizar sessão'
         });
       }
-
-      console.log('✅ Sessão atualizada com sucesso');
     } else {
-      console.log('Criando nova sessão');
-
       await supabase
         .from('active_sessions')
         .update({ is_active: false })
@@ -367,12 +345,9 @@ app.post('/api/login', async (req, res) => {
           error: 'Erro ao criar sessão'
         });
       }
-
-      console.log('✅ Nova sessão criada com sucesso');
     }
 
     await logLoginAttempt(sanitizedUsername, true, null, sanitizedDeviceToken, cleanIP);
-    console.log('✅ Login realizado com sucesso:', sanitizedUsername, '| IP:', cleanIP);
 
     res.json({
       success: true,
@@ -423,7 +398,6 @@ app.post('/api/logout', async (req, res) => {
       return res.status(500).json({ error: 'Erro ao fazer logout' });
     }
 
-    console.log('✅ Logout realizado:', sanitizedToken.substr(0, 20) + '...');
     res.json({ success: true });
   } catch (error) {
     console.error('❌ Erro no logout:', error);
@@ -472,8 +446,7 @@ app.post('/api/verify-session', async (req, res) => {
     }
 
     // ==========================================
-    // REMOVIDO: Verificação de IP (causava logout)
-    // Agora apenas atualiza o IP atual
+    // NÃO VERIFICAMOS IP AQUI – apenas atualizamos
     // ==========================================
     const currentIP = getClientIP(req);
 
@@ -500,11 +473,6 @@ app.post('/api/verify-session', async (req, res) => {
         reason: 'session_expired' 
       });
     }
-
-    // ==========================================
-    // REMOVIDO: Verificação de horário comercial
-    // Usuário pode continuar usando após fazer login
-    // ==========================================
 
     // Atualiza última atividade e IP
     await supabase
@@ -576,11 +544,12 @@ app.listen(PORT, () => {
   console.log('='.repeat(50));
   console.log(`🚀 Portal Central rodando na porta ${PORT}`);
   console.log(`💾 Supabase configurado: ${supabaseUrl ? 'Sim ✅' : 'Não ❌'}`);
-  console.log(`🔒 IPs autorizados: ${AUTHORIZED_IPS.join(', ')}`);
+  console.log(`🔒 IPs autorizados (fallback global): ${AUTHORIZED_IPS.join(', ')}`); // Agora mostra apenas 187.36.172.217
   console.log('⏰ Horário comercial: Seg-Sex, 8h-18h (apenas LOGIN)');
   console.log(`🛡️ Rate limiting ativo: 5 tentativas/15min por IP`);
   console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
   console.log('✅ Melhorias: Tokens seguros, Rate limiting, Sanitização, Validação');
   console.log('🔓 Sessão: 24 horas | Sem verificação de IP/horário após login');
+  console.log('👤 Verificação de IP: por usuário (com fallback global)');
   console.log('='.repeat(50));
 });
