@@ -39,9 +39,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ==========================================
 // ======== AUTENTICAÇÃO ====================
 // ==========================================
-const PORTAL_URL = process.env.PORTAL_URL; // ex: https://ir-comercio-portal-zcan.onrender.com/portal
+const PORTAL_URL = process.env.PORTAL_URL;
 
-// Log para debug da variável
 console.log('🔧 PORTAL_URL configurada como:', PORTAL_URL);
 
 async function verificarAutenticacao(req, res, next) {
@@ -75,8 +74,11 @@ async function verificarAutenticacao(req, res, next) {
             body: JSON.stringify({ sessionToken })
         });
 
+        console.log(`📡 Resposta do portal: status ${verifyResponse.status}`);
+
         if (!verifyResponse.ok) {
-            console.log(`❌ Resposta do portal não ok: ${verifyResponse.status}`);
+            const errorText = await verifyResponse.text();
+            console.log(`❌ Resposta do portal não ok: ${verifyResponse.status} - ${errorText}`);
             return res.status(401).json({
                 error: 'Sessão inválida',
                 redirectToLogin: true
@@ -84,6 +86,7 @@ async function verificarAutenticacao(req, res, next) {
         }
 
         const sessionData = await verifyResponse.json();
+        console.log('✅ Sessão válida:', sessionData);
 
         if (!sessionData.valid) {
             console.log('❌ Sessão inválida (valid=false)');
@@ -136,21 +139,22 @@ app.get('/api/ordens', async (req, res) => {
 
         console.log(`📦 Buscando ordens da tabela ordens_compra para mês=${mes}, ano=${ano}`);
 
-        // Primeiro, vamos verificar se a tabela existe e se as colunas estão corretas
-        // Podemos tentar uma consulta simples para debug
-        const { data: testData, error: testError } = await supabase
+        // Primeiro, tenta uma consulta simples para verificar a tabela
+        const { error: testError } = await supabase
             .from('ordens_compra')
-            .select('count', { count: 'exact', head: true });
+            .select('id')
+            .limit(1);
 
         if (testError) {
             console.error('❌ Erro ao acessar tabela ordens_compra:', testError);
-            return res.status(500).json({ 
-                error: 'Erro de configuração da tabela',
-                details: testError.message 
+            return res.status(500).json({
+                error: 'Erro de acesso à tabela',
+                details: testError.message,
+                code: testError.code,
+                hint: testError.hint
             });
         }
 
-        // Agora a consulta real
         const { data, error } = await supabase
             .from('ordens_compra')
             .select('*')
@@ -160,17 +164,17 @@ app.get('/api/ordens', async (req, res) => {
 
         if (error) {
             console.error('❌ Erro no Supabase (ordens):', error);
-            // Retorna erro detalhado apenas em desenvolvimento
-            if (process.env.NODE_ENV !== 'production') {
-                return res.status(500).json({ error: error.message, details: error });
-            }
-            return res.status(500).json({ error: 'Erro ao buscar ordens' });
+            return res.status(500).json({
+                error: 'Erro ao buscar ordens',
+                details: error.message,
+                code: error.code
+            });
         }
 
         console.log(`✅ Encontradas ${data ? data.length : 0} ordens`);
         res.json(data || []);
     } catch (error) {
-        console.error('❌ Erro ao buscar ordens:', error);
+        console.error('❌ Erro inesperado ao buscar ordens:', error);
         res.status(500).json({ error: 'Erro interno ao buscar ordens' });
     }
 });
@@ -187,10 +191,10 @@ app.get('/api/ordens/ultimo-numero', async (req, res) => {
 
         if (error) {
             console.error('❌ Erro no Supabase (ultimo-numero):', error);
-            if (process.env.NODE_ENV !== 'production') {
-                return res.status(500).json({ error: error.message });
-            }
-            throw error;
+            return res.status(500).json({
+                error: 'Erro ao buscar último número',
+                details: error.message
+            });
         }
         const ultimoNumero = data && data.length > 0 ? data[0].numero_ordem : 0;
         console.log(`✅ Último número: ${ultimoNumero}`);
@@ -213,10 +217,10 @@ app.get('/api/fornecedores', async (req, res) => {
 
         if (error) {
             console.error('❌ Erro no Supabase (fornecedores):', error);
-            if (process.env.NODE_ENV !== 'production') {
-                return res.status(500).json({ error: error.message });
-            }
-            throw error;
+            return res.status(500).json({
+                error: 'Erro ao buscar fornecedores',
+                details: error.message
+            });
         }
 
         // Remove duplicatas baseado na razão social
@@ -279,10 +283,10 @@ app.post('/api/ordens', async (req, res) => {
 
         if (error) {
             console.error('❌ Erro no Supabase (insert):', error);
-            if (process.env.NODE_ENV !== 'production') {
-                return res.status(500).json({ error: error.message });
-            }
-            throw error;
+            return res.status(500).json({
+                error: 'Erro ao criar ordem',
+                details: error.message
+            });
         }
         console.log('✅ Ordem criada com ID:', data.id);
         res.status(201).json(data);
