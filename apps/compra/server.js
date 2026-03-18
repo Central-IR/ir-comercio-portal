@@ -60,7 +60,6 @@ async function verificarAutenticacao(req, res, next) {
         });
     }
 
-    // Verifica se PORTAL_URL está definida
     if (!PORTAL_URL) {
         console.error('❌ PORTAL_URL não definida no ambiente');
         return res.status(500).json({ error: 'Erro de configuração do servidor' });
@@ -136,6 +135,22 @@ app.get('/api/ordens', async (req, res) => {
         }
 
         console.log(`📦 Buscando ordens da tabela ordens_compra para mês=${mes}, ano=${ano}`);
+
+        // Primeiro, vamos verificar se a tabela existe e se as colunas estão corretas
+        // Podemos tentar uma consulta simples para debug
+        const { data: testData, error: testError } = await supabase
+            .from('ordens_compra')
+            .select('count', { count: 'exact', head: true });
+
+        if (testError) {
+            console.error('❌ Erro ao acessar tabela ordens_compra:', testError);
+            return res.status(500).json({ 
+                error: 'Erro de configuração da tabela',
+                details: testError.message 
+            });
+        }
+
+        // Agora a consulta real
         const { data, error } = await supabase
             .from('ordens_compra')
             .select('*')
@@ -144,13 +159,19 @@ app.get('/api/ordens', async (req, res) => {
             .order('numero_ordem', { ascending: true });
 
         if (error) {
-            console.error('Erro no Supabase (ordens):', error);
-            throw error;
+            console.error('❌ Erro no Supabase (ordens):', error);
+            // Retorna erro detalhado apenas em desenvolvimento
+            if (process.env.NODE_ENV !== 'production') {
+                return res.status(500).json({ error: error.message, details: error });
+            }
+            return res.status(500).json({ error: 'Erro ao buscar ordens' });
         }
+
+        console.log(`✅ Encontradas ${data ? data.length : 0} ordens`);
         res.json(data || []);
     } catch (error) {
-        console.error('Erro ao buscar ordens:', error);
-        res.status(500).json({ error: 'Erro ao buscar ordens' });
+        console.error('❌ Erro ao buscar ordens:', error);
+        res.status(500).json({ error: 'Erro interno ao buscar ordens' });
     }
 });
 
@@ -165,13 +186,17 @@ app.get('/api/ordens/ultimo-numero', async (req, res) => {
             .limit(1);
 
         if (error) {
-            console.error('Erro no Supabase (ultimo-numero):', error);
+            console.error('❌ Erro no Supabase (ultimo-numero):', error);
+            if (process.env.NODE_ENV !== 'production') {
+                return res.status(500).json({ error: error.message });
+            }
             throw error;
         }
         const ultimoNumero = data && data.length > 0 ? data[0].numero_ordem : 0;
+        console.log(`✅ Último número: ${ultimoNumero}`);
         res.json({ ultimoNumero });
     } catch (error) {
-        console.error('Erro ao buscar último número:', error);
+        console.error('❌ Erro ao buscar último número:', error);
         res.status(500).json({ error: 'Erro ao buscar último número' });
     }
 });
@@ -187,7 +212,10 @@ app.get('/api/fornecedores', async (req, res) => {
             .order('razao_social');
 
         if (error) {
-            console.error('Erro no Supabase (fornecedores):', error);
+            console.error('❌ Erro no Supabase (fornecedores):', error);
+            if (process.env.NODE_ENV !== 'production') {
+                return res.status(500).json({ error: error.message });
+            }
             throw error;
         }
 
@@ -200,9 +228,10 @@ app.get('/api/fornecedores', async (req, res) => {
                 unique.push(item);
             }
         });
+        console.log(`✅ ${unique.length} fornecedores únicos encontrados`);
         res.json(unique);
     } catch (error) {
-        console.error('Erro ao buscar fornecedores:', error);
+        console.error('❌ Erro ao buscar fornecedores:', error);
         res.status(500).json({ error: 'Erro ao buscar fornecedores' });
     }
 });
@@ -217,11 +246,12 @@ app.get('/api/ordens/:id', async (req, res) => {
             .single();
 
         if (error) {
+            console.error('❌ Erro ao buscar ordem por ID:', error);
             return res.status(404).json({ error: 'Ordem não encontrada' });
         }
         res.json(data);
     } catch (error) {
-        console.error('Erro ao buscar ordem:', error);
+        console.error('❌ Erro ao buscar ordem:', error);
         res.status(500).json({ error: 'Erro ao buscar ordem' });
     }
 });
@@ -248,12 +278,16 @@ app.post('/api/ordens', async (req, res) => {
             .single();
 
         if (error) {
-            console.error('Erro no Supabase (insert):', error);
+            console.error('❌ Erro no Supabase (insert):', error);
+            if (process.env.NODE_ENV !== 'production') {
+                return res.status(500).json({ error: error.message });
+            }
             throw error;
         }
+        console.log('✅ Ordem criada com ID:', data.id);
         res.status(201).json(data);
     } catch (error) {
-        console.error('Erro ao criar ordem:', error);
+        console.error('❌ Erro ao criar ordem:', error);
         res.status(500).json({ error: 'Erro ao criar ordem' });
     }
 });
@@ -269,11 +303,12 @@ app.put('/api/ordens/:id', async (req, res) => {
             .single();
 
         if (error) {
+            console.error('❌ Erro ao atualizar ordem:', error);
             return res.status(404).json({ error: 'Ordem não encontrada' });
         }
         res.json(data);
     } catch (error) {
-        console.error('Erro ao atualizar ordem:', error);
+        console.error('❌ Erro ao atualizar ordem:', error);
         res.status(500).json({ error: 'Erro ao atualizar ordem' });
     }
 });
@@ -290,11 +325,12 @@ app.patch('/api/ordens/:id/status', async (req, res) => {
             .single();
 
         if (error) {
+            console.error('❌ Erro ao atualizar status:', error);
             return res.status(404).json({ error: 'Ordem não encontrada' });
         }
         res.json(data);
     } catch (error) {
-        console.error('Erro ao atualizar status:', error);
+        console.error('❌ Erro ao atualizar status:', error);
         res.status(500).json({ error: 'Erro ao atualizar status' });
     }
 });
@@ -307,10 +343,13 @@ app.delete('/api/ordens/:id', async (req, res) => {
             .delete()
             .eq('id', req.params.id);
 
-        if (error) throw error;
+        if (error) {
+            console.error('❌ Erro ao deletar ordem:', error);
+            throw error;
+        }
         res.status(204).end();
     } catch (error) {
-        console.error('Erro ao deletar ordem:', error);
+        console.error('❌ Erro ao deletar ordem:', error);
         res.status(500).json({ error: 'Erro ao deletar ordem' });
     }
 });
@@ -326,7 +365,7 @@ app.use((req, res) => {
 // ======== TRATAMENTO DE ERROS =============
 // ==========================================
 app.use((error, req, res, next) => {
-    console.error('Erro não tratado:', error);
+    console.error('❌ Erro não tratado:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
 });
 
