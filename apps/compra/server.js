@@ -128,7 +128,7 @@ app.get('/', (req, res) => {
 // ==========================================
 app.use('/api', verificarAutenticacao);
 
-// GET /api/ordens - listar ordens do mês
+// GET /api/ordens - listar ordens do mês (usando data_ordem)
 app.get('/api/ordens', async (req, res) => {
     try {
         const mes = parseInt(req.query.mes);
@@ -137,29 +137,17 @@ app.get('/api/ordens', async (req, res) => {
             return res.status(400).json({ error: 'Mês e ano são obrigatórios' });
         }
 
-        console.log(`📦 Buscando ordens da tabela ordens_compra para mês=${mes}, ano=${ano}`);
+        // Calcula o primeiro e último dia do mês
+        const primeiroDia = new Date(ano, mes, 1);
+        const ultimoDia = new Date(ano, mes + 1, 0);
 
-        // Primeiro, tenta uma consulta simples para verificar a tabela
-        const { error: testError } = await supabase
-            .from('ordens_compra')
-            .select('id')
-            .limit(1);
-
-        if (testError) {
-            console.error('❌ Erro ao acessar tabela ordens_compra:', testError);
-            return res.status(500).json({
-                error: 'Erro de acesso à tabela',
-                details: testError.message,
-                code: testError.code,
-                hint: testError.hint
-            });
-        }
+        console.log(`📦 Buscando ordens da tabela ordens_compra entre ${primeiroDia.toISOString().split('T')[0]} e ${ultimoDia.toISOString().split('T')[0]}`);
 
         const { data, error } = await supabase
             .from('ordens_compra')
             .select('*')
-            .eq('mes', mes)
-            .eq('ano', ano)
+            .gte('data_ordem', primeiroDia.toISOString().split('T')[0])
+            .lte('data_ordem', ultimoDia.toISOString().split('T')[0])
             .order('numero_ordem', { ascending: true });
 
         if (error) {
@@ -264,9 +252,6 @@ app.get('/api/ordens/:id', async (req, res) => {
 app.post('/api/ordens', async (req, res) => {
     try {
         const ordem = req.body;
-        const dataAtual = new Date();
-        const mes = dataAtual.getMonth();
-        const ano = dataAtual.getFullYear();
 
         console.log('➕ Criando nova ordem na tabela ordens_compra:', ordem.numero_ordem);
 
@@ -274,8 +259,6 @@ app.post('/api/ordens', async (req, res) => {
             .from('ordens_compra')
             .insert([{
                 ...ordem,
-                mes,
-                ano,
                 created_at: new Date().toISOString()
             }])
             .select()
