@@ -41,6 +41,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ==========================================
 const PORTAL_URL = process.env.PORTAL_URL; // ex: https://ir-comercio-portal-zcan.onrender.com/portal
 
+// Log para debug da variável
+console.log('🔧 PORTAL_URL configurada como:', PORTAL_URL);
+
 async function verificarAutenticacao(req, res, next) {
     const publicPaths = ['/', '/health'];
     if (publicPaths.includes(req.path)) {
@@ -55,6 +58,12 @@ async function verificarAutenticacao(req, res, next) {
             error: 'Não autenticado',
             redirectToLogin: true
         });
+    }
+
+    // Verifica se PORTAL_URL está definida
+    if (!PORTAL_URL) {
+        console.error('❌ PORTAL_URL não definida no ambiente');
+        return res.status(500).json({ error: 'Erro de configuração do servidor' });
     }
 
     try {
@@ -76,7 +85,6 @@ async function verificarAutenticacao(req, res, next) {
         }
 
         const sessionData = await verifyResponse.json();
-        console.log('✅ Sessão válida:', sessionData);
 
         if (!sessionData.valid) {
             console.log('❌ Sessão inválida (valid=false)');
@@ -129,7 +137,7 @@ app.get('/api/ordens', async (req, res) => {
 
         console.log(`📦 Buscando ordens da tabela ordens_compra para mês=${mes}, ano=${ano}`);
         const { data, error } = await supabase
-            .from('ordens_compra')  // <-- NOME CORRIGIDO
+            .from('ordens_compra')
             .select('*')
             .eq('mes', mes)
             .eq('ano', ano)
@@ -151,7 +159,7 @@ app.get('/api/ordens/ultimo-numero', async (req, res) => {
     try {
         console.log('🔢 Buscando último número de ordem na tabela ordens_compra');
         const { data, error } = await supabase
-            .from('ordens_compra')  // <-- NOME CORRIGIDO
+            .from('ordens_compra')
             .select('numero_ordem')
             .order('numero_ordem', { ascending: false })
             .limit(1);
@@ -173,7 +181,7 @@ app.get('/api/fornecedores', async (req, res) => {
     try {
         console.log('👥 Buscando fornecedores na tabela ordens_compra');
         const { data, error } = await supabase
-            .from('ordens_compra')  // <-- NOME CORRIGIDO
+            .from('ordens_compra')
             .select('razao_social, nome_fantasia, cnpj, endereco_fornecedor, site, contato, telefone, email')
             .not('razao_social', 'is', null)
             .order('razao_social');
@@ -203,7 +211,7 @@ app.get('/api/fornecedores', async (req, res) => {
 app.get('/api/ordens/:id', async (req, res) => {
     try {
         const { data, error } = await supabase
-            .from('ordens_compra')  // <-- NOME CORRIGIDO
+            .from('ordens_compra')
             .select('*')
             .eq('id', req.params.id)
             .single();
@@ -229,7 +237,7 @@ app.post('/api/ordens', async (req, res) => {
         console.log('➕ Criando nova ordem na tabela ordens_compra:', ordem.numero_ordem);
 
         const { data, error } = await supabase
-            .from('ordens_compra')  // <-- NOME CORRIGIDO
+            .from('ordens_compra')
             .insert([{
                 ...ordem,
                 mes,
@@ -254,7 +262,7 @@ app.post('/api/ordens', async (req, res) => {
 app.put('/api/ordens/:id', async (req, res) => {
     try {
         const { data, error } = await supabase
-            .from('ordens_compra')  // <-- NOME CORRIGIDO
+            .from('ordens_compra')
             .update(req.body)
             .eq('id', req.params.id)
             .select()
@@ -275,7 +283,7 @@ app.patch('/api/ordens/:id/status', async (req, res) => {
     try {
         const { status } = req.body;
         const { data, error } = await supabase
-            .from('ordens_compra')  // <-- NOME CORRIGIDO
+            .from('ordens_compra')
             .update({ status })
             .eq('id', req.params.id)
             .select()
@@ -295,7 +303,7 @@ app.patch('/api/ordens/:id/status', async (req, res) => {
 app.delete('/api/ordens/:id', async (req, res) => {
     try {
         const { error } = await supabase
-            .from('ordens_compra')  // <-- NOME CORRIGIDO
+            .from('ordens_compra')
             .delete()
             .eq('id', req.params.id);
 
