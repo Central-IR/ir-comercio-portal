@@ -7,7 +7,6 @@
     <title>Portal</title>
     <style>
 /* VARIÁVEIS BASE */
-/* VARIÁVEIS BASE */
 :root {
     --primary: #ff521d;
     --bg-primary: #FFFFFF;
@@ -586,13 +585,13 @@ input:focus {
 .welcome-greeting-text { font-size: 2rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
 .welcome-title { font-size: 1rem; font-weight: 400; color: var(--text-secondary); text-align: center; }
 
-/* GRID DE CARDS - 4 COLUNAS NO MÁXIMO */
+/* GRID DE CARDS - 5 COLUNAS POR LINHA */
 .welcome-modules-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* exatamente 4 colunas em telas grandes */
+    grid-template-columns: repeat(5, 1fr); /* 5 colunas em telas grandes */
     gap: 1.2rem;
     width: 100%;
-    max-width: 1100px; /* limite opcional para não ficar muito largo */
+    max-width: 1400px; /* largura suficiente para 5 cards confortáveis */
     margin: 0 auto;
 }
 
@@ -729,24 +728,33 @@ input:focus {
 .hidden { display: none !important; }
 
 /* ─── RESPONSIVO ─── */
-/* Ajuste para telas médias (tablets) */
-@media (max-width: 992px) {
+/* Ajuste para telas médias (≤1200px) */
+@media (max-width: 1200px) {
     .welcome-modules-grid {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 800px;
-    }
-    .welcome-module-card {
-        padding: 1.8rem 1.2rem; /* leve ajuste para caber melhor */
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1000px;
     }
 }
 
+/* Ajuste para tablets (≤768px) */
 @media (max-width: 768px) {
     .welcome-modules-grid {
-        grid-template-columns: 1fr;
-        max-width: 400px;
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 600px;
+    }
+    .welcome-module-card {
+        padding: 1.8rem 1.2rem;
     }
     .sidebar.visible.expanded {
         position: fixed; left: 0; top: 0; height: 100vh; z-index: 1000;
+    }
+}
+
+/* Ajuste para celulares pequenos (≤480px) */
+@media (max-width: 480px) {
+    .welcome-modules-grid {
+        grid-template-columns: 1fr;
+        max-width: 350px;
     }
 }
     </style>
