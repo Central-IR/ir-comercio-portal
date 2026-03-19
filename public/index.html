@@ -585,20 +585,32 @@ input:focus {
 .welcome-greeting-text { font-size: 2rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
 .welcome-title { font-size: 1rem; font-weight: 400; color: var(--text-secondary); text-align: center; }
 
-/* GRID DE CARDS */
+/* GRID DE CARDS - MODIFICADO PARA MAIOR LARGURA HORIZONTAL */
 .welcome-modules-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1rem; width: 100%; max-width: 900px;
+    grid-template-columns: repeat(3, 1fr); /* de 6 para 3 colunas */
+    gap: 1.5rem; /* aumento do espaçamento entre cards */
+    width: 100%;
+    max-width: 1200px; /* mais largura máxima */
+    margin: 0 auto; /* centraliza a grade */
 }
 
 .welcome-module-card {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 0.85rem; padding: 2rem 1.5rem;
-    background: var(--bg-card); border: 1.5px solid var(--border-color); border-radius: 16px;
-    cursor: pointer; transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
-    color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;
-    text-align: center; user-select: none; position: relative; overflow: hidden;
+    gap: 0.85rem; 
+    padding: 2.5rem 2rem; /* aumenta o espaço interno horizontal/vertical */
+    background: var(--bg-card); 
+    border: 1.5px solid var(--border-color); 
+    border-radius: 16px;
+    cursor: pointer; 
+    transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+    color: var(--text-secondary); 
+    font-size: 1rem; /* um pouco maior, opcional */
+    font-weight: 600;
+    text-align: center; 
+    user-select: none; 
+    position: relative; 
+    overflow: hidden;
 }
 .welcome-module-card::before {
     content: ''; position: absolute; inset: 0;
@@ -716,10 +728,35 @@ input:focus {
 .hidden { display: none !important; }
 
 /* ─── RESPONSIVO ─── */
+/* Ajuste para telas médias (tablets) */
+@media (max-width: 992px) {
+    .welcome-modules-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 800px;
+        gap: 1.2rem;
+    }
+    .welcome-module-card {
+        padding: 2rem 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
-    .welcome-modules-grid { grid-template-columns: repeat(3, 1fr); }
-    .welcome-module-card { padding: 1.5rem 1rem; }
-    .sidebar.visible.expanded { position: fixed; left: 0; top: 0; height: 100vh; z-index: 1000; }
+    .welcome-modules-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 1rem;
+    }
+    .welcome-module-card { 
+        padding: 1.8rem 1.2rem; 
+    }
+    .sidebar.visible.expanded { 
+        position: fixed; left: 0; top: 0; height: 100vh; z-index: 1000; 
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-modules-grid {
+        grid-template-columns: 1fr; /* em telas muito pequenas, uma coluna */
+    }
 }
     </style>
 </head>
