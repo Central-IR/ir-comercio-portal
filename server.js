@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 // Agora contém apenas o IP 187.36.172.217
 const AUTHORIZED_IPS = process.env.AUTHORIZED_IPS 
   ? process.env.AUTHORIZED_IPS.split(',').map(ip => ip.trim())
-  : ['187.36.172.217'];  // <-- APENAS ESSE IP POR PADRÃO
+  : ['187.36.216.13'];  // <-- APENAS ESSE IP POR PADRÃO
 
 // ==========================================
 // ======== CONFIGURAÇÃO DO SUPABASE ========
